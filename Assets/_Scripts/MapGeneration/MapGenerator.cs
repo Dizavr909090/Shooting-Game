@@ -1,94 +1,85 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+
+[RequireComponent(typeof(MapSpawner))]
 public class MapGenerator : MonoBehaviour
 {
-    [SerializeField]
-    private Transform _tilePrefab;
-    [SerializeField]
-    private Transform _obstaclePrefab;
-    [SerializeField]
-    private Vector2 _mapSize;
-    [SerializeField, Range(0,1)]
-    private float _outlinePercent;
-    [SerializeField]
-    private int _seed = 10;
-    [SerializeField]
-    private int _obstacleCount = 10;
+    [SerializeField] private MapSettings _mapSettings;
 
-    private List<Coord> _allTileCoords;
-    private Queue<Coord> _shuffledTileCoords;
+    private MapSpawner _spawner;
+
+    private List<Utility.Coord> _allTileCoords;
+    private Queue<Utility.Coord> _shuffledTileCoords;
+
+    public MapSettings MapSettings => _mapSettings;
+    private MapSpawner Spawner
+    {
+        get
+        {
+            if (_spawner == null) _spawner = GetComponent<MapSpawner>();
+            return _spawner;
+        }
+    }
+
     private void Start()
     {
         GenerateMap();
     }
 
-    public Coord GetRandomCoord()
+    public void GenerateMap()
     {
-        Coord randomCoord = _shuffledTileCoords.Dequeue();
+        ShuffleCoords();
+
+        string holderName = "Generated Map";
+        Transform mapHolder = Spawner.CreateMapHolder(holderName, transform);
+
+
+        List<Vector3> tilePositions = new List<Vector3>();
+        for (int x = 0; x < _mapSettings.MapSize.x; x++)
+        {
+            for (int y = 0; y < _mapSettings.MapSize.y; y++)
+            {
+                tilePositions.Add(CoordToPosition(x, y));
+            }
+        }
+
+        Spawner.SpawnTiles(tilePositions, _mapSettings.TilePrefab.gameObject, _mapSettings.OutlinePercent, mapHolder);
+
+        List<Vector3> obstaclePositions = new List<Vector3>();
+        for (int i = 0; i < _mapSettings.ObstacleCount; i++)
+        {
+            Utility.Coord randomCoord = GetRandomCoord();
+            obstaclePositions.Add(CoordToPosition(randomCoord.x, randomCoord.y));
+        }
+
+        Spawner.SpawnObstacles(obstaclePositions, _mapSettings.ObstaclePrefab.gameObject, mapHolder);
+    }
+
+    private void ShuffleCoords()
+    {
+        _allTileCoords = new List<Utility.Coord>();
+        for (int x = 0; x < _mapSettings.MapSize.x; x++)
+        {
+            for (int y = 0; y < _mapSettings.MapSize.y; y++)
+            {
+                _allTileCoords.Add(new Utility.Coord(x, y));
+            }
+        }
+
+        _shuffledTileCoords = new Queue<Utility.Coord>(Utility.ShuffleArray(_allTileCoords.ToArray(), _mapSettings.Seed));
+    }
+    private Utility.Coord GetRandomCoord()
+    {
+        Utility.Coord randomCoord = _shuffledTileCoords.Dequeue();
         _shuffledTileCoords.Enqueue(randomCoord);
         return randomCoord;
     }
 
-    public void GenerateMap()
-    {
-        _allTileCoords = new List<Coord>();
-        for (int x = 0; x < _mapSize.x; x++)
-        {
-            for (int y = 0; y < _mapSize.y; y++)
-            {
-                _allTileCoords.Add(new Coord(x, y));
-            }
-        }
-
-        _shuffledTileCoords = new Queue<Coord>(Utility.ShuffleArray(_allTileCoords.ToArray(), _seed));
-
-        string holderName = "Generated Map";
-
-        if (transform.Find(holderName))
-        {
-            DestroyImmediate(transform.Find(holderName).gameObject);
-        }
-
-        Transform mapHolder = new GameObject(holderName).transform;
-        mapHolder.parent = transform;
-
-        for (int x = 0; x < _mapSize.x; x++)
-        {
-            for (int y = 0; y < _mapSize.y; y++)
-            {
-                Vector3 tilePosition = CoordToPosition(x, y);
-                Transform newTile = Instantiate(_tilePrefab, tilePosition, Quaternion.Euler(Vector3.right*90));
-                newTile.localScale = Vector3.one * (1- _outlinePercent);
-                newTile.parent = mapHolder;
-            }
-        }
-
-       
-        
-        for (int i = 0; i < _obstacleCount; i++)
-        {
-            Coord randomCoord = GetRandomCoord();
-            Vector3 obstaclePosition = CoordToPosition(randomCoord.x, randomCoord.y);
-            Transform newObstacle = Instantiate(_obstaclePrefab, obstaclePosition + Vector3.up * 0.5f, Quaternion.identity);
-            newObstacle.parent = mapHolder;
-        }
-    }
-
     private Vector3 CoordToPosition(int x, int y)
     {
-        return new Vector3(-_mapSize.x / 2 + 0.5f + x, 0, -_mapSize.y / 2 + 0.5f + y);
+        return new Vector3(-_mapSettings.MapSize.x / 2 + 0.5f + x, 0, -_mapSettings.MapSize.y / 2 + 0.5f + y);
     }
 
-    public struct Coord
-    {
-        public int x;
-        public int y;
-
-        public Coord(int X, int Y)
-        {
-            x = X; 
-            y = Y;
-        }
-    }
+    
 }

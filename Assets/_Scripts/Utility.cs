@@ -15,4 +15,15 @@ public static class Utility
 
         return array;
     }
+    public struct Coord
+    {
+        public int x;
+        public int y;
+
+        public Coord(int X, int Y)
+        {
+            x = X;
+            y = Y;
+        }
+    }
 }

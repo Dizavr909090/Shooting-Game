@@ -17,7 +17,7 @@ public class MapSettings : ScriptableObject
     private int _obstacleCount = 10;
 
     public Transform TilePrefab => _tilePrefab;
-    public Transform ObstaclePrebaf => _obstaclePrefab;
+    public Transform ObstaclePrefab => _obstaclePrefab;
     public Vector2 MapSize => _mapSize;
     public float OutlinePercent => _outlinePercent;
     public int Seed => _seed;

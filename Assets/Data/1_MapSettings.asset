@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75a6a2fad2d0f3246a6d1f02ee01b76a, type: 3}
+  m_Name: 1_MapSettings
+  m_EditorClassIdentifier: Assembly-CSharp::MapSettings
+  _tilePrefab: {fileID: 2429071001898193830, guid: ddad36ad7b7989c439c999f9e46b912b, type: 3}
+  _obstaclePrefab: {fileID: 5034545394031867656, guid: ed915bebc453f784ca5c1162e8b2aac4, type: 3}
+  _mapSize: {x: 15, y: 15}
+  _outlinePercent: 0.01
+  _seed: 52
+  _obstacleCount: 18
