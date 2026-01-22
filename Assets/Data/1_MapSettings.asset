@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MapSettings
   _tilePrefab: {fileID: 2429071001898193830, guid: ddad36ad7b7989c439c999f9e46b912b, type: 3}
   _obstaclePrefab: {fileID: 5034545394031867656, guid: ed915bebc453f784ca5c1162e8b2aac4, type: 3}
-  _mapSize: {x: 15, y: 15}
+  _mapSize: {x: 10, y: 10}
   _outlinePercent: 0.01
   _seed: 52
-  _obstacleCount: 18
+  _obstaclePercent: 0.5

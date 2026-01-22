@@ -13,14 +13,14 @@ public class MapSettings : ScriptableObject
     private float _outlinePercent;
     [SerializeField]
     private int _seed = 10;
-    [SerializeField]
-    private int _obstacleCount = 10;
+    [SerializeField, Range(0, 1)]
+    private float _obstaclePercent;
 
     public Transform TilePrefab => _tilePrefab;
     public Transform ObstaclePrefab => _obstaclePrefab;
     public Vector2 MapSize => _mapSize;
     public float OutlinePercent => _outlinePercent;
     public int Seed => _seed;
-    public int ObstacleCount => _obstacleCount;
+    public float ObstaclePercent => _obstaclePercent;
 
 }
