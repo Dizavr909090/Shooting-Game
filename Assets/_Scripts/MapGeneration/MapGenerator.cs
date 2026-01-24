@@ -1,16 +1,14 @@
 using System.Collections.Generic;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
-using UnityEngine.UIElements;
 using static Utility;
 
 [RequireComponent(typeof(MapSpawner))]
 public class MapGenerator : MonoBehaviour
 {
     [SerializeField] private MapSettings _mapSettings;
+    [SerializeField] private string _holderName = "Generated Map";
 
     private MapSpawner _spawner;
-    private Coord _mapCenter;
 
     private List<Coord> _allTileCoords;
     private Queue<Coord> _shuffledTileCoords;
@@ -32,26 +30,48 @@ public class MapGenerator : MonoBehaviour
 
     public void GenerateMap()
     {
-        ShuffleCoords();
-        string holderName = "Generated Map";
-        Transform mapHolder = Spawner.CreateMapHolder(holderName, transform);
+        Transform mapHolder = Spawner.CreateMapHolder(_holderName, transform);
 
-        
+        LevelMapData mapData = GenerateMapData();
 
-
-        List<Vector3> tilePositions = GetTitlePosition();
-        Spawner.SpawnTiles(tilePositions, _mapSettings.TilePrefab.gameObject, _mapSettings.OutlinePercent, mapHolder);
-
-        List<Vector3> obstaclePositions = GetObstaclePosition();
-        Spawner.SpawnObstacles(obstaclePositions, _mapSettings.ObstaclePrefab.gameObject, mapHolder);
+        Spawner.SpawnMap(mapData, _mapSettings, mapHolder);
     }
 
-    private bool MapIsFullyAccessible(bool[,] obstacleMap, int currentObstacleCount)
+    private LevelMapData GenerateMapData()
     {
-        bool[,] mapFlags = new bool[obstacleMap.GetLength(0), obstacleMap.GetLength(1)];
+        ShuffleCoords();
+
+        int width = (int)_mapSettings.MapSize.x;
+        int height = (int)_mapSettings.MapSize.y;
+        TileType[,] map = new TileType[width, height];
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                map[x, y] = TileType.Floor;
+            }
+        }
+
+        PlaceObstacles(map);
+
+        return new LevelMapData(map, _mapSettings.MapSize, _mapSettings.MapCenter);
+    }
+
+    private bool MapIsFullyAccessible(TileType[,] map, int currentObstacleCount)
+    {
+        int targetAccessibleTileCount = (int)(_mapSettings.TotalTiles - currentObstacleCount);
+        int accessibleTileCount = GetAccessibleTileCount(map, _mapSettings.MapCenter);
+
+        return targetAccessibleTileCount == accessibleTileCount;
+    }
+
+    private int GetAccessibleTileCount(TileType[,] map, Coord startCoord)
+    {
+        bool[,] mapFlags = new bool[map.GetLength(0), map.GetLength(1)];
         Queue<Coord> queue = new Queue<Coord>();
-        queue.Enqueue(_mapCenter);
-        mapFlags[_mapCenter.x, _mapCenter.y] = true;
+        queue.Enqueue(_mapSettings.MapCenter);
+        mapFlags[_mapSettings.MapCenter.x, _mapSettings.MapCenter.y] = true;
 
         int accessibleTileCount = 1;
 
@@ -68,14 +88,14 @@ public class MapGenerator : MonoBehaviour
 
                     if (x == 0 || y == 0)
                     {
-                        if (neighbourX >= 0 && neighbourX < obstacleMap.GetLength(0) &&
-                            neighbourY >= 0 && neighbourY < obstacleMap.GetLength(1))
+                        if (neighbourX >= 0 && neighbourX < map.GetLength(0) &&
+                            neighbourY >= 0 && neighbourY < map.GetLength(1))
                         {
-                            if (!mapFlags[neighbourX, neighbourY] && !obstacleMap[neighbourX, neighbourY])
+                            if (!mapFlags[neighbourX, neighbourY] && !(map[neighbourX, neighbourY] == TileType.Obstacle))
                             {
                                 mapFlags[neighbourX, neighbourY] = true;
                                 queue.Enqueue(new Coord(neighbourX, neighbourY));
-                                accessibleTileCount++; 
+                                accessibleTileCount++;
                             }
                         }
                     }
@@ -83,60 +103,33 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        int targetAccessibleTileCount = (int)(_mapSettings.MapSize.x * _mapSettings.MapSize.y - currentObstacleCount);
-
-        return targetAccessibleTileCount == accessibleTileCount;
+        return accessibleTileCount;
     }
 
-    private List<Vector3> GetObstaclePosition()
+    private void PlaceObstacles(TileType[,] map )
     {
-        int obstacleCount = (int)(_mapSettings.MapSize.x * _mapSettings.MapSize.y * _mapSettings.ObstaclePercent);
-
         int currentObstacleCount = 0;
 
-        bool[,] obstacleMap = new bool[(int)_mapSettings.MapSize.x, (int)_mapSettings.MapSize.y];
-
-        _mapCenter = new Coord((int)_mapSettings.MapSize.x / 2, (int)_mapSettings.MapSize.y / 2);
-
-        List<Vector3> positions = new List<Vector3>();
-        for (int i = 0; i < obstacleCount; i++)
+        for (int i = 0; i < _mapSettings.TargetObstacleCount; i++)
         {
             Coord randomCoord = GetRandomCoord();
 
-            obstacleMap[randomCoord.x, randomCoord.y] = true;
+            map[randomCoord.x, randomCoord.y] = TileType.Obstacle;
             currentObstacleCount++;
 
-            if (randomCoord != _mapCenter && MapIsFullyAccessible(obstacleMap, currentObstacleCount))
-            {
-                positions.Add(CoordToPosition(randomCoord.x, randomCoord.y));
-            }
+            if (randomCoord != _mapSettings.MapCenter && MapIsFullyAccessible(map, currentObstacleCount)) { }
             else
             {
-                obstacleMap[randomCoord.x, randomCoord.y] = false;
+                map[randomCoord.x, randomCoord.y] = TileType.Floor;
                 currentObstacleCount--;
             }
         }
-
-        return positions;
-    }
-
-    private List<Vector3> GetTitlePosition()
-    {
-        List<Vector3> positions = new List<Vector3>();
-        for (int x = 0; x < _mapSettings.MapSize.x; x++)
-        {
-            for (int y = 0; y < _mapSettings.MapSize.y; y++)
-            {
-                positions.Add(CoordToPosition(x, y));
-            }
-        }
-
-        return positions;
     }
 
     private void ShuffleCoords()
     {
         _allTileCoords = new List<Coord>();
+
         for (int x = 0; x < _mapSettings.MapSize.x; x++)
         {
             for (int y = 0; y < _mapSettings.MapSize.y; y++)
@@ -147,15 +140,11 @@ public class MapGenerator : MonoBehaviour
 
         _shuffledTileCoords = new Queue<Coord>(Utility.ShuffleArray(_allTileCoords.ToArray(), _mapSettings.Seed));
     }
+
     private Coord GetRandomCoord()
     {
         Coord randomCoord = _shuffledTileCoords.Dequeue();
         _shuffledTileCoords.Enqueue(randomCoord);
         return randomCoord;
-    }
-
-    private Vector3 CoordToPosition(int x, int y)
-    {
-        return new Vector3(-_mapSettings.MapSize.x / 2 + 0.5f + x, 0, -_mapSettings.MapSize.y / 2 + 0.5f + y);
     }
 }

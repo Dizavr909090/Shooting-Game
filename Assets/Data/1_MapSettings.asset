@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75a6a2fad2d0f3246a6d1f02ee01b76a, type: 3}
   m_Name: 1_MapSettings
   m_EditorClassIdentifier: Assembly-CSharp::MapSettings
-  _tilePrefab: {fileID: 2429071001898193830, guid: ddad36ad7b7989c439c999f9e46b912b, type: 3}
-  _obstaclePrefab: {fileID: 5034545394031867656, guid: ed915bebc453f784ca5c1162e8b2aac4, type: 3}
-  _mapSize: {x: 10, y: 10}
-  _outlinePercent: 0.01
-  _seed: 52
-  _obstaclePercent: 0.5
+  _tileConfigs:
+  - type: 0
+    prefab: {fileID: 4050845759496461566, guid: ddad36ad7b7989c439c999f9e46b912b, type: 3}
+  - type: 1
+    prefab: {fileID: 3283489982738744153, guid: ed915bebc453f784ca5c1162e8b2aac4, type: 3}
+  _mapSize: {x: 15, y: 15}
+  _seed: 29
+  _tileSize: 1
+  _outlinePercent: 0.029
+  _obstaclePercent: 1

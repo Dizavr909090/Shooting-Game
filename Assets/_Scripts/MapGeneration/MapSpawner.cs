@@ -1,28 +1,42 @@
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 public class MapSpawner : MonoBehaviour
 {
-    public void SpawnObstacles(List<Vector3> positions, GameObject obstaclePrefab, Transform holder)
+    public void SpawnMap(LevelMapData mapData, MapSettings settings, Transform holder)
     {
-        foreach (Vector3 pos in positions)
+        GameObject floorPrefab = settings.GetPrefabByType(TileType.Floor);
+
+        for (int x = 0; x < mapData.tileMap.GetLength(0); x++)
         {
-            Transform newObstacle = Instantiate(obstaclePrefab, pos + Vector3.up * 0.5f, Quaternion.identity).transform;
-            newObstacle.parent = holder;
+            for (int y = 0; y < mapData.tileMap.GetLength(1); y++)
+            {
+                TileType currentType = mapData.tileMap[x, y];
+
+                Vector3 pos = Utility.CoordToPosition(mapData.mapSize, x, y, settings.TileSize);
+
+                if (floorPrefab != null)
+                {
+                    CreateObject(floorPrefab, pos, Quaternion.Euler(Vector3.right * 90), settings.OutlinePercent, settings.TileSize, holder);
+                }
+
+                if (currentType != TileType.Floor)
+                {
+                    GameObject prefab = settings.GetPrefabByType(currentType);
+                    if (prefab != null)
+                    {
+                        CreateObject(prefab, pos + Vector3.up, Quaternion.identity, settings.OutlinePercent, settings.TileSize, holder);
+                    }
+                }
+            }
         }
     }
 
-    public void SpawnTiles(List<Vector3> positions, GameObject tilePrefab, float outlinePercent, Transform holder)
+    private void CreateObject(GameObject prefab, Vector3 pos, Quaternion rotation, float outline, float tileSize, Transform holder)
     {
-
-        foreach (Vector3 pos in positions)
-        {
-            Transform newTile = Instantiate(tilePrefab, pos, Quaternion.Euler(Vector3.right * 90)).transform;
-            newTile.localScale = Vector3.one * (1 - outlinePercent);
-            newTile.parent = holder;
-        }
-
+        GameObject gameObject = Instantiate(prefab, pos, rotation);
+        gameObject.transform.localScale = Vector3.one * (1 - outline) * tileSize;
+        gameObject.transform.parent = holder;
     }
 
     public Transform CreateMapHolder(string name, Transform parent)

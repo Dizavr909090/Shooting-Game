@@ -1,9 +1,11 @@
 using System;
+using UnityEngine;
+
 public static class Utility
 {
-   public static T[] ShuffleArray<T>(T[] array, int seed)
+    public static T[] ShuffleArray<T>(T[] array, int seed)
     {
-        Random prng = new Random(seed);
+        System.Random prng = new System.Random(seed);
 
         for (int i = 0; i < array.Length - 1; i++)
         {
@@ -16,6 +18,16 @@ public static class Utility
         return array;
     }
 
+    public static Vector3 CoordToPosition(Vector2 size, int x, int y, float tileSize)
+    {
+        return new Vector3((-size.x / 2 + 0.5f + x) * tileSize, 0, (-size.y / 2 + 0.5f + y) * tileSize);
+    }
+
+    public static Vector3 CoordToPosition(Vector2 size, int x, int y)
+    {
+        return new Vector3(-size.x / 2 + 0.5f + x, 0, -size.y / 2 + 0.5f + y);
+    }
+
     public struct Coord : IEquatable<Coord>
     {
         public int x;
@@ -26,6 +38,7 @@ public static class Utility
             x = X;
             y = Y;
         }
+
         public static bool operator ==(Coord c1, Coord c2)
         {
             return c1.x == c2.x && c1.y == c2.y;
@@ -35,8 +48,6 @@ public static class Utility
         {
             return !(c1 == c2);
         }
-
-
 
         public bool Equals(Coord other)
         {
@@ -53,6 +64,4 @@ public static class Utility
             return x.GetHashCode() ^ y.GetHashCode();
         }
     }
-
-    
 }
