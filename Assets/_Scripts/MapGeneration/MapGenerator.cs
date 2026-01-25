@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
+using static MapSettings;
 using static Utility;
 
 [RequireComponent(typeof(MapSpawner))]
@@ -7,9 +9,16 @@ public class MapGenerator : MonoBehaviour
 {
     [SerializeField] private MapSettings _mapSettings;
     [SerializeField] private string _holderName = "Generated Map";
+    [SerializeField] private NavMeshSurface _navMeshSurface;
 
+    [SerializeField] private int _mapIndex;
+
+    private Vector2 _lastMapSize;
     private MapSpawner _spawner;
+    private MapConfig _currentMap;
 
+    private bool[,] _mapFlags;
+    private Queue<Coord> _accessibleQueue;
     private List<Coord> _allTileCoords;
     private Queue<Coord> _shuffledTileCoords;
 
@@ -22,6 +31,14 @@ public class MapGenerator : MonoBehaviour
             return _spawner;
         }
     }
+    private NavMeshSurface NavMeshSurface
+    {
+        get
+        {
+            if (_navMeshSurface == null) _navMeshSurface = GetComponent<NavMeshSurface>();
+            return _navMeshSurface;
+        }
+    }
 
     private void Start()
     {
@@ -30,20 +47,38 @@ public class MapGenerator : MonoBehaviour
 
     public void GenerateMap()
     {
+        GetComponent<BoxCollider>().size = new Vector3(_currentMap.MapSize.x * _currentMap.TileSize, .5f, _currentMap.MapSize.y * _currentMap.TileSize);
+
         Transform mapHolder = Spawner.CreateMapHolder(_holderName, transform);
 
         LevelMapData mapData = GenerateMapData();
 
-        Spawner.SpawnMap(mapData, _mapSettings, mapHolder);
+        Spawner.SpawnMap(mapData, _mapSettings, _currentMap, mapHolder);
+
+        NavMeshSurface.BuildNavMesh();
     }
 
     private LevelMapData GenerateMapData()
     {
+        _currentMap = _mapSettings.Maps[_mapIndex];
+
+        if (_allTileCoords == null)
+        {
+            _allTileCoords = new List<Coord>();
+        }
+
         ShuffleCoords();
 
-        int width = (int)_mapSettings.MapSize.x;
-        int height = (int)_mapSettings.MapSize.y;
+        int width = (int)_currentMap.MapSize.x;
+        int height = (int)_currentMap.MapSize.y;
         TileType[,] map = new TileType[width, height];
+
+        if (_mapFlags == null || _currentMap.MapSize != _lastMapSize)
+        {
+            _mapFlags = new bool[width, height];
+            _accessibleQueue = new Queue<Coord>();
+        }
+
 
         for (int x = 0; x < width; x++)
         {
@@ -55,29 +90,32 @@ public class MapGenerator : MonoBehaviour
 
         PlaceObstacles(map);
 
-        return new LevelMapData(map, _mapSettings.MapSize, _mapSettings.MapCenter);
+        _lastMapSize = _currentMap.MapSize;
+
+        return new LevelMapData(map, _currentMap.MapSize, _currentMap.MapCenter);
     }
 
     private bool MapIsFullyAccessible(TileType[,] map, int currentObstacleCount)
     {
-        int targetAccessibleTileCount = (int)(_mapSettings.TotalTiles - currentObstacleCount);
-        int accessibleTileCount = GetAccessibleTileCount(map, _mapSettings.MapCenter);
+        int targetAccessibleTileCount = (int)(_currentMap.TotalTiles - currentObstacleCount);
+        int accessibleTileCount = GetAccessibleTileCount(map, _currentMap.MapCenter);
 
         return targetAccessibleTileCount == accessibleTileCount;
     }
 
     private int GetAccessibleTileCount(TileType[,] map, Coord startCoord)
     {
-        bool[,] mapFlags = new bool[map.GetLength(0), map.GetLength(1)];
-        Queue<Coord> queue = new Queue<Coord>();
-        queue.Enqueue(_mapSettings.MapCenter);
-        mapFlags[_mapSettings.MapCenter.x, _mapSettings.MapCenter.y] = true;
+        System.Array.Clear(_mapFlags, 0, _mapFlags.Length);
+
+        _accessibleQueue.Clear();
+        _accessibleQueue.Enqueue(_currentMap.MapCenter);
+        _mapFlags[_currentMap.MapCenter.x, _currentMap.MapCenter.y] = true;
 
         int accessibleTileCount = 1;
 
-        while (queue.Count > 0)
+        while (_accessibleQueue.Count > 0)
         {
-            Coord tile = queue.Dequeue();
+            Coord tile = _accessibleQueue.Dequeue();
 
             for (int x = -1; x <= 1; x++)
             {
@@ -91,10 +129,10 @@ public class MapGenerator : MonoBehaviour
                         if (neighbourX >= 0 && neighbourX < map.GetLength(0) &&
                             neighbourY >= 0 && neighbourY < map.GetLength(1))
                         {
-                            if (!mapFlags[neighbourX, neighbourY] && !(map[neighbourX, neighbourY] == TileType.Obstacle))
+                            if (!_mapFlags[neighbourX, neighbourY] && !(map[neighbourX, neighbourY] == TileType.Obstacle))
                             {
-                                mapFlags[neighbourX, neighbourY] = true;
-                                queue.Enqueue(new Coord(neighbourX, neighbourY));
+                                _mapFlags[neighbourX, neighbourY] = true;
+                                _accessibleQueue.Enqueue(new Coord(neighbourX, neighbourY));
                                 accessibleTileCount++;
                             }
                         }
@@ -110,15 +148,14 @@ public class MapGenerator : MonoBehaviour
     {
         int currentObstacleCount = 0;
 
-        for (int i = 0; i < _mapSettings.TargetObstacleCount; i++)
+        for (int i = 0; i < _currentMap.TargetObstacleCount; i++)
         {
             Coord randomCoord = GetRandomCoord();
 
             map[randomCoord.x, randomCoord.y] = TileType.Obstacle;
             currentObstacleCount++;
 
-            if (randomCoord != _mapSettings.MapCenter && MapIsFullyAccessible(map, currentObstacleCount)) { }
-            else
+            if (randomCoord == _currentMap.MapCenter || !MapIsFullyAccessible(map, currentObstacleCount)) 
             {
                 map[randomCoord.x, randomCoord.y] = TileType.Floor;
                 currentObstacleCount--;
@@ -128,17 +165,23 @@ public class MapGenerator : MonoBehaviour
 
     private void ShuffleCoords()
     {
-        _allTileCoords = new List<Coord>();
+        int width = (int)_currentMap.MapSize.x;
+        int height = (int)_currentMap.MapSize.y;
 
-        for (int x = 0; x < _mapSettings.MapSize.x; x++)
+        if (_currentMap.MapSize != _lastMapSize || _allTileCoords.Count == 0)
         {
-            for (int y = 0; y < _mapSettings.MapSize.y; y++)
+            _allTileCoords.Clear();
+
+            for (int x = 0; x < width; x++)
             {
-                _allTileCoords.Add(new Coord(x, y));
+                for (int y = 0; y < height; y++)
+                {
+                    _allTileCoords.Add(new Coord(x, y));
+                }
             }
         }
 
-        _shuffledTileCoords = new Queue<Coord>(Utility.ShuffleArray(_allTileCoords.ToArray(), _mapSettings.Seed));
+        _shuffledTileCoords = new Queue<Coord>(Utility.ShuffleArray(_allTileCoords.ToArray(), _currentMap.Seed));
     }
 
     private Coord GetRandomCoord()

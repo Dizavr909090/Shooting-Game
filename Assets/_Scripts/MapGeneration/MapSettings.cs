@@ -6,26 +6,9 @@ using static Utility;
 public class MapSettings : ScriptableObject
 {
     [SerializeField] private List<TilePrefabConfig> _tileConfigs;
+    [SerializeField] private MapConfig[] _maps;
 
-    [SerializeField] private Vector2 _mapSize;
-    [SerializeField] private int _seed = 10;
-    [SerializeField] private float _tileSize = 1f;
-
-
-    [SerializeField, Range(0, 1)] 
-    private float _outlinePercent;
-
-    [SerializeField, Range(0, 1)] 
-    private float _obstaclePercent;
-
-    public Vector2 MapSize => _mapSize;
-    public int Seed => _seed;
-    public float TileSize => _tileSize;
-    public float OutlinePercent => _outlinePercent;
-    public float ObstaclePercent => _obstaclePercent;
-    public int TotalTiles => (int)(MapSize.x * MapSize.y);
-    public int TargetObstacleCount => (int)(TotalTiles * ObstaclePercent);
-    public Coord MapCenter => new Coord((int)MapSize.x / 2, (int)MapSize.y / 2);
+    public MapConfig[] Maps => _maps;
 
     public GameObject GetPrefabByType(TileType type)
     {
@@ -35,9 +18,41 @@ public class MapSettings : ScriptableObject
         }
         return null;
     }
+
+    [System.Serializable]
+    public struct MapConfig
+    {
+        [SerializeField] private Vector2 _mapSize;
+        [SerializeField] private int _seed;
+        [SerializeField] private float _tileSize;
+        [SerializeField] private float _minObstacleHeight;
+        [SerializeField] private float _maxObstacleHeight;
+        [SerializeField] private Color _foregroundColour;
+        [SerializeField] private Color _backgroundColour;
+
+        [SerializeField, Range(0, 1)]
+        private float _outlinePercent;
+
+        [SerializeField, Range(0, 1)]
+        private float _obstaclePercent;
+
+        public Vector2 MapSize => _mapSize;
+        public int Seed => _seed;
+        public float TileSize => _tileSize;
+        public float OutlinePercent => _outlinePercent;
+        public float ObstaclePercent => _obstaclePercent;
+        public int TotalTiles => (int)(MapSize.x * MapSize.y);
+        public int TargetObstacleCount => (int)(TotalTiles * ObstaclePercent);
+        public Coord MapCenter => new Coord((int)MapSize.x / 2, (int)MapSize.y / 2);
+        public float MinObstacleHeight => _minObstacleHeight;
+        public float MaxObstacleHeight => _maxObstacleHeight;
+        public Color ForegroundColour => _foregroundColour;
+        public Color BackgroundColour => _backgroundColour;
+    }
 }
 
 public enum TileType { Floor, Obstacle }
+
 
 public struct LevelMapData
 {
