@@ -21,6 +21,7 @@ public class MapGenerator : MonoBehaviour
     private Queue<Coord> _accessibleQueue;
     private List<Coord> _allTileCoords;
     private Queue<Coord> _shuffledTileCoords;
+    private Queue<Coord> _shuffledOpenCoords;
 
     public MapSettings MapSettings => _mapSettings;
     private MapSpawner Spawner
@@ -45,6 +46,28 @@ public class MapGenerator : MonoBehaviour
         GenerateMap();
     }
 
+    public Transform GetTileFromPosition(Vector3 position)
+    {
+        int x = Mathf.RoundToInt(position.x / _currentMap.TileSize + (_currentMap.MapSize.x - 1) / 2f);
+        int y = Mathf.RoundToInt(position.z / _currentMap.TileSize + (_currentMap.MapSize.y - 1) / 2f);
+        x = Mathf.Clamp(x, 0, (int)_currentMap.MapSize.x - 1);
+        y = Mathf.Clamp(y, 0, (int)_currentMap.MapSize.y - 1);
+
+        return Spawner.GetTileAt(x, y);
+    }
+
+    public Vector3 PositionFromCoord(Coord coord)
+    {
+        return Utility.CoordToPosition(_currentMap.MapSize, coord.x, coord.y, _currentMap.TileSize);
+    }
+
+    public Coord GetRandomOpenTile()
+    {
+        Coord randomCoord = _shuffledOpenCoords.Dequeue();
+        _shuffledOpenCoords.Enqueue(randomCoord);
+        return randomCoord;
+    }
+
     public void GenerateMap()
     {
         Transform mapHolder = Spawner.CreateMapHolder(_holderName, transform);
@@ -58,6 +81,8 @@ public class MapGenerator : MonoBehaviour
         NavMeshSurface.RemoveData();
 
         Spawner.SpawnMap(mapData, _mapSettings, _currentMap, mapHolder);
+
+        ShuffleOpenCoords(mapData);
 
         NavMeshSurface.BuildNavMesh();
     }
@@ -186,6 +211,11 @@ public class MapGenerator : MonoBehaviour
         }
 
         _shuffledTileCoords = new Queue<Coord>(Utility.ShuffleArray(_allTileCoords.ToArray(), _currentMap.Seed));
+    }
+
+    private void ShuffleOpenCoords(LevelMapData mapData)
+    {
+        _shuffledOpenCoords = new Queue<Coord>(ShuffleArray(mapData.GetOpenCoords().ToArray(), _currentMap.Seed));
     }
 
     private Coord GetRandomCoord()

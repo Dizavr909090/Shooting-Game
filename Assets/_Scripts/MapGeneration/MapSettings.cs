@@ -53,7 +53,6 @@ public class MapSettings : ScriptableObject
 
 public enum TileType { Floor, Obstacle }
 
-
 public struct LevelMapData
 {
     public TileType[,] tileMap;
@@ -66,6 +65,23 @@ public struct LevelMapData
         tileMap = TileMap;
         mapSize = MapSize;
         mapCenter = MapCenter;
+    }
+
+    public List<Coord> GetOpenCoords()
+    {
+        List<Coord> coords = new List<Coord>();
+
+        for (int x = 0; x < tileMap.GetLength(0); x++) 
+        {
+            for (int y = 0; y < tileMap.GetLength(1); y++)
+            {
+                if (tileMap[x, y] == TileType.Floor)
+                {
+                    coords.Add(new Coord(x, y));
+                }
+            }
+        }
+        return coords;
     }
 }
 

@@ -1,11 +1,20 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private Wave[] _waves;
     [SerializeField] private Enemy _enemyPrefab;
+    [SerializeField] private float _spawnDelay = 1f;
+    [SerializeField] private float _tileFlashSpeed = 4f;
+    [SerializeField] private float _campThresholdDistance = 1.5f;
+    [SerializeField] private float _timeBetweenCampingChecks = 2;
 
+
+    private Entity _playerEntity;
+    private Transform _playerTransform;
+    private MapGenerator _mapGenerator;
     private ITargetable _target;
 
     private Wave _currentWave;
@@ -14,19 +23,54 @@ public class Spawner : MonoBehaviour
     private int _enemiesRemainingToSpawn;
     private int _enemiesRemainingAlive;
     private float _nextSpawnTime;
+    private bool _isDisabled;
+    private float _nextCampCheckTime;
+    private Vector3 _campPositionOld;
+    private bool _isCamping;
 
     private void Start()
     {
-        var player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null) _target = player.GetComponent<ITargetable>();
+        InitializePlayer();
 
         NextWave();
     }
 
     private void Update()
     {
-        SpawnEnemy();
-        
+        if (!_isDisabled)
+        {
+            CampingCheck();
+            SpawnEnemy();
+        }
+    }
+
+    private IEnumerator SpawnEnemySequence(Utility.Coord spawnCoord)
+    {
+        Vector3 spawnPosition = _mapGenerator.PositionFromCoord(spawnCoord);
+        Transform tileTransform = _mapGenerator.GetTileFromPosition(spawnPosition);
+
+        Renderer tileRenderer = tileTransform.GetComponent<Renderer>();
+        Material tileMat = tileRenderer.material;
+
+        Color initialColour = tileMat.color;
+        Color flashColour = Color.red;
+        float spawnTimer = 0;
+
+        while (spawnTimer < _spawnDelay)
+        {
+            tileMat.color = Color.Lerp(initialColour, flashColour, Mathf.PingPong(spawnTimer * _tileFlashSpeed, 1));
+            spawnTimer += Time.deltaTime;
+            yield return null;
+        }
+
+        tileMat.color = initialColour;
+
+        Enemy spawnedEnemy = Instantiate(_enemyPrefab, spawnPosition + Vector3.up, Quaternion.identity);
+
+        if (_target != null)
+            spawnedEnemy.SetTarget(_target);
+
+        spawnedEnemy.OnDeath += OnEnemyDeath;
     }
 
     private void SpawnEnemy()
@@ -36,11 +80,19 @@ public class Spawner : MonoBehaviour
             _enemiesRemainingToSpawn--;
             _nextSpawnTime = Time.time + _currentWave._timeBetweenSpawns;
 
-            Enemy spawnedEnemy = Instantiate(_enemyPrefab, transform.position, Quaternion.identity);
-            if (_target != null)
-                spawnedEnemy.SetTarget(_target);
-            
-            spawnedEnemy.OnDeath += OnEnemyDeath;
+            if (_mapGenerator == null) _mapGenerator = FindFirstObjectByType<MapGenerator>();
+
+            Utility.Coord spawnCoord = _mapGenerator.GetRandomOpenTile();
+
+            if (_isCamping)
+            {
+                var currentMap = _mapGenerator.MapSettings.Maps[0];
+                spawnCoord = Utility.WorldPositionToCoord(_playerTransform.position, currentMap.MapSize, currentMap.TileSize);
+
+                Debug.DrawLine(_playerTransform.position, _mapGenerator.PositionFromCoord(spawnCoord), Color.green, 2f);
+            }
+
+            StartCoroutine(SpawnEnemySequence(spawnCoord));
         }
     }
 
@@ -67,6 +119,34 @@ public class Spawner : MonoBehaviour
         {
             NextWave();
         }
+    }
+
+    private void CampingCheck()
+    {
+        if (Time.time > _nextCampCheckTime)
+        {
+            _nextCampCheckTime = Time.time + _timeBetweenCampingChecks;
+
+            _isCamping = (Vector3.Distance(_playerTransform.position, _campPositionOld) < _campThresholdDistance);
+            _campPositionOld = _playerTransform.position;
+        }
+    }
+
+    private void InitializePlayer()
+    {
+        _playerEntity = FindFirstObjectByType<PlayerHealth>();
+        if (_playerEntity != null) _target = _playerEntity.GetComponent<ITargetable>();
+        _playerTransform = _playerEntity.transform;
+
+        _nextCampCheckTime = _timeBetweenCampingChecks + Time.time;
+        _campPositionOld = _playerTransform.position;
+
+        _playerEntity.OnDeath += OnPlayerDeath;
+    }
+
+    private void OnPlayerDeath(Entity entity)
+    {
+        _isDisabled = true;
     }
 
     [Serializable]

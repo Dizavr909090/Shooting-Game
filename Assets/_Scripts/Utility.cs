@@ -28,6 +28,17 @@ public static class Utility
         return new Vector3(-size.x / 2 + 0.5f + x, 0, -size.y / 2 + 0.5f + y);
     }
 
+    public static Coord WorldPositionToCoord(Vector3 worldPos, Vector2 mapSize, float tileSize)
+    {
+        int x = Mathf.RoundToInt(worldPos.x / tileSize + (mapSize.x - 1) / 2f);
+        int y = Mathf.RoundToInt(worldPos.z / tileSize + (mapSize.y - 1) / 2f);
+
+        x = Mathf.Clamp(x, 0, (int)mapSize.x - 1);
+        y = Mathf.Clamp(y, 0, (int)mapSize.y - 1);
+
+        return new Coord(x, y);
+    }
+
     public struct Coord : IEquatable<Coord>
     {
         public int x;

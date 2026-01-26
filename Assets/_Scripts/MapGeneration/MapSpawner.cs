@@ -4,10 +4,19 @@ using static MapSettings;
 
 public class MapSpawner : MonoBehaviour
 {
+    private Transform[,] _tileMap;
+
+    public Transform GetTileAt(int x, int y)
+    {
+        return _tileMap[x, y];
+    }
+
     public void SpawnMap(LevelMapData mapData, MapSettings settings, MapConfig currentMap, Transform holder)
     {
         System.Random prng = new System.Random(currentMap.Seed);
         GameObject floorPrefab = settings.GetPrefabByType(TileType.Floor);
+
+        _tileMap = new Transform[mapData.tileMap.GetLength(0), mapData.tileMap.GetLength(1)];
 
         for (int x = 0; x < mapData.tileMap.GetLength(0); x++)
         {
@@ -19,7 +28,7 @@ public class MapSpawner : MonoBehaviour
 
                 if (floorPrefab != null)
                 {
-                    CreateObject(floorPrefab, pos, Quaternion.Euler(Vector3.right * 90), currentMap.OutlinePercent, currentMap.TileSize, holder);
+                    _tileMap[x,y] = CreateObject(floorPrefab, pos, Quaternion.Euler(Vector3.right * 90), currentMap.OutlinePercent, currentMap.TileSize, holder);
                 }
 
                 if (currentType != TileType.Floor)
@@ -47,7 +56,7 @@ public class MapSpawner : MonoBehaviour
         }
     }
 
-    private void CreateObject(GameObject prefab, Vector3 pos, Quaternion rotation, float outline, float tileSize, Transform holder, VisualModifiers? mods = null)
+    private Transform CreateObject(GameObject prefab, Vector3 pos, Quaternion rotation, float outline, float tileSize, Transform holder, VisualModifiers? mods = null)
     {
         GameObject gameObject = Instantiate(prefab, pos, rotation);
         gameObject.transform.parent = holder;
@@ -77,6 +86,8 @@ public class MapSpawner : MonoBehaviour
         }
 
         gameObject.transform.localScale = scale;
+
+        return gameObject.transform; 
     }
 
     public Transform CreateMapHolder(string name, Transform parent)
