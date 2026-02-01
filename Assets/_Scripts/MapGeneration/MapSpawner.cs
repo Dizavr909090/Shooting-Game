@@ -24,7 +24,7 @@ public class MapSpawner : MonoBehaviour
             {
                 TileType currentType = mapData.tileMap[x, y];
 
-                Vector3 pos = Utility.CoordToPosition(mapData.mapSize, x, y, currentMap.TileSize);
+                Vector3 pos = mapData.grid.CoordToWorld(new Coord(x, y));
 
                 if (floorPrefab != null)
                 {

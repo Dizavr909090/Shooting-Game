@@ -11,10 +11,11 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float _campThresholdDistance = 1.5f;
     [SerializeField] private float _timeBetweenCampingChecks = 2;
 
-
+    private MapSpawner _mapVisualizer;
+    private LevelMapData _mapData;
+    private bool _hasMapData;
     private Entity _playerEntity;
     private Transform _playerTransform;
-    private MapGenerator _mapGenerator;
     private ITargetable _target;
 
     private Wave _currentWave;
@@ -44,10 +45,18 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private IEnumerator SpawnEnemySequence(Utility.Coord spawnCoord)
+    public void OnMapGenerated(LevelMapData data)
     {
-        Vector3 spawnPosition = _mapGenerator.PositionFromCoord(spawnCoord);
-        Transform tileTransform = _mapGenerator.GetTileFromPosition(spawnPosition);
+        _mapData = data;
+        _hasMapData = true;
+    }
+
+    private IEnumerator SpawnEnemySequence(Coord spawnCoord)
+    {
+        Vector3 spawnPosition = _mapData.grid.CoordToWorld(spawnCoord);
+
+        if (_mapVisualizer == null) _mapVisualizer = FindFirstObjectByType<MapSpawner>();
+        Transform tileTransform = _mapVisualizer.GetTileAt(spawnCoord.x, spawnCoord.y);
 
         Renderer tileRenderer = tileTransform.GetComponent<Renderer>();
         Material tileMat = tileRenderer.material;
@@ -75,21 +84,18 @@ public class Spawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
+        if (!_hasMapData) return;
+
         if (_enemiesRemainingToSpawn > 0 && Time.time > _nextSpawnTime)
         {
             _enemiesRemainingToSpawn--;
             _nextSpawnTime = Time.time + _currentWave._timeBetweenSpawns;
 
-            if (_mapGenerator == null) _mapGenerator = FindFirstObjectByType<MapGenerator>();
-
-            Utility.Coord spawnCoord = _mapGenerator.GetRandomOpenTile();
+            Coord spawnCoord = _mapData.GetRandomOpenTile();
 
             if (_isCamping)
             {
-                var currentMap = _mapGenerator.MapSettings.Maps[0];
-                spawnCoord = Utility.WorldPositionToCoord(_playerTransform.position, currentMap.MapSize, currentMap.TileSize);
-
-                Debug.DrawLine(_playerTransform.position, _mapGenerator.PositionFromCoord(spawnCoord), Color.green, 2f);
+                spawnCoord = _mapData.grid.WorldToCoord(_playerTransform.position);
             }
 
             StartCoroutine(SpawnEnemySequence(spawnCoord));

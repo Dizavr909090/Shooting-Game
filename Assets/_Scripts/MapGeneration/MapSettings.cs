@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static Utility;
 
 [CreateAssetMenu(fileName = "MapSettings", menuName = "Scriptable Objects/MapSettings")]
 public class MapSettings : ScriptableObject
@@ -56,32 +55,33 @@ public enum TileType { Floor, Obstacle }
 public struct LevelMapData
 {
     public TileType[,] tileMap;
-
     public Vector2 mapSize;
-    public Coord mapCenter;
+    public MapGrid grid;
+    private Queue<Coord> _shuffledOpenCoords;
 
-    public LevelMapData(TileType[,] TileMap, Vector2 MapSize, Coord MapCenter)
+    public LevelMapData(TileType[,] TileMap, Vector2 MapSize, float tileSize, int seed, MapGrid Grid)
     {
         tileMap = TileMap;
         mapSize = MapSize;
-        mapCenter = MapCenter;
-    }
+        grid = Grid;
 
-    public List<Coord> GetOpenCoords()
-    {
-        List<Coord> coords = new List<Coord>();
-
-        for (int x = 0; x < tileMap.GetLength(0); x++) 
+        // Сразу вычисляем свободные клетки при создании данных
+        List<Coord> openCoords = new List<Coord>();
+        for (int x = 0; x < tileMap.GetLength(0); x++)
         {
             for (int y = 0; y < tileMap.GetLength(1); y++)
             {
-                if (tileMap[x, y] == TileType.Floor)
-                {
-                    coords.Add(new Coord(x, y));
-                }
+                if (tileMap[x, y] == TileType.Floor) openCoords.Add(new Coord(x, y));
             }
         }
-        return coords;
+        _shuffledOpenCoords = new Queue<Coord>(Utility.ShuffleArray(openCoords.ToArray(), seed));
+    }
+
+    public Coord GetRandomOpenTile()
+    {
+        Coord coord = _shuffledOpenCoords.Dequeue();
+        _shuffledOpenCoords.Enqueue(coord);
+        return coord;
     }
 }
 

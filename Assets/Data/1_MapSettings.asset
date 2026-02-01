@@ -18,11 +18,11 @@ MonoBehaviour:
   - type: 1
     prefab: {fileID: 3283489982738744153, guid: ed915bebc453f784ca5c1162e8b2aac4, type: 3}
   _maps:
-  - _mapSize: {x: 10, y: 10}
-    _seed: 1
+  - _mapSize: {x: 15, y: 15}
+    _seed: 18
     _tileSize: 2
     _minObstacleHeight: 1
-    _maxObstacleHeight: 2.26
+    _maxObstacleHeight: 2
     _foregroundColour: {r: 0.26383942, g: 0.2729692, b: 0.7264151, a: 0}
     _backgroundColour: {r: 0.4528302, g: 0, b: 0.4422444, a: 0}
     _outlinePercent: 0.02
@@ -36,7 +36,7 @@ MonoBehaviour:
     _backgroundColour: {r: 0.754717, g: 0.26699895, b: 0.28661975, a: 0}
     _outlinePercent: 0.01
     _obstaclePercent: 0.36
-  - _mapSize: {x: 20, y: 20}
+  - _mapSize: {x: 30, y: 30}
     _seed: 3
     _tileSize: 2
     _minObstacleHeight: 1
