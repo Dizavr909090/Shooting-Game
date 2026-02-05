@@ -9,43 +9,33 @@ public class Spawner : MonoBehaviour
     [SerializeField] private Enemy _enemyPrefab;
     [SerializeField] private float _spawnDelay = 1f;
     [SerializeField] private float _tileFlashSpeed = 4f;
-    [SerializeField] private float _campThresholdDistance = 1.5f;
-    [SerializeField] private float _timeBetweenCampingChecks = 2;
     [SerializeField] private MapSpawner _mapSpawner;
 
+    private ICampingProvider _campingProvider;
     private LevelMapData _mapData;
     private bool _hasMapData;
-    private Entity _playerEntity;
-    private Transform _playerTransform;
     private ITargetable _target;
-
-    private float _nextCampCheckTime;
-    private Vector3 _campPositionOld;
-    private bool _isCamping;
 
     private bool _isDisabled;
 
     private void Start()
     {
-        InitializePlayer();
-
         if (_mapSpawner == null) _mapSpawner = FindFirstObjectByType<MapSpawner>();
     }
 
-    private void Update()
+    public void Disable() => _isDisabled = true;
+
+    public void Initialize(ICampingProvider campingProvider, ITargetable target)
     {
-        if (!_isDisabled)
-        {
-            CampingCheck();
-        }
+        _campingProvider = campingProvider;
+        _target = target;
     }
+
 
     public void OnMapGenerated(LevelMapData data)
     {
         _mapData = data;
         _hasMapData = true;
-
-        ResetPlayerPosition();
     }
 
     private IEnumerator SpawnEnemySequence(Coord spawnCoord)
@@ -80,14 +70,18 @@ public class Spawner : MonoBehaviour
 
     public void SpawnEnemy()
     {
-        if (!_hasMapData) return;
+        if (_isDisabled || !_hasMapData) return;
+
+        if (_campingProvider == null) return;
 
         Coord spawnCoord = _mapData.GetRandomOpenTile();
 
-        if (_isCamping)
+        if (_campingProvider != null && _campingProvider.IsCamping)
         {
-            spawnCoord = _mapData.grid.WorldToCoord(_playerTransform.position);
+            spawnCoord = _mapData.grid.WorldToCoord(_target.Transform.position);
         }
+
+        if (_campingProvider == null) Debug.LogWarning("Spawner: CampingProvider is missing! Camping check disabled.");
 
         StartCoroutine(SpawnEnemySequence(spawnCoord));
     }
@@ -97,44 +91,5 @@ public class Spawner : MonoBehaviour
         entity.OnDeath -= OnEnemyDeath;
 
         EnemyDeath?.Invoke();
-    }
-
-    private void CampingCheck()
-    {
-        if (Time.time > _nextCampCheckTime)
-        {
-            _nextCampCheckTime = Time.time + _timeBetweenCampingChecks;
-
-            _isCamping = (Vector3.Distance(_playerTransform.position, _campPositionOld) < _campThresholdDistance);
-            _campPositionOld = _playerTransform.position;
-        }
-    }
-
-    private void InitializePlayer()
-    {
-        _playerEntity = FindFirstObjectByType<PlayerHealth>();
-        if (_playerEntity != null) _target = _playerEntity.GetComponent<ITargetable>();
-        _playerTransform = _playerEntity.transform;
-
-        _nextCampCheckTime = _timeBetweenCampingChecks + Time.time;
-        _campPositionOld = _playerTransform.position;
-
-        _playerEntity.OnDeath += OnPlayerDeath;
-    }
-
-    private void OnPlayerDeath(Entity entity)
-    {
-        _isDisabled = true;
-    }
-
-    private void ResetPlayerPosition()
-    {
-        if (!_hasMapData) return;
-
-        Coord centerCoord = _mapData.center;
-
-        Vector3 centerWorldPos = _mapData.grid.CoordToWorld(centerCoord);
-
-        _playerTransform.position = centerWorldPos + Vector3.up * 3f;
     }
 }
