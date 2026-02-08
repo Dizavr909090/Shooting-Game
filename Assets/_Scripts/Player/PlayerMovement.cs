@@ -44,6 +44,20 @@ public class PlayerMovement : MonoBehaviour
         HandleMovement();
     }
 
+    public void Teleport(Vector3 targetPosition)
+    {
+        _currentVelocity = Vector3.zero;
+        _smoothDampVelocity = Vector3.zero;
+
+        _myRb.linearVelocity = Vector3.zero;
+        _myRb.angularVelocity = Vector3.zero;
+
+        _myRb.position = targetPosition;
+        transform.position = targetPosition;
+
+        _myRb.interpolation = RigidbodyInterpolation.None;
+    }
+
     private void HandeInput(Vector2 input)
     {
         _rawInputVector = input;

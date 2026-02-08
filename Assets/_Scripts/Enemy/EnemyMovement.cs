@@ -65,7 +65,11 @@ public class EnemyMovement : MonoBehaviour
             StopCoroutine(_pathCoroutine);
             _pathCoroutine = null;
         }
-        _agent.ResetPath();
+
+        if(_agent != null && _agent.isOnNavMesh)
+        {
+            _agent.ResetPath();
+        }
     }
 
     public void UpdateTarget(ITargetable newTarget)

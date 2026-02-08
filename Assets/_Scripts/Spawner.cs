@@ -2,15 +2,16 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(SpawnVisualizer))]
 public class Spawner : MonoBehaviour
 {
     public event Action EnemyDeath;
 
     [SerializeField] private Enemy _enemyPrefab;
     [SerializeField] private float _spawnDelay = 1f;
-    [SerializeField] private float _tileFlashSpeed = 4f;
-    [SerializeField] private MapSpawner _mapSpawner;
 
+    private MapSpawner _mapSpawner;
+    private SpawnVisualizer _spawnViisualizer;
     private ICampingProvider _campingProvider;
     private LevelMapData _mapData;
     private bool _hasMapData;
@@ -20,15 +21,20 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        if (_mapSpawner == null) _mapSpawner = FindFirstObjectByType<MapSpawner>();
+        if (_mapSpawner == null)
+            _mapSpawner = GetComponent<MapSpawner>();
+
+        if (_spawnViisualizer == null)
+            _spawnViisualizer = GetComponent<SpawnVisualizer>();
     }
 
     public void Disable() => _isDisabled = true;
 
-    public void Initialize(ICampingProvider campingProvider, ITargetable target)
+    public void Initialize(ICampingProvider campingProvider, ITargetable target, MapSpawner mapSpawner)
     {
         _campingProvider = campingProvider;
         _target = target;
+        _mapSpawner = mapSpawner;
     }
 
 
@@ -40,25 +46,10 @@ public class Spawner : MonoBehaviour
 
     private IEnumerator SpawnEnemySequence(Coord spawnCoord)
     {
+        var renderer = _mapSpawner.GetTileAt(spawnCoord.x, spawnCoord.y).GetComponent<Renderer>();
+        yield return _spawnViisualizer.StartBlink(renderer, _spawnDelay);
+
         Vector3 spawnPosition = _mapData.grid.CoordToWorld(spawnCoord);
- 
-        Transform tileTransform = _mapSpawner.GetTileAt(spawnCoord.x, spawnCoord.y);
-
-        Renderer tileRenderer = tileTransform.GetComponent<Renderer>();
-        Material tileMat = tileRenderer.material;
-
-        Color initialColour = tileMat.color;
-        Color flashColour = Color.red;
-        float spawnTimer = 0;
-
-        while (spawnTimer < _spawnDelay)
-        {
-            tileMat.color = Color.Lerp(initialColour, flashColour, Mathf.PingPong(spawnTimer * _tileFlashSpeed, 1));
-            spawnTimer += Time.deltaTime;
-            yield return null;
-        }
-
-        tileMat.color = initialColour;
 
         Enemy spawnedEnemy = Instantiate(_enemyPrefab, spawnPosition + Vector3.up, Quaternion.identity);
 
@@ -71,8 +62,6 @@ public class Spawner : MonoBehaviour
     public void SpawnEnemy()
     {
         if (_isDisabled || !_hasMapData) return;
-
-        if (_campingProvider == null) return;
 
         Coord spawnCoord = _mapData.GetRandomOpenTile();
 

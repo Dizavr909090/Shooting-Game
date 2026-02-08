@@ -7,18 +7,29 @@ public class LevelInitializer : MonoBehaviour
     [SerializeField] private WaveGenerator _waveGenerator;
     [SerializeField] private WaveSequencer _waveSequencer;
     [SerializeField] private PlayerTracker _playerTracker;
+    [SerializeField] private MapSpawner _mapSpawner;
 
     private void Awake()
     {
         Entity player = FindFirstObjectByType<PlayerHealth>();
+        Debug.Log($"[LevelInit] Player found: {player != null}, Tracker linked: {_playerTracker != null}");
         _playerTracker.InitializePlayer(player);
-        _enemySpawner.Initialize(_playerTracker, player);
+        _enemySpawner.Initialize(_playerTracker, player, _mapSpawner);
 
         _mapGenerator.MapGenerated += _enemySpawner.OnMapGenerated;
 
         _mapGenerator.MapGenerated += (data) => {
             Vector3 centerPos = data.grid.CoordToWorld(data.center);
-            player.transform.position = centerPos + Vector3.up * 3f;
+
+            PlayerMovement movement = player.GetComponent<PlayerMovement>();
+            if (movement != null)
+            {
+                movement.Teleport(centerPos);
+            }
+            else
+            {
+                player.transform.position = centerPos;
+            }
         };
 
         _waveSequencer.NewWave += OnNewWaveRequested;
@@ -26,11 +37,6 @@ public class LevelInitializer : MonoBehaviour
         _enemySpawner.EnemyDeath += _waveSequencer.RecordEnemyDeath;
 
         player.OnDeath += (e) => _enemySpawner.Disable();
-    }
-
-    private void Start()
-    {
-        
     }
 
     private void OnNewWaveRequested(int waveNumber)
