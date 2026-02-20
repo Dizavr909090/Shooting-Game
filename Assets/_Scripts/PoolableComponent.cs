@@ -1,9 +1,4 @@
-using UnityEngine;
-
-public class PoolableComponent : MonoBehaviour
+public interface IPoolableComponent
 {
-    public virtual void Reset()
-    {
-
-    }
+    void Reset();
 }

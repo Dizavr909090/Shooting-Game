@@ -1,6 +1,7 @@
-public class EnemyPoolable : PoolableComponent
+using UnityEngine;
+
+public class EnemyPoolableComponent : MonoBehaviour, IPoolableComponent
 {
-    private Enemy _enemy;
     private HealthComponent _health;
     private EnemyMovement _movement;
     private EnemyAttack _attack;
@@ -11,7 +12,7 @@ public class EnemyPoolable : PoolableComponent
         GetComponents();
     }
 
-    public override void Reset()
+    public void Reset()
     {
         _health.ResetHealth();
 
@@ -22,7 +23,6 @@ public class EnemyPoolable : PoolableComponent
 
     private void GetComponents()
     {
-        _enemy = GetComponent<Enemy>();
         _health = GetComponent<HealthComponent>();
         _movement = GetComponent<EnemyMovement>();
         _attack = GetComponent<EnemyAttack>();

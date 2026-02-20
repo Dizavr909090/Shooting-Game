@@ -7,8 +7,10 @@ public class EnemyAttack : MonoBehaviour
     public event Action OnAttackStarted;
     public event Action OnAttackFinished;
 
+
     private ITargetable _target;
     private EnemyStats _stats;
+    private Coroutine _attackCoroutine;
 
     public bool IsAttacking { get; private set; }
 
@@ -31,12 +33,18 @@ public class EnemyAttack : MonoBehaviour
 
     public void PerformAttack()
     {
-        StartCoroutine(AttackRoutine());
+        if (_attackCoroutine != null) StopCoroutine(_attackCoroutine);
+        _attackCoroutine = StartCoroutine(AttackRoutine());
     }
 
     public void ResetAttack()
     {
-        StopAllCoroutines();
+        if (_attackCoroutine != null)
+        {
+            StopCoroutine(_attackCoroutine);
+            _attackCoroutine = null;
+        }
+    
         _target = null;
         IsAttacking = false;
     }

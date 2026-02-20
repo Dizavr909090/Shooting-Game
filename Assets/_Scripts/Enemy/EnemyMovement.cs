@@ -18,11 +18,6 @@ public class EnemyMovement : MonoBehaviour
 
     private bool _hasTarget;
 
-    private void Awake()
-    {
-        _myCollisionRadius = GetComponent<CapsuleCollider>().radius;
-    }
-
     public float DistanceToTarget
     {
         get
@@ -32,6 +27,11 @@ public class EnemyMovement : MonoBehaviour
             float distance = Vector3.Distance(transform.position, _target.Transform.position);
             return distance - (_myCollisionRadius + _targetCollisionRadius);
         }
+    }
+
+    private void Awake()
+    {
+        _myCollisionRadius = GetComponent<CapsuleCollider>().radius;
     }
 
     public void Initialize(ITargetable target, EnemyStats stats, NavMeshAgent agent )

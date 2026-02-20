@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerTracker : MonoBehaviour, ICampingProvider
 {
-    [SerializeField] private float _timeBetweenCampingChecks = 1f;
+    [SerializeField] private float _timeBetweenCampingChecks = 2f;
     [SerializeField] private float _campThresholdDistance = 1.5f;
 
     private ITargetable _playerTarget;
@@ -27,6 +27,7 @@ public class PlayerTracker : MonoBehaviour, ICampingProvider
     {
         _playerTarget = player;
         _oldPosition = _playerTarget.Transform.position;
+        _nextCheckTime = Time.time + _timeBetweenCampingChecks;
     }
 
     private void CampingCheck()

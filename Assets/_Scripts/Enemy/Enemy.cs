@@ -6,7 +6,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(EnemyAttack))]
 [RequireComponent(typeof(EnemyVisuals))]
 [RequireComponent(typeof(HealthComponent))]
-[RequireComponent(typeof(EnemyPoolable))]
+[RequireComponent(typeof(EnemyPoolableComponent))]
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyStats _stats;
@@ -17,14 +17,14 @@ public class Enemy : MonoBehaviour
     private EnemyVisuals _visuals;
 
     private HealthComponent _healthComponent;
-    private EnemyPoolable _poolableComponent;
+    private EnemyPoolableComponent _poolableComponent;
 
     private NavMeshAgent _agent;
 
     private ITargetable _target;
 
-    public HealthComponent Health { get; private set; }
-    public EnemyPoolable Poolable => _poolableComponent;
+    public HealthComponent Health => _healthComponent;
+    public EnemyPoolableComponent PoolableComponent => _poolableComponent;
 
     private void Awake()
     {
@@ -47,14 +47,14 @@ public class Enemy : MonoBehaviour
     public void TeleportTo(Vector3 position)
     {
         _agent.enabled = false;
+        float heightOffset = _agent.baseOffset;
+        position.y += heightOffset;
         transform.position = position;
         _agent.enabled = true;
     }
 
     public void SetTarget(ITargetable target)
     {
-        Debug.Log($"{name} SetTarget: {target}");
-
         if (target == null)
             Debug.LogError("NO target for SetTarget()");
 
@@ -73,6 +73,6 @@ public class Enemy : MonoBehaviour
         _stateMachine = GetComponent<EnemyStateMachine>();
 
         _healthComponent = GetComponent<HealthComponent>();
-        _poolableComponent = GetComponent<EnemyPoolable>();
+        _poolableComponent = GetComponent<EnemyPoolableComponent>();
     }
 }

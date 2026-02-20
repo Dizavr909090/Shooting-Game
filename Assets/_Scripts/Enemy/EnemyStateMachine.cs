@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EnemyStateMachine : MonoBehaviour
 {
-    [SerializeField] private float _timeBetweenChecks = .1f;
+    [SerializeField] private float _timeBetweenChecks = 0.1f;
     private EnemyMovement _movement;
     private EnemyAttack _attack;
     private EnemyStats _stats;
@@ -13,7 +13,7 @@ public class EnemyStateMachine : MonoBehaviour
     private Coroutine _stateUpdateCoroutine;
 
     public enum State { Idle, Chasing, Attacking, Dead };
-    private State _currentState;
+    [SerializeField] private State _currentState;
 
     public void Initialize(EnemyMovement movement, EnemyAttack attack, EnemyStats stats, IHealth selfHealth)
     {
@@ -65,7 +65,6 @@ public class EnemyStateMachine : MonoBehaviour
             case State.Attacking:
                 _movement.StopMoving();
                 _movement.SetKinematic(true);
-                _attack.PerformAttack();
                 break;
             case State.Dead:
                 _movement.StopMoving();
@@ -76,31 +75,28 @@ public class EnemyStateMachine : MonoBehaviour
 
     private void CheckStateTransition()
     {
-        if (_selfHealth .IsDead)
+        if (_selfHealth.IsDead)
         {
             ChangeState(State.Dead);
             return;
         }
 
-        if (_target == null)
+        if (_target == null || _target.IsDead)
         {
-            Debug.Log("NO target");
-            ChangeState(State.Idle);
-            return;
-        }
-
-        if (_target.IsDead)
-        {
-            Debug.Log("Target is dead");
+            Debug.Log("NO target or target is dead");
             ChangeState(State.Idle);
             return;
         }
 
         if (_attack.IsAttacking) return;
 
-        if (_movement.DistanceToTarget <= _stats.AttackDistanceThreshold)
+        if (_movement.DistanceToTarget <= _stats.AttackDistanceThreshold + _stats.AttackDistanceTolerance)
         {
-            ChangeState(State.Attacking);
+            if(_currentState != State.Attacking)
+                ChangeState(State.Attacking);
+
+            if (!_attack.IsAttacking)
+                _attack.PerformAttack();
         }
         else
         {
@@ -114,23 +110,8 @@ public class EnemyStateMachine : MonoBehaviour
 
         while (_selfHealth != null)
         {
-            if (_selfHealth.IsDead)
-            {
-                ChangeState(State.Dead);
-                yield break;
-            }
+            CheckStateTransition();
 
-            if (_target == null)
-            {
-                ChangeState(State.Idle);
-            }
-            else
-            {
-                CheckStateTransition();
-
-                if (_currentState == State.Attacking && !_attack.IsAttacking)
-                    _attack.PerformAttack();
-            }
             yield return new WaitForSeconds(_timeBetweenChecks);
         }
     }

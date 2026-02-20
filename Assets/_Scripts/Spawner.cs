@@ -1,16 +1,15 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Pool;
 
-[RequireComponent(typeof(SpawnVisualizer))]
+[RequireComponent(typeof(SpawnVisualizer), typeof(EnemyPool))]
 public class Spawner : MonoBehaviour
 {
     public event Action EnemyDeath;
 
-    [SerializeField] private Enemy _enemyPrefab;
     [SerializeField] private float _spawnDelay = 1f;
 
+    private EnemyPool _enemyPool;
     private MapSpawner _mapSpawner;
     private SpawnVisualizer _spawnVisualizer;
     private ICampingProvider _campingProvider;
@@ -20,26 +19,11 @@ public class Spawner : MonoBehaviour
 
     private bool _isDisabled;
 
-    private ObjectPool<Enemy> _enemyPool;
-
     private void Awake()
     {
-        _enemyPool = new ObjectPool<Enemy>(
-            createFunc: () => Instantiate(_enemyPrefab, transform),
-            actionOnGet: (enemy) => {
-                enemy.gameObject.SetActive(true);
-                enemy.Poolable.Reset();
-            },
-            actionOnRelease: (enemy) => enemy.gameObject.SetActive(false),
-            actionOnDestroy: (enemy) => Destroy(enemy.gameObject),
-            collectionCheck: true,
-            defaultCapacity: 10,
-            maxSize: 20
-            );
-    }
+        if (_enemyPool  == null)
+            _enemyPool = GetComponent<EnemyPool>();
 
-    private void Start()
-    {
         if (_spawnVisualizer == null)
             _spawnVisualizer = GetComponent<SpawnVisualizer>();
     }
@@ -66,7 +50,7 @@ public class Spawner : MonoBehaviour
 
         Vector3 spawnPosition = _mapData.grid.CoordToWorld(spawnCoord);
 
-        Enemy spawnedEnemy = _enemyPool.Get();
+        Enemy spawnedEnemy = _enemyPool.GetEnemy();
 
         spawnedEnemy.Activate(_target, spawnPosition);
 
@@ -98,7 +82,7 @@ public class Spawner : MonoBehaviour
         if (enemy != null)
         {
             enemy.Health.OnDeath -= ReturnEnemyToPool;
-            _enemyPool.Release(enemy);
+            _enemyPool.Return(enemy);
             EnemyDeath?.Invoke();
         }
     }

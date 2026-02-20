@@ -6,13 +6,15 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float _damage = 1;
     [SerializeField] private float _lifeTime = 2;
 
+    private ProjectilePool _pool;
+    private ProjectilePoolableComponent _poolableComponent;
     private float _skinWidth = .1f;
     private float _speed;
 
+    public ProjectilePoolableComponent PoolableComponent => _poolableComponent;
+
     private void Start()
     {
-        Destroy(gameObject, _lifeTime);
-
         Collider[] initialCollisions = Physics.OverlapSphere(transform.position, .1f, _collisionMask);
         if (initialCollisions.Length > 0)
         {
@@ -25,6 +27,11 @@ public class Projectile : MonoBehaviour
         float moveDistance = _speed * Time.deltaTime;
         CheckCollisions(moveDistance);
         Launch();
+    }
+
+    public void ResetLogic()
+    {
+        _speed = 0;
     }
 
     public void SetSpeed(float newSpeed)

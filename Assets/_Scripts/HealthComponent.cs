@@ -6,7 +6,7 @@ public class HealthComponent : MonoBehaviour, IHealth, IDamageable
     [SerializeField] private float _maxHealth;
     [SerializeField] private float _currentHealth;
 
-    private bool _isDead;
+    [SerializeField] private bool _isDead;
 
     public float CurrentHealth => _currentHealth;
 
@@ -23,6 +23,7 @@ public class HealthComponent : MonoBehaviour, IHealth, IDamageable
     public void ResetHealth()
     {
         _currentHealth = _maxHealth;
+        _isDead = false;
     }
 
     public void TakeHit(float damage, RaycastHit hit)
@@ -46,5 +47,6 @@ public class HealthComponent : MonoBehaviour, IHealth, IDamageable
         _isDead = true;
         StopAllCoroutines();
         OnDeath?.Invoke(this);
+        
     }
 }
