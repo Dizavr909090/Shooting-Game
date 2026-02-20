@@ -5,7 +5,9 @@ using UnityEngine.AI;
 [RequireComponent(typeof(EnemyMovement))]
 [RequireComponent(typeof(EnemyAttack))]
 [RequireComponent(typeof(EnemyVisuals))]
-public class Enemy : Entity
+[RequireComponent(typeof(HealthComponent))]
+[RequireComponent(typeof(EnemyPoolable))]
+public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyStats _stats;
 
@@ -14,9 +16,15 @@ public class Enemy : Entity
     private EnemyAttack _attack;
     private EnemyVisuals _visuals;
 
+    private HealthComponent _healthComponent;
+    private EnemyPoolable _poolableComponent;
+
     private NavMeshAgent _agent;
 
     private ITargetable _target;
+
+    public HealthComponent Health { get; private set; }
+    public EnemyPoolable Poolable => _poolableComponent;
 
     private void Awake()
     {
@@ -25,24 +33,35 @@ public class Enemy : Entity
         _visuals.Initialize(_attack);
         _movement.Initialize(_target, _stats, _agent);
         _attack.Initialize(_target, _stats);
-        _stateMachine.Initialize(_movement, _attack, _stats, this);  
-
-        if (_stats != null) _startingHealth = _stats.MaxHealth;
+        _stateMachine.Initialize(_movement, _attack, _stats, _healthComponent);  
     }
 
-    protected override void Start()
+    public void Activate(ITargetable target, Vector3 startPosition)
     {
-        base.Start();
+        SetTarget(target);
+        TeleportTo(startPosition);
+        gameObject.SetActive(true);
+        _stateMachine.StartStateMachine();
+    }
+
+    public void TeleportTo(Vector3 position)
+    {
+        _agent.enabled = false;
+        transform.position = position;
+        _agent.enabled = true;
     }
 
     public void SetTarget(ITargetable target)
     {
-        if (target == null) return;
+        Debug.Log($"{name} SetTarget: {target}");
+
+        if (target == null)
+            Debug.LogError("NO target for SetTarget()");
 
         _target = target;
         _movement.UpdateTarget(target);
         _attack.UpdateTarget(target);
-        _stateMachine.SetTarget(target);
+        _stateMachine.UpdateTarget(target);
     }
 
     private void GetComponents()
@@ -52,5 +71,8 @@ public class Enemy : Entity
         _agent = GetComponent<NavMeshAgent>();
         _visuals = GetComponent<EnemyVisuals>();
         _stateMachine = GetComponent<EnemyStateMachine>();
+
+        _healthComponent = GetComponent<HealthComponent>();
+        _poolableComponent = GetComponent<EnemyPoolable>();
     }
 }

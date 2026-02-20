@@ -51,8 +51,10 @@ public class EnemyMovement : MonoBehaviour
 
     public void StartMoving()
     {
-        if (_pathCoroutine != null) return;
         _hasTarget = true;
+
+        if (_pathCoroutine != null) return;
+
         _pathCoroutine = StartCoroutine(UpdatePath());
     }
 
@@ -72,6 +74,19 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    public void ResetMovement()
+    {
+        _hasTarget = false;
+
+        if (_pathCoroutine != null)
+        {
+            StopCoroutine(_pathCoroutine);
+            _pathCoroutine = null;
+        }
+
+        _agent.enabled = true;
+    }
+
     public void UpdateTarget(ITargetable newTarget)
     {
         _target = newTarget;
@@ -87,11 +102,6 @@ public class EnemyMovement : MonoBehaviour
         else
         {
             _agent.enabled = true;
-
-            if (_agent.isOnNavMesh)
-            {
-                _agent.Warp(transform.position);
-            }
         }
     }
 
@@ -99,9 +109,13 @@ public class EnemyMovement : MonoBehaviour
     {
         while (_hasTarget)
         {
-            if (_target == null) yield break;
+            if (_target == null || _target.Transform == null || _target.IsDead)
+            {
+                yield return new WaitForSeconds(_pathUpdateInterval);
+                continue;
+            }
 
-            if (!_agent.enabled || !_agent.isOnNavMesh || _target.IsDead)
+            if (!_agent.enabled || !_agent.isOnNavMesh)
             {
                 yield return new WaitForSeconds(_pathUpdateInterval);
                 continue;
@@ -112,9 +126,11 @@ public class EnemyMovement : MonoBehaviour
                 (_myCollisionRadius + _targetCollisionRadius + _stats.AttackDistanceThreshold);
 
             _agent.SetDestination(targetPosition);
-
+ 
             yield return new WaitForSeconds(_pathUpdateInterval);
         }
+
+        _pathCoroutine = null;
     }
 }
 

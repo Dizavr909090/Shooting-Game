@@ -9,7 +9,7 @@ public class InputManager : MonoBehaviour
     public event Action OnShootPressed;
 
     private PlayerControls _playerControls;
-
+    
     public bool IsShooting { get; private set; }
 
     private void Awake()

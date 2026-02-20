@@ -34,12 +34,19 @@ public class EnemyAttack : MonoBehaviour
         StartCoroutine(AttackRoutine());
     }
 
+    public void ResetAttack()
+    {
+        StopAllCoroutines();
+        _target = null;
+        IsAttacking = false;
+    }
+
     public IEnumerator AttackRoutine()
     {
         if (_target == null || _target.Transform == null) yield break;
 
         IsAttacking = true;
-
+      
         OnAttackStarted?.Invoke();
 
         Vector3 startPosition = transform.position;

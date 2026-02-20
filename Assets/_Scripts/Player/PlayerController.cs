@@ -5,24 +5,25 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PlayerMovement _playerMovement;
-    [SerializeField] private PlayerHealth _playerHealth;
+    [SerializeField] private PlayerFacade _player;
     [SerializeField] private Rigidbody _myRb;
 
     private void Awake()
     {
-        if (_playerHealth == null) _playerHealth = GetComponent<PlayerHealth>();
-        if (_playerMovement == null) _playerMovement = GetComponent<PlayerMovement>();
-
-        SetupConnections();
+        if (_player == null) _player = GetComponent<PlayerFacade>();
         SetRigidbody();
+    }
+
+    private void Start()
+    {
+        _player.Health.OnDeath += HandleDeath;
     }
 
     private void OnDisable()
     {
-        if (_playerHealth != null)
+        if (_player.Health != null)
         {
-            _playerHealth.OnDeath -= HandleDeath;
+            _player.Health.OnDeath -= HandleDeath;
         }
     }
 
@@ -37,13 +38,8 @@ public class PlayerController : MonoBehaviour
         _myRb.angularDamping = 0f;
     }
 
-    private void SetupConnections()
+    private void HandleDeath(IHealth _)
     {
-        _playerHealth.OnDeath += HandleDeath;
-    }
-
-    private void HandleDeath(Entity entity)
-    {
-        _playerMovement.DisableMovement();
+        _player.Movement.DisableMovement();
     }
 }

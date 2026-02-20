@@ -8,28 +8,41 @@ public class EnemyStateMachine : MonoBehaviour
     private EnemyAttack _attack;
     private EnemyStats _stats;
     private ITargetable _target;
-    private Entity _selfEntity;
+    private IHealth _selfHealth;
 
     private Coroutine _stateUpdateCoroutine;
 
     public enum State { Idle, Chasing, Attacking, Dead };
     private State _currentState;
 
-    public void Initialize(EnemyMovement movement, EnemyAttack attack, EnemyStats stats, Entity self )
+    public void Initialize(EnemyMovement movement, EnemyAttack attack, EnemyStats stats, IHealth selfHealth)
     {
         _movement = movement;
         _attack = attack;
         _stats = stats;
-        _selfEntity = self;
+        _selfHealth = selfHealth;
+    }
 
+    public void StartStateMachine()
+    {
         if (_stateUpdateCoroutine != null) StopCoroutine(_stateUpdateCoroutine);
         _stateUpdateCoroutine = StartCoroutine(StateUpdateTick());
     }
 
-    public void SetTarget(ITargetable target)
+    public void ResetLogic()
     {
-        _target = target;
-        CheckStateTransition();
+        _currentState = State.Idle;
+        _target = null;
+
+        if (_stateUpdateCoroutine != null)
+            StopCoroutine(_stateUpdateCoroutine);
+
+        _stateUpdateCoroutine = StartCoroutine(StateUpdateTick());
+    }
+
+    public void UpdateTarget(ITargetable newTarget)
+    {
+        _target = newTarget;
     }
 
     private void ChangeState(State newState)
@@ -63,14 +76,22 @@ public class EnemyStateMachine : MonoBehaviour
 
     private void CheckStateTransition()
     {
-        if (_selfEntity.IsDead)
+        if (_selfHealth .IsDead)
         {
             ChangeState(State.Dead);
             return;
         }
 
-        if (_target == null || _target.IsDead)
+        if (_target == null)
         {
+            Debug.Log("NO target");
+            ChangeState(State.Idle);
+            return;
+        }
+
+        if (_target.IsDead)
+        {
+            Debug.Log("Target is dead");
             ChangeState(State.Idle);
             return;
         }
@@ -89,9 +110,11 @@ public class EnemyStateMachine : MonoBehaviour
 
     private IEnumerator StateUpdateTick()
     {
-        while (_selfEntity != null)
+        yield return new WaitForEndOfFrame();
+
+        while (_selfHealth != null)
         {
-            if (_selfEntity.IsDead)
+            if (_selfHealth.IsDead)
             {
                 ChangeState(State.Dead);
                 yield break;
@@ -110,7 +133,5 @@ public class EnemyStateMachine : MonoBehaviour
             }
             yield return new WaitForSeconds(_timeBetweenChecks);
         }
-
-        ChangeState(State.Dead);
     }
 }

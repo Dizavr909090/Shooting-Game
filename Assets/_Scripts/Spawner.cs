@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Pool;
 
 [RequireComponent(typeof(SpawnVisualizer))]
 public class Spawner : MonoBehaviour
@@ -11,7 +12,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float _spawnDelay = 1f;
 
     private MapSpawner _mapSpawner;
-    private SpawnVisualizer _spawnViisualizer;
+    private SpawnVisualizer _spawnVisualizer;
     private ICampingProvider _campingProvider;
     private LevelMapData _mapData;
     private bool _hasMapData;
@@ -19,13 +20,28 @@ public class Spawner : MonoBehaviour
 
     private bool _isDisabled;
 
+    private ObjectPool<Enemy> _enemyPool;
+
+    private void Awake()
+    {
+        _enemyPool = new ObjectPool<Enemy>(
+            createFunc: () => Instantiate(_enemyPrefab, transform),
+            actionOnGet: (enemy) => {
+                enemy.gameObject.SetActive(true);
+                enemy.Poolable.Reset();
+            },
+            actionOnRelease: (enemy) => enemy.gameObject.SetActive(false),
+            actionOnDestroy: (enemy) => Destroy(enemy.gameObject),
+            collectionCheck: true,
+            defaultCapacity: 10,
+            maxSize: 20
+            );
+    }
+
     private void Start()
     {
-        if (_mapSpawner == null)
-            _mapSpawner = GetComponent<MapSpawner>();
-
-        if (_spawnViisualizer == null)
-            _spawnViisualizer = GetComponent<SpawnVisualizer>();
+        if (_spawnVisualizer == null)
+            _spawnVisualizer = GetComponent<SpawnVisualizer>();
     }
 
     public void Disable() => _isDisabled = true;
@@ -37,7 +53,6 @@ public class Spawner : MonoBehaviour
         _mapSpawner = mapSpawner;
     }
 
-
     public void OnMapGenerated(LevelMapData data)
     {
         _mapData = data;
@@ -47,16 +62,17 @@ public class Spawner : MonoBehaviour
     private IEnumerator SpawnEnemySequence(Coord spawnCoord)
     {
         var renderer = _mapSpawner.GetTileAt(spawnCoord.x, spawnCoord.y).GetComponent<Renderer>();
-        yield return _spawnViisualizer.StartBlink(renderer, _spawnDelay);
+        yield return _spawnVisualizer.StartBlink(renderer, _spawnDelay);
 
         Vector3 spawnPosition = _mapData.grid.CoordToWorld(spawnCoord);
 
-        Enemy spawnedEnemy = Instantiate(_enemyPrefab, spawnPosition + Vector3.up, Quaternion.identity);
+        Enemy spawnedEnemy = _enemyPool.Get();
 
-        if (_target != null)
-            spawnedEnemy.SetTarget(_target);
+        spawnedEnemy.Activate(_target, spawnPosition);
 
-        spawnedEnemy.OnDeath += OnEnemyDeath;
+        spawnedEnemy.Health.OnDeath += ReturnEnemyToPool;
+
+        yield return null;
     }
 
     public void SpawnEnemy()
@@ -75,10 +91,15 @@ public class Spawner : MonoBehaviour
         StartCoroutine(SpawnEnemySequence(spawnCoord));
     }
 
-    private void OnEnemyDeath(Entity entity)
+    private void ReturnEnemyToPool(IHealth health)
     {
-        entity.OnDeath -= OnEnemyDeath;
+        Enemy enemy = (health as MonoBehaviour)?.GetComponent<Enemy>();
 
-        EnemyDeath?.Invoke();
+        if (enemy != null)
+        {
+            enemy.Health.OnDeath -= ReturnEnemyToPool;
+            _enemyPool.Release(enemy);
+            EnemyDeath?.Invoke();
+        }
     }
 }

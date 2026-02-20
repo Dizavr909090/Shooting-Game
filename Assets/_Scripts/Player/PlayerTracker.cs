@@ -5,7 +5,7 @@ public class PlayerTracker : MonoBehaviour, ICampingProvider
     [SerializeField] private float _timeBetweenCampingChecks = 1f;
     [SerializeField] private float _campThresholdDistance = 1.5f;
 
-    private Entity _playerEntity;
+    private ITargetable _playerTarget;
     private bool _isCamping;
     private Vector3 _oldPosition;
     private float _nextCheckTime;
@@ -14,7 +14,7 @@ public class PlayerTracker : MonoBehaviour, ICampingProvider
 
     private void Update()
     {
-        if (_playerEntity == null || _playerEntity.IsDead)
+        if (_playerTarget == null || _playerTarget.IsDead)
         {
             _isCamping = false;
             return;
@@ -23,10 +23,10 @@ public class PlayerTracker : MonoBehaviour, ICampingProvider
         CampingCheck();
     }
 
-    public void InitializePlayer(Entity player)
+    public void InitializePlayer(ITargetable player)
     {
-        _playerEntity = player;
-        _oldPosition = _playerEntity.transform.position;
+        _playerTarget = player;
+        _oldPosition = _playerTarget.Transform.position;
     }
 
     private void CampingCheck()
@@ -35,7 +35,7 @@ public class PlayerTracker : MonoBehaviour, ICampingProvider
         {
             _nextCheckTime = Time.time + _timeBetweenCampingChecks;
 
-            float distanceMoved = Vector3.Distance(_playerEntity.transform.position, _oldPosition);
+            float distanceMoved = Vector3.Distance(_playerTarget.Transform.position, _oldPosition);
 
             if (distanceMoved < _campThresholdDistance)
             {
@@ -46,7 +46,7 @@ public class PlayerTracker : MonoBehaviour, ICampingProvider
                 _isCamping = false;
             }
 
-            _oldPosition = _playerEntity.transform.position;
+            _oldPosition = _playerTarget.Transform.position;
         }
     }
 }
