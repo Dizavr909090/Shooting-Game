@@ -16,5 +16,3 @@ Technical Overview
     Engine: Unity
 
     Architecture Patterns: State Machine, Interface-based design (SOLID principles focus).
-
-    Version Control: Git
