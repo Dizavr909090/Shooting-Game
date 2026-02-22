@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -67,8 +66,6 @@ public struct LevelMapData
         tileMap = TileMap;
         mapSize = MapSize;
         grid = Grid;
-
-        
 
         List<Coord> openCoords = new List<Coord>();
         for (int x = 0; x < tileMap.GetLength(0); x++)

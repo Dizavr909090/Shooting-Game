@@ -5,11 +5,11 @@ public class EnemyPool : MonoBehaviour
 {
     [SerializeField] private Enemy _enemyPrefab;
 
-    private ObjectPool<Enemy> _enemyPool;
+    private ObjectPool<Enemy> _pool;
 
     private void Awake()
     {
-        _enemyPool = new ObjectPool<Enemy>(
+        _pool = new ObjectPool<Enemy>(
             createFunc: () => Instantiate(_enemyPrefab, transform),
             actionOnGet: (enemy) => {
                 enemy.gameObject.SetActive(true);
@@ -25,16 +25,14 @@ public class EnemyPool : MonoBehaviour
 
     public Enemy GetEnemy()
     {
-        Enemy enemy = _enemyPool.Get();
-
-        return enemy;
+        return _pool.Get();
     }
 
     public void Return(Enemy enemy)
     {
         if (enemy != null)
         {
-            _enemyPool.Release(enemy);
+            _pool.Release(enemy);
         }
     }
 }

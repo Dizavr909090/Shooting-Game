@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BaseWave_1
   m_EditorClassIdentifier: Assembly-CSharp::WaveData
   _waveName: Wave
-  _enemyCount: 10
-  _timeBetweenSpawns: 3
+  _enemyCount: 3
+  _timeBetweenSpawns: 1

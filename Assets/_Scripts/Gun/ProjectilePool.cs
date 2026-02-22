@@ -10,13 +10,21 @@ public class ProjectilePool : MonoBehaviour
     private void Awake()
     {
         _pool = new ObjectPool<Projectile>(
-            createFunc: () => Instantiate(_projectilePrefab, transform),
-            actionOnGet: (projectile) => {
-                projectile.gameObject.SetActive(true);
-                projectile.PoolableComponent.Reset();
+            createFunc: () => {
+                var proj = Instantiate(_projectilePrefab);
+                proj.SetPool(this);
+                return proj;
             },
-            actionOnRelease: (projectile) => projectile.gameObject.SetActive(false),
-            actionOnDestroy: (projectile) => Destroy(projectile.gameObject),
+            actionOnGet: (proj) => {
+                proj.transform.SetParent(null);
+                proj.gameObject.SetActive(true);
+                proj.PoolableComponent.Reset();
+            },
+            actionOnRelease: (proj) => {
+                proj.gameObject.SetActive(false);
+                proj.transform.SetParent(transform);
+            },
+            actionOnDestroy: (proj) => Destroy(proj.gameObject),
             collectionCheck: true,
             defaultCapacity: 50,
             maxSize: 100
@@ -25,9 +33,7 @@ public class ProjectilePool : MonoBehaviour
 
     public Projectile GetProjectile()
     {
-        Projectile projectile = _pool.Get();
-
-        return projectile;
+        return _pool.Get();
     }
 
     public void Return(Projectile projectile)

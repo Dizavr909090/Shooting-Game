@@ -37,9 +37,11 @@ public class InputManager : MonoBehaviour
             _playerControls.Player.Shoot.performed -= HandleShootPerformed;
             _playerControls.Player.Shoot.canceled -= HandleShootCanceled;
 
-            _playerControls.Player.Disable();
+            _playerControls.Disable();
         }
     }
+
+    private void OnDestroy() => _playerControls?.Dispose();
 
     private void HandleMovePerformed(InputAction.CallbackContext context)
     {

@@ -19,14 +19,14 @@ MonoBehaviour:
     prefab: {fileID: 3283489982738744153, guid: ed915bebc453f784ca5c1162e8b2aac4, type: 3}
   _maps:
   - _mapSize: {x: 15, y: 15}
-    _seed: 16
+    _seed: 1
     _tileSize: 2
     _minObstacleHeight: 1
     _maxObstacleHeight: 2
-    _foregroundColour: {r: 0.13207549, g: 0.01059096, b: 0.01059096, a: 0}
-    _backgroundColour: {r: 1, g: 0, b: 0.06640482, a: 1}
+    _foregroundColour: {r: 0, g: 0, b: 0, a: 0}
+    _backgroundColour: {r: 1, g: 0, b: 1, a: 1}
     _outlinePercent: 0.02
-    _obstaclePercent: 0.199
+    _obstaclePercent: 0.188
   - _mapSize: {x: 7, y: 11}
     _seed: 1
     _tileSize: 2
@@ -34,7 +34,7 @@ MonoBehaviour:
     _maxObstacleHeight: 2.23
     _foregroundColour: {r: 0.14926639, g: 0.7264151, b: 0.12677999, a: 0}
     _backgroundColour: {r: 0.754717, g: 0.26699895, b: 0.28661975, a: 0}
-    _outlinePercent: 0.01
+    _outlinePercent: 0.02
     _obstaclePercent: 0.36
   - _mapSize: {x: 29, y: 29}
     _seed: 1
@@ -43,5 +43,68 @@ MonoBehaviour:
     _maxObstacleHeight: 4
     _foregroundColour: {r: 0, g: 0, b: 0, a: 0}
     _backgroundColour: {r: 0.5, g: 0.32935658, b: 0.12028301, a: 0}
-    _outlinePercent: 0.01
+    _outlinePercent: 0.02
+    _obstaclePercent: 0.259
+  - _mapSize: {x: 12, y: 12}
+    _seed: 21
+    _tileSize: 2
+    _minObstacleHeight: 1
+    _maxObstacleHeight: 4
+    _foregroundColour: {r: 0.6226415, g: 0.17915626, b: 0.17915626, a: 0}
+    _backgroundColour: {r: 0.13318795, g: 0.53647107, b: 0.6886792, a: 0}
+    _outlinePercent: 0.02
+    _obstaclePercent: 0.122
+  - _mapSize: {x: 20, y: 20}
+    _seed: 37
+    _tileSize: 2
+    _minObstacleHeight: 1
+    _maxObstacleHeight: 4
+    _foregroundColour: {r: 0.15671751, g: 0.5377358, b: 0.11921501, a: 0}
+    _backgroundColour: {r: 0.8301887, g: 0.39551443, b: 0.8235619, a: 0}
+    _outlinePercent: 0.02
+    _obstaclePercent: 0.11
+  - _mapSize: {x: 16, y: 16}
+    _seed: 1
+    _tileSize: 2
+    _minObstacleHeight: 1
+    _maxObstacleHeight: 4
+    _foregroundColour: {r: 0, g: 0, b: 1, a: 0}
+    _backgroundColour: {r: 0, g: 0, b: 0, a: 0}
+    _outlinePercent: 0.02
+    _obstaclePercent: 0.555
+  - _mapSize: {x: 29, y: 29}
+    _seed: 1
+    _tileSize: 2
+    _minObstacleHeight: 1
+    _maxObstacleHeight: 4
+    _foregroundColour: {r: 0, g: 0, b: 0, a: 0}
+    _backgroundColour: {r: 0.5, g: 0.32935658, b: 0.12028301, a: 0}
+    _outlinePercent: 0.02
+    _obstaclePercent: 0.259
+  - _mapSize: {x: 29, y: 29}
+    _seed: 1
+    _tileSize: 2
+    _minObstacleHeight: 1
+    _maxObstacleHeight: 4
+    _foregroundColour: {r: 0, g: 0, b: 0, a: 0}
+    _backgroundColour: {r: 0.5, g: 0.32935658, b: 0.12028301, a: 0}
+    _outlinePercent: 0.02
+    _obstaclePercent: 0.259
+  - _mapSize: {x: 29, y: 29}
+    _seed: 1
+    _tileSize: 2
+    _minObstacleHeight: 1
+    _maxObstacleHeight: 4
+    _foregroundColour: {r: 0, g: 0, b: 0, a: 0}
+    _backgroundColour: {r: 0.5, g: 0.32935658, b: 0.12028301, a: 0}
+    _outlinePercent: 0.02
+    _obstaclePercent: 0.259
+  - _mapSize: {x: 29, y: 29}
+    _seed: 1
+    _tileSize: 2
+    _minObstacleHeight: 1
+    _maxObstacleHeight: 4
+    _foregroundColour: {r: 0, g: 0, b: 0, a: 0}
+    _backgroundColour: {r: 0.5, g: 0.32935658, b: 0.12028301, a: 0}
+    _outlinePercent: 0.02
     _obstaclePercent: 0.259

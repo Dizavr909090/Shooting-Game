@@ -46,7 +46,6 @@ public class HealthComponent : MonoBehaviour, IHealth, IDamageable
     {
         _isDead = true;
         StopAllCoroutines();
-        OnDeath?.Invoke(this);
-        
+        OnDeath?.Invoke(this);     
     }
 }

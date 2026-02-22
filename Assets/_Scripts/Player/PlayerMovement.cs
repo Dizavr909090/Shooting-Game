@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody _myRb;
     private Vector2 _rawInputVector;
 
-    //private bool _disabled = false;
+    private bool _disabled = false;
 
     private void Awake()
     {
@@ -41,6 +41,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_disabled) return;
+
         HandleMovement();
     }
 
@@ -101,7 +103,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void DisableMovement()
     {
-        //_disabled = true;
+        _disabled = true;
 
         _rawInputVector = Vector3.zero;
         _targetMovementVector = Vector3.zero;
