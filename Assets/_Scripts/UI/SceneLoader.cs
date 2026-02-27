@@ -7,11 +7,11 @@ public class SceneLoader : MonoBehaviour, ISceneLoader
 
     public void LoadGameScene()
     {
-        SceneManager.LoadScene(_sceneConfig.gameScene.name);
+        SceneManager.LoadScene(_sceneConfig.GameScene.name);
     }
 
     public void LoadMenuScene()
     {
-        SceneManager.LoadScene(_sceneConfig.menuScene.name);
+        SceneManager.LoadScene(_sceneConfig.MenuScene.name);
     }
 }

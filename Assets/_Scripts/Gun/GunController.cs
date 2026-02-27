@@ -15,7 +15,7 @@ public class GunController : MonoBehaviour
 
     public void TryShoot()
     {
-        if (_equippedGun != null && _equippedGun.CanShoot())
+        if (_equippedGun != null && _equippedGun.CanShoot)
         {
             _equippedGun.Shoot();
         }

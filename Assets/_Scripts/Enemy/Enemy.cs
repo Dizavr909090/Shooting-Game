@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(EnemyStateMachine))]
+[RequireComponent(typeof(StateMachine))]
 [RequireComponent(typeof(EnemyMovement))]
 [RequireComponent(typeof(EnemyAttack))]
 [RequireComponent(typeof(EnemyVisuals))]
@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyStats _stats;
 
-    private EnemyStateMachine _stateMachine;
+    private StateMachine _stateMachine;
     private EnemyMovement _movement;
     private EnemyAttack _attack;
     private EnemyVisuals _visuals;
@@ -38,10 +38,10 @@ public class Enemy : MonoBehaviour
 
     public void Activate(ITargetable target, Vector3 startPosition)
     {
-        SetTarget(target);
-        TeleportTo(startPosition);
         gameObject.SetActive(true);
-        _stateMachine.StartStateMachine();
+        _stateMachine.ResetLogic();
+        TeleportTo(startPosition);
+        SetTarget(target);
     }
 
     public void TeleportTo(Vector3 position)
@@ -70,7 +70,7 @@ public class Enemy : MonoBehaviour
         _attack = GetComponent<EnemyAttack>();
         _agent = GetComponent<NavMeshAgent>();
         _visuals = GetComponent<EnemyVisuals>();
-        _stateMachine = GetComponent<EnemyStateMachine>();
+        _stateMachine = GetComponent<StateMachine>();
 
         _healthComponent = GetComponent<HealthComponent>();
         _poolableComponent = GetComponent<EnemyPoolableComponent>();

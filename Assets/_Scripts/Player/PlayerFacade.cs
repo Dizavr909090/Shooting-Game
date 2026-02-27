@@ -9,6 +9,8 @@ using UnityEngine;
 [RequireComponent(typeof(CapsuleCollider))]
 public class PlayerFacade : MonoBehaviour
 {
+    public static PlayerFacade Instance { get; private set; }
+
     public HealthComponent Health { get; private set; }
     public TargetComponent Target { get; private set; }
     public PlayerDeathComponent Death { get; private set; }
@@ -17,6 +19,15 @@ public class PlayerFacade : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         Target = GetComponent<TargetComponent>();
         Health = GetComponent<HealthComponent>();
         Death = GetComponent<PlayerDeathComponent>();

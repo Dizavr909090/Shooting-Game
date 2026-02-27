@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a391b318a9243144ba87e3c07123b06a, type: 3}
   m_Name: ScenesConfig
   m_EditorClassIdentifier: Assembly-CSharp::ScenesConfig
-  gameScene: {fileID: 102900000, guid: 7d03cea2c0acbe140866626d89936d9c, type: 3}
-  menuScene: {fileID: 0}
+  <GameScene>k__BackingField: {fileID: 102900000, guid: 982ed3d4fd228f6449c30baeae1a258e, type: 3}
+  <MenuScene>k__BackingField: {fileID: 0}

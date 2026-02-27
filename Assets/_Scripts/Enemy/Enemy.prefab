@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2441541150668502328}
   - component: {fileID: 1876563612273340694}
   - component: {fileID: 211440642394514612}
-  - component: {fileID: 3620365938051397973}
   - component: {fileID: 4683282199024084895}
   - component: {fileID: 953772240955198127}
   - component: {fileID: 8101362422583788286}
@@ -21,6 +20,7 @@ GameObject:
   - component: {fileID: 7033786971688114655}
   - component: {fileID: 3405888038747926585}
   - component: {fileID: 6576522838244961394}
+  - component: {fileID: 1572886345599358538}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
@@ -122,19 +122,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3620365938051397973
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7945208588524569813}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf4e0ddd50bdb414d92201eb247ec9f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyStateMachine
-  _timeBetweenChecks: 0.1
 --- !u!195 &4683282199024084895
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -233,6 +220,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
   _maxHealth: 10
   _currentHealth: 0
+  _isDead: 0
 --- !u!114 &6576522838244961394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,3 +233,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7246d1220e4ea45b6b1951f0ee64c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPoolable
+--- !u!114 &1572886345599358538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7945208588524569813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aabb52693f1e9cf44b639a91d44dfbc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StateMachine
+  _timeBetweenChecks: 0.1

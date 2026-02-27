@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
-using PlayerInput;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -22,6 +20,12 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _rawInputVector;
 
     private bool _disabled = false;
+
+    public float MoveSpeed 
+    {
+        get => _moveSpeed;
+        set => _moveSpeed = value;
+    }
 
     private void Awake()
     {

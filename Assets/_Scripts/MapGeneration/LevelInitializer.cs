@@ -8,32 +8,25 @@ public class LevelInitializer : MonoBehaviour
     [SerializeField] private WaveSequencer _waveSequencer;
     [SerializeField] private MapSpawner _mapSpawner;
 
-    [SerializeField] private PlayerFacade _player;
-
-    private void Awake()
-    {
-        if (_player == null) _player = GetComponent<PlayerFacade>();
-    }
 
     private void Start()
     {
-        _player.Tracker.InitializePlayer(_player.Target);
+        PlayerFacade.Instance.Tracker.InitializePlayer(PlayerFacade.Instance.Target);
  
-        _enemySpawner.Initialize(_player.Tracker, _player.Target, _mapSpawner);
+        _enemySpawner.Initialize(PlayerFacade.Instance.Tracker, PlayerFacade.Instance.Target, _mapSpawner);
 
         _mapGenerator.MapGenerated += _enemySpawner.OnMapGenerated;
 
         _mapGenerator.MapGenerated += (data) => {
             Vector3 centerPos = data.grid.CoordToWorld(data.center);
 
-            PlayerMovement movement = _player.Movement;
-            if (movement != null)
+            if (PlayerFacade.Instance.Movement != null)
             {
-                movement.Teleport(centerPos);
+                PlayerFacade.Instance.Movement.Teleport(centerPos);
             }
             else
             {
-                _player.Target.transform.position = centerPos;
+                PlayerFacade.Instance.Target.transform.position = centerPos;
             }
         };
 
@@ -41,7 +34,7 @@ public class LevelInitializer : MonoBehaviour
         _waveSequencer.SpawnRequested += _enemySpawner.SpawnEnemy;
         _enemySpawner.EnemyDeath += _waveSequencer.RecordEnemyDeath;
 
-        _player.Health.OnDeath += (e) => _enemySpawner.Disable();
+        PlayerFacade.Instance.Health.OnDeath += (e) => _enemySpawner.Disable();
     }
 
     private void OnNewWaveRequested(int waveNumber)

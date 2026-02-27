@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 300130758496027542}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.001, z: 0.4332}
+  m_LocalPosition: {x: 0, y: -0.001, z: 0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -41,7 +41,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4971256718294014237}
   - component: {fileID: -7043338177790030131}
-  - component: {fileID: 4907299697071453511}
   m_Layer: 0
   m_Name: Gun
   m_TagString: Untagged
@@ -79,23 +78,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gun
   _muzzleTransform: {fileID: 4142318783944462262}
-  _projectile: {fileID: 7746808790816061370, guid: a8085c30733ed5243a03d039ceec6178, type: 3}
-  _msBetweenShots: 10
-  _muzzleVelocity: 30
-  _projectilePool: {fileID: 0}
---- !u!114 &4907299697071453511
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1960818352074925751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e95ee2335c004964ab5749dd4f6128f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectilePool
-  _projectilePrefab: {fileID: 7746808790816061370, guid: a8085c30733ed5243a03d039ceec6178, type: 3}
+  _gunStats: {fileID: 11400000, guid: 99ae45f48c5f7b64aad35d89bb63b143, type: 2}
 --- !u!1 &4173675924752932334
 GameObject:
   m_ObjectHideFlags: 0

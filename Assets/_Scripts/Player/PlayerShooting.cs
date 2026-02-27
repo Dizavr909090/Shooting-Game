@@ -1,6 +1,4 @@
-using PlayerInput;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerShooting : MonoBehaviour
 {
@@ -19,10 +17,10 @@ public class PlayerShooting : MonoBehaviour
     }
 
     private void Update()
-    {
+    {       
         if (_input.IsShooting)
         {
             _gunController.TryShoot();
-        }
+        } 
     }
 }

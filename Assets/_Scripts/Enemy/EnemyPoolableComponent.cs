@@ -5,7 +5,7 @@ public class EnemyPoolableComponent : MonoBehaviour, IPoolableComponent
     private HealthComponent _health;
     private EnemyMovement _movement;
     private EnemyAttack _attack;
-    private EnemyStateMachine _stateMachine;
+    private StateMachine _stateMachine;
 
     private void Awake()
     {
@@ -26,6 +26,6 @@ public class EnemyPoolableComponent : MonoBehaviour, IPoolableComponent
         _health = GetComponent<HealthComponent>();
         _movement = GetComponent<EnemyMovement>();
         _attack = GetComponent<EnemyAttack>();
-        _stateMachine = GetComponent<EnemyStateMachine>();
+        _stateMachine = GetComponent<StateMachine>();
     }
 }

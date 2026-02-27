@@ -3,16 +3,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "WaveData", menuName = "Waves/WaveData")]
 public class WaveData : ScriptableObject
 {
-    [SerializeField] private string _waveName = "Wave";
-    [SerializeField] private int _enemyCount = 10;
-    [SerializeField] private float _timeBetweenSpawns = 1f;
+    [field: SerializeField] public string WaveName { get; private set; } = "Wave";
+    [field: SerializeField] public int EnemyCount { get; private set; } = 10;
+    [field: SerializeField] public float TimeBetweenSpawns { get; private set; } = 1f;
 
-    public string WaveName => _waveName;
-    public int EnemyCount => _enemyCount;
-    public float TimeBetweenSpawns => _timeBetweenSpawns;
-
-    public void SetName(string name) => _waveName = name;
-    public void SetEnemyCount(int count) => _enemyCount = count;
-    public void SetSpawnDelay(float delay) => _timeBetweenSpawns = delay;
+    public void SetName(string name) => WaveName = name;
+    public void SetEnemyCount(int count) => EnemyCount = count;
+    public void SetSpawnDelay(float delay) => TimeBetweenSpawns = delay;
 
 }
