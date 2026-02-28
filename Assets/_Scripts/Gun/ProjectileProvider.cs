@@ -10,6 +10,19 @@ public class ProjectileProvider : MonoBehaviour
 
     private void Awake() => Instance = this;
 
+    private void Start()
+    {
+        ProjectileSimulation.Instance.ProjectileHit += ReturnProjectile;
+    }
+
+    private void OnDisable()
+    {
+        if (ProjectileSimulation.Instance != null)
+        {
+            ProjectileSimulation.Instance.ProjectileHit -= ReturnProjectile;
+        }
+    }
+
     public ProjectileVisual GetProjectile(ProjectileData projData)
     {
         if (!_projectilePools.ContainsKey(projData))

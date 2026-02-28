@@ -20,14 +20,10 @@ public class EnemyVisuals : MonoBehaviour
 
     public void Initialize(EnemyAttack attack)
     {
-        if (attack == null)
-        {
-            Debug.LogError("NO COMPONENTS");
-            return;
-        }
-
         _attack = attack;
+
         if (_renderer == null) _renderer = GetComponent<Renderer>();
+
         _propBlock = new MaterialPropertyBlock();
         _originalColor = _renderer.sharedMaterial.color;
 

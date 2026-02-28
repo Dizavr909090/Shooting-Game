@@ -10,12 +10,17 @@ public class EnemyStats : ScriptableObject
     [Header("Movement")]
     [field: SerializeField] public float MoveSpeed { get; private set; }
 
+    [Header("Rotation")]
+    [field: SerializeField] public float RotationSpeed { get; private set; }
+    [field: SerializeField] public float RotationTreshold { get; private set; }
+
     [Header("Melee Combat")]
-    [field: SerializeField] public float AttackDistanceThreshold { get; private set; } = .5f;
-    [field: SerializeField] public float AttackDistanceTolerance { get; private set; } = .1f;
-    [field: SerializeField] public float TimeBetweenAttacks { get; private set; } = 1f;
-    [field: SerializeField] public float Damage { get; private set; } = 1f;
-    [field: SerializeField] public float AttackSpeed { get; private set; } = 3f;
+    [field: SerializeField] public float MeleeAttackRange { get; private set; } = .5f;
+    [field: SerializeField] public float DistanceTolerance { get; private set; } = .5f;
+    [field: SerializeField] public float TimeBetweenMeleeAttacks { get; private set; } = 1f;
+    [field: SerializeField] public float MeleeAttackDelay { get; private set; } = 1f;
+    [field: SerializeField] public float MeleeAttackDamage { get; private set; } = 1f;
+    [field: SerializeField] public float MeleeAttackSpeed { get; private set; } = 3f;
 
     [Header("Ranged Combat")]
     [field: SerializeField] public float RangedAttackDistanceMin { get; private set; }

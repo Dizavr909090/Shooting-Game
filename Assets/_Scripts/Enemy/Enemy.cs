@@ -7,6 +7,9 @@ using UnityEngine.AI;
 [RequireComponent(typeof(EnemyVisuals))]
 [RequireComponent(typeof(HealthComponent))]
 [RequireComponent(typeof(EnemyPoolableComponent))]
+[RequireComponent(typeof(AlwaysKnowDetector))]
+[RequireComponent(typeof(GunController))]
+[RequireComponent(typeof(EnemyRotator))]
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyStats _stats;
@@ -15,13 +18,12 @@ public class Enemy : MonoBehaviour
     private EnemyMovement _movement;
     private EnemyAttack _attack;
     private EnemyVisuals _visuals;
-
+    private ITargetProvider _targetProvider;
     private HealthComponent _healthComponent;
     private EnemyPoolableComponent _poolableComponent;
-
+    private IShootable _shootable;
+    private EnemyRotator _rotator;
     private NavMeshAgent _agent;
-
-    private ITargetable _target;
 
     public HealthComponent Health => _healthComponent;
     public EnemyPoolableComponent PoolableComponent => _poolableComponent;
@@ -31,9 +33,10 @@ public class Enemy : MonoBehaviour
         GetComponents();
 
         _visuals.Initialize(_attack);
-        _movement.Initialize(_target, _stats, _agent);
-        _attack.Initialize(_target, _stats);
-        _stateMachine.Initialize(_movement, _attack, _stats, _healthComponent);  
+        _movement.Initialize(_targetProvider, _agent);
+        _attack.Initialize(_targetProvider, _stats);
+        _stateMachine.Initialize(_movement, _attack, _stats, _healthComponent, _targetProvider, _shootable, _rotator);  
+        _rotator.Initialize(_stats, _agent);
     }
 
     public void Activate(ITargetable target, Vector3 startPosition)
@@ -41,7 +44,6 @@ public class Enemy : MonoBehaviour
         gameObject.SetActive(true);
         _stateMachine.ResetLogic();
         TeleportTo(startPosition);
-        SetTarget(target);
     }
 
     public void TeleportTo(Vector3 position)
@@ -53,17 +55,6 @@ public class Enemy : MonoBehaviour
         _agent.enabled = true;
     }
 
-    public void SetTarget(ITargetable target)
-    {
-        if (target == null)
-            Debug.LogError("NO target for SetTarget()");
-
-        _target = target;
-        _movement.UpdateTarget(target);
-        _attack.UpdateTarget(target);
-        _stateMachine.UpdateTarget(target);
-    }
-
     private void GetComponents()
     {
         _movement = GetComponent<EnemyMovement>();
@@ -71,6 +62,9 @@ public class Enemy : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _visuals = GetComponent<EnemyVisuals>();
         _stateMachine = GetComponent<StateMachine>();
+        _targetProvider = GetComponent<ITargetProvider>();
+        _shootable = GetComponentInChildren<IShootable>();
+        _rotator = GetComponent<EnemyRotator>();
 
         _healthComponent = GetComponent<HealthComponent>();
         _poolableComponent = GetComponent<EnemyPoolableComponent>();

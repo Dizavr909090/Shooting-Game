@@ -1,8 +1,13 @@
+
+
+using UnityEngine;
+
 public class MeleeAttackState : BaseState
 {
     private EnemyMovement _movement;
     private EnemyStats _stats;
     private EnemyAttack _attack;
+
 
     public MeleeAttackState(
         StateMachine stateMachine, 
@@ -23,9 +28,12 @@ public class MeleeAttackState : BaseState
 
     public override void Update()
     {
+        if (HandleTargetLost()) return;
+
         if (_attack.IsAttacking) return;
 
-        if (_movement.DistanceToTarget >= _stats.AttackDistanceThreshold + _stats.AttackDistanceTolerance)
+        if (Vector3.Distance(_stateMachine.transform.position, _stateMachine.CurrentTarget.Transform.position) >= 
+            _stats.MeleeAttackRange + _stats.DistanceTolerance)
         {
             _stateMachine.SwitchState<ChaseState>();
             return;

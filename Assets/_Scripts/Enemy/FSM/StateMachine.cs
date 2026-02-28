@@ -10,17 +10,24 @@ public class StateMachine : MonoBehaviour
     private EnemyMovement _enemyMovement;
     private EnemyAttack _enemyAttack;
     private EnemyStats _enemyStats;
+    private EnemyRotator _enemyRotator;
     private IHealth _enemyHealth;
+    private ITargetProvider _targetProvider;
+    private IShootable _shootable;
+
+    private float _distanceToTarget;
+    
 
     private Dictionary<Type, IState> _states;
-    private IState _currentState;
+    [SerializeField] private IState _currentState;
     private Coroutine _stateUpdateCoroutine;
 
-    public ITargetable CurrentTarget { get; private set; }
+    public float DistanceToTarget => _distanceToTarget;
+    [SerializeField] public ITargetable CurrentTarget => _targetProvider?.Target;
 
-    public void UpdateTarget(ITargetable newTarget)
+    private void Update()
     {
-        CurrentTarget = newTarget;
+        _currentState?.Update();
     }
 
     public void ResetLogic()
@@ -43,18 +50,29 @@ public class StateMachine : MonoBehaviour
         _currentState?.OnEnter();
     }
 
-    public void Initialize(EnemyMovement movement, EnemyAttack attack, EnemyStats stats, IHealth health)
+    public void Initialize(
+        EnemyMovement movement, 
+        EnemyAttack attack, 
+        EnemyStats stats, 
+        IHealth health, 
+        ITargetProvider targetProvider,
+        IShootable shootable,
+        EnemyRotator rotator)
     {
         _enemyMovement = movement;
         _enemyAttack = attack;
         _enemyStats = stats;
         _enemyHealth = health;
+        _targetProvider = targetProvider;
+        _shootable = shootable;
+        _enemyRotator = rotator;
 
         _states = new Dictionary<Type, IState>()
         {
             {typeof(IdleState), new IdleState(this, _enemyMovement) },
-            {typeof(ChaseState), new ChaseState(this, _enemyMovement, _enemyStats) },
+            {typeof(ChaseState), new ChaseState(this, _enemyMovement, _enemyStats, _targetProvider, _enemyRotator) },
             {typeof(MeleeAttackState), new MeleeAttackState(this, _enemyMovement, _enemyStats, _enemyAttack) },
+            {typeof(RangedAttackState), new RangedAttackState(this, _enemyMovement, _enemyStats, _shootable, _enemyRotator ) },
             {typeof(DeadState), new DeadState(this, _enemyMovement) }
         };
 
@@ -76,14 +94,26 @@ public class StateMachine : MonoBehaviour
 
         while (gameObject.activeSelf)
         {
+            UpdateCommonData();
+
             if (_enemyHealth.IsDead && _currentState != _states[typeof(DeadState)])
             {
                 SwitchState<DeadState>();
             }
 
-            _currentState?.Update();
-
             yield return new WaitForSeconds(_timeBetweenChecks);
+        }
+    }
+
+    private void UpdateCommonData()
+    {
+        if (CurrentTarget != null)
+        {
+            _distanceToTarget = Vector3.Distance(transform.position, CurrentTarget.Transform.position);
+        }
+        else
+        {
+            _distanceToTarget = float.MaxValue;
         }
     }
 }

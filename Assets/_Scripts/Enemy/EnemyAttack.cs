@@ -7,28 +7,17 @@ public class EnemyAttack : MonoBehaviour
     public event Action OnAttackStarted;
     public event Action OnAttackFinished;
 
-
-    private ITargetable _target;
+    private ITargetProvider _targetProvider;
     private EnemyStats _stats;
     private Coroutine _attackCoroutine;
 
+    private ITargetable _target => _targetProvider?.Target;
     public bool IsAttacking { get; private set; }
 
-    public void Initialize(ITargetable target, EnemyStats stats)
+    public void Initialize(ITargetProvider targetProvider, EnemyStats stats)
     {
-        if (stats == null)
-        {
-            Debug.LogError("NO COMPONENTS");
-            return;
-        }
-
-        _target = target;
+        _targetProvider = targetProvider;
         _stats = stats;
-    }
-
-    public void UpdateTarget(ITargetable newTarget)
-    {
-        _target = newTarget;
     }
 
     public void PerformAttack()
@@ -45,53 +34,34 @@ public class EnemyAttack : MonoBehaviour
             _attackCoroutine = null;
         }
     
-        _target = null;
         IsAttacking = false;
     }
 
     public IEnumerator AttackRoutine()
     {
-        if (_target == null || _target.Transform == null) yield break;
+        ITargetable currentTarget = _target;
+        if (currentTarget == null || currentTarget.Transform == null) yield break;
 
         IsAttacking = true;
       
         OnAttackStarted?.Invoke();
 
-        Vector3 startPosition = transform.position;
+        // анимация замаха тут!
+        yield return new WaitForSeconds(_stats.MeleeAttackDelay);
 
-        Vector3 targetPosition = _target.Transform.position;
-        Vector3 dirToTarget = (targetPosition - startPosition).normalized;
-        targetPosition = targetPosition - dirToTarget * (_stats.AttackDistanceThreshold);
+        float distance = Vector3.Distance(transform.position, currentTarget.Transform.position);
 
-        float attackPercent = 0f;
-
-        bool hasAppliedDamage = false;
-
-        while (attackPercent <= 1)
+        if (distance < _stats.MeleeAttackRange)
         {
-            attackPercent += Time.deltaTime * _stats.AttackSpeed;
-
-            float interpolation = (-Mathf.Pow(attackPercent, 2) + attackPercent) * 4;
-            transform.position = Vector3.Lerp(startPosition, targetPosition, interpolation);
-
-            if (attackPercent >= .5f && !hasAppliedDamage)
+            if (currentTarget.Transform.TryGetComponent<IDamageable>(out var damageable))
             {
-                hasAppliedDamage = true;
-
-                if (_target.Transform.TryGetComponent<IDamageable>(out var damageable))
-                {
-                    damageable.TakeDamage(_stats.Damage);
-                }
+                damageable.TakeDamage(_stats.MeleeAttackDamage);
             }
-
-            yield return null;
         }
-
-        transform.position = startPosition;
 
         OnAttackFinished?.Invoke();
 
-        yield return new WaitForSeconds(_stats.TimeBetweenAttacks);
+        yield return new WaitForSeconds(_stats.TimeBetweenMeleeAttacks);
 
         IsAttacking = false;
     }

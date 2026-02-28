@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class RangedAttackState : BaseState
@@ -6,16 +5,19 @@ public class RangedAttackState : BaseState
     private IShootable _shootable;
     private EnemyStats _stats;
     private EnemyMovement _movement;
+    private EnemyRotator _rotator;
 
     public RangedAttackState(
-        StateMachine stateMachine, 
-        IShootable shootable, 
+        StateMachine stateMachine,
+        EnemyMovement movement,
         EnemyStats stats,
-        EnemyMovement movement) : base(stateMachine)
+        IShootable shootable,
+        EnemyRotator rotator) : base(stateMachine)
     {
         _shootable = shootable;
         _stats = stats;
         _movement = movement;
+        _rotator = rotator;
     }
 
     public override void OnEnter()
@@ -28,8 +30,13 @@ public class RangedAttackState : BaseState
         if (HandleTargetLost()) return;
         if (TrySwitchIfOutOfRange()) return;
 
+        Vector3 targetPos = _stateMachine.CurrentTarget.Transform.position;
+        _rotator.RotateTowards(targetPos);
 
-        if (_shootable.CanShoot) _shootable.Shoot();
+        if (_rotator.IsFacingTarget(targetPos))
+        {
+            if (_shootable.CanShoot) _shootable.Shoot();
+        }
     }
 
     public override void OnExit()
@@ -39,36 +46,9 @@ public class RangedAttackState : BaseState
 
     private bool TrySwitchIfOutOfRange()
     {
-        var distanceToTarget = _movement.DistanceToTarget;
-
-        if (distanceToTarget > _stats.RangedAttackDistanceMax)
+        if (_stateMachine.DistanceToTarget > _stats.RangedAttackDistanceMax)
         {
             _stateMachine.SwitchState<ChaseState>();
-            return true;
-        }
-
-        return false;
-    }
-
-    private bool IsTargetInViewAngle()
-    {
-        if (HandleTargetLost()) return false;
-
-        Vector3 directionToTarget = (_stateMachine.CurrentTarget.Transform.position -
-            _movement.transform.position).normalized;
-
-        float angle = Vector3.Angle(_movement.transform.forward, directionToTarget);
-
-        float halfViewAngle = _stats.ViewAngle * 0.5f;
-
-        return angle <= halfViewAngle;
-    }
-
-    private bool HandleTargetLost()
-    {
-        if (_stateMachine.CurrentTarget == null || _stateMachine.CurrentTarget.IsDead)
-        {
-            _stateMachine.SwitchState<IdleState>();
             return true;
         }
 

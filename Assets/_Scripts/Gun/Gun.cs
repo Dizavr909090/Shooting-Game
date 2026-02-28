@@ -1,7 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 
-public class Gun : MonoBehaviour, IShootable
+public class Gun : MonoBehaviour
 {
     [SerializeField] private Transform _muzzleTransform;
     [SerializeField] private GunStats _gunStats;
@@ -28,7 +28,6 @@ public class Gun : MonoBehaviour, IShootable
             projToShoot
             );
 
-        Camera.main.transform.DOShakePosition(0.05f, 0.05f, 1, 90, false, true);
         transform.DOLocalMoveZ(-0.1f, 0.05f).SetRelative().SetLoops(2, LoopType.Yoyo);
         transform.DOPunchRotation(new Vector3(-20, 0, 0), 0.1f);
     }

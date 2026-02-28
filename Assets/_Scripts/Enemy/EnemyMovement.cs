@@ -5,62 +5,33 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyMovement : MonoBehaviour
 {
-    [SerializeField, Range(0.1f, 2f)] private float _pathUpdateInterval = 0.25f;
+    [SerializeField, Range(0.1f, 2f)] private float _pathUpdateInterval = 0.2f;
 
     private NavMeshAgent _agent;
-    private EnemyStats _stats;
-    private ITargetable _target;
-
-    private float _myCollisionRadius;
-    private float _targetCollisionRadius;
-
+    private ITargetProvider _targetProvider;
     private Coroutine _pathCoroutine;
+    private bool _isMoving;
 
-    private bool _hasTarget;
+    public Vector3 Velocity => _agent.velocity;
 
-    public float DistanceToTarget
+    public void Initialize(ITargetProvider targetProvider, NavMeshAgent agent )
     {
-        get
-        {
-            if (_target == null || _target.Transform == null) return float.MaxValue;
 
-            float distance = Vector3.Distance(transform.position, _target.Transform.position);
-            return distance - (_myCollisionRadius + _targetCollisionRadius);
-        }
-    }
-
-    private void Awake()
-    {
-        _myCollisionRadius = GetComponent<CapsuleCollider>().radius;
-    }
-
-    public void Initialize(ITargetable target, EnemyStats stats, NavMeshAgent agent )
-    {
-        if (agent == null || stats == null)
-        {
-            Debug.LogError("NO COMPONENTS");
-            return;
-        }
-
-        _target = target;
-        _stats = stats;
+        _targetProvider = targetProvider;
         _agent = agent;
-
-        if (_target != null) _targetCollisionRadius = _target.GetRadius();
     }
 
     public void StartMoving()
     {
-        _hasTarget = true;
+        if (_isMoving) return;
 
-        if (_pathCoroutine != null) return;
-
+        _isMoving = true;
         _pathCoroutine = StartCoroutine(UpdatePath());
     }
 
     public void StopMoving()
     {
-        _hasTarget = false;
+        _isMoving = false;
 
         if (_pathCoroutine != null)
         {
@@ -68,15 +39,12 @@ public class EnemyMovement : MonoBehaviour
             _pathCoroutine = null;
         }
 
-        if(_agent != null && _agent.isOnNavMesh)
-        {
-            _agent.ResetPath();
-        }
+        if(_agent.isOnNavMesh) _agent.ResetPath();
     }
 
     public void ResetMovement()
     {
-        _hasTarget = false;
+        _isMoving = false;
 
         if (_pathCoroutine != null)
         {
@@ -85,12 +53,6 @@ public class EnemyMovement : MonoBehaviour
         }
 
         _agent.enabled = true;
-    }
-
-    public void UpdateTarget(ITargetable newTarget)
-    {
-        _target = newTarget;
-        if (_target != null) _targetCollisionRadius = _target.GetRadius();
     }
 
     public void SetKinematic(bool isKinematic)
@@ -105,28 +67,23 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    public void MoveTo(Vector3 targetPosition)
+    {
+        if (_agent.isOnNavMesh && _agent.enabled)
+        {
+            _agent.SetDestination(targetPosition);
+        }
+    }
+
     private IEnumerator UpdatePath()
     {
-        while (_hasTarget)
+        while (_isMoving)
         {
-            if (_target == null || _target.Transform == null || _target.IsDead)
-            {
-                yield return new WaitForSeconds(_pathUpdateInterval);
-                continue;
-            }
+            var target = _targetProvider.Target;
 
-            if (!_agent.enabled || !_agent.isOnNavMesh)
-            {
-                yield return new WaitForSeconds(_pathUpdateInterval);
-                continue;
-            }
+            if (target != null && !target.IsDead && _agent.isOnNavMesh)
+                _agent.SetDestination(target.Transform.position);
 
-            Vector3 dirToTarget = (_target.Transform.position - transform.position).normalized;
-            Vector3 targetPosition = _target.Transform.position - dirToTarget *
-                (_myCollisionRadius + _targetCollisionRadius + _stats.AttackDistanceThreshold);
-
-            _agent.SetDestination(targetPosition);
- 
             yield return new WaitForSeconds(_pathUpdateInterval);
         }
 

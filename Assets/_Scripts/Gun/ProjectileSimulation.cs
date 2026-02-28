@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ProjectileSimulation : MonoBehaviour
 {
+    public event Action<ProjectileData, ProjectileVisual> ProjectileHit; 
+
     [SerializeField] private LayerMask collisionMask;
 
     public static ProjectileSimulation Instance { get; private set; }
@@ -29,11 +32,11 @@ public class ProjectileSimulation : MonoBehaviour
             if (isRaycast)
             {
                 hit.collider.GetComponent<IDamageable>()?.TakeHit(projInstance.ProjectileData.Damage, hit);
-                ProjectileProvider.Instance.ReturnProjectile(projInstance.ProjectileData, projInstance.ProjectileVisual);
+                ProjectileHit?.Invoke(projInstance.ProjectileData, projInstance.ProjectileVisual);
                 _activeProjectiles.RemoveAt(i);
                 continue;
             }
-            else if (!isRaycast)
+            else
             {
                 projInstance.UpdatePosition(Time.deltaTime);
                 projInstance.ProjectileVisual.transform.position = projInstance.Position;
@@ -42,7 +45,7 @@ public class ProjectileSimulation : MonoBehaviour
                 
                 if(projInstance.TimeRemaining <= 0)
                 {
-                    ProjectileProvider.Instance.ReturnProjectile(projInstance.ProjectileData, projInstance.ProjectileVisual);
+                    ProjectileHit?.Invoke(projInstance.ProjectileData, projInstance.ProjectileVisual);
                     _activeProjectiles.RemoveAt(i);
                 }
             }

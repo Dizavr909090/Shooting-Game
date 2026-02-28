@@ -16,6 +16,7 @@ public class PlayerFacade : MonoBehaviour
     public PlayerDeathComponent Death { get; private set; }
     public PlayerMovement Movement { get; private set; }
     public PlayerTracker Tracker { get; private set; }
+    public Transform Transform { get; private set; }
 
     private void Awake()
     {

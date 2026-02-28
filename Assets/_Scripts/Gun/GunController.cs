@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GunController : MonoBehaviour
+public class GunController : MonoBehaviour, IShootable
 {
     [SerializeField]
     private Transform _weaponHold;
@@ -8,17 +8,21 @@ public class GunController : MonoBehaviour
     private Gun _startingGun;
     private Gun _equippedGun;
 
+    public bool CanShoot => _equippedGun != null && _equippedGun.CanShoot;
+
     private void Start()
     {
         SelectStartingGun();
     }
 
-    public void TryShoot()
+    public void Shoot()
     {
-        if (_equippedGun != null && _equippedGun.CanShoot)
-        {
-            _equippedGun.Shoot();
-        }
+        _equippedGun?.Shoot();
+    }
+
+    public void StopFiring()
+    {
+        _equippedGun?.StopFiring();
     }
 
     public void EquipGun(Gun gunToEquip)
