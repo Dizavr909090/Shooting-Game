@@ -26,7 +26,7 @@ MonoBehaviour:
     _foregroundColour: {r: 0, g: 0, b: 0, a: 0}
     _backgroundColour: {r: 1, g: 0, b: 1, a: 1}
     _outlinePercent: 0.02
-    _obstaclePercent: 0.188
+    _obstaclePercent: 0.018
   - _mapSize: {x: 7, y: 11}
     _seed: 1
     _tileSize: 2

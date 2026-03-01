@@ -15,11 +15,14 @@ MonoBehaviour:
   <Material>k__BackingField: {fileID: 0}
   <MaxHealth>k__BackingField: 0
   <MoveSpeed>k__BackingField: 0
-  <AttackDistanceThreshold>k__BackingField: 0.5
+  <RotationSpeed>k__BackingField: 360
+  <RotationTreshold>k__BackingField: 5
+  <MeleeAttackRange>k__BackingField: 0.5
   <DistanceTolerance>k__BackingField: 0.1
-  <TimeBetweenAttacks>k__BackingField: 1
-  <Damage>k__BackingField: 1
-  <AttackSpeed>k__BackingField: 3
+  <TimeBetweenMeleeAttacks>k__BackingField: 1
+  <MeleeAttackDelay>k__BackingField: 1
+  <MeleeAttackDamage>k__BackingField: 1
+  <MeleeAttackSpeed>k__BackingField: 3
   <RangedAttackDistanceMin>k__BackingField: 3
   <RangedAttackDistanceMax>k__BackingField: 10
   <ChaseRangeMax>k__BackingField: 0

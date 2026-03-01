@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Proj_1
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileData
   <projPrefab>k__BackingField: {fileID: 7820042245518273394, guid: a8085c30733ed5243a03d039ceec6178, type: 3}
-  <Damage>k__BackingField: 5
+  <Damage>k__BackingField: 2
   <BaseSpeed>k__BackingField: 15
   <LifeTime>k__BackingField: 2

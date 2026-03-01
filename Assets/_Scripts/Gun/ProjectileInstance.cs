@@ -9,6 +9,7 @@ public class ProjectileInstance
     public float TimeRemaining { get; private set; }
     public float Speed { get; private set; }
     public Vector3 DirectionNormalized { get; private set; }
+    public LayerMask CollisionToHit { get; private set; }
 
     public ProjectileInstance(
         Vector3 startPos, 

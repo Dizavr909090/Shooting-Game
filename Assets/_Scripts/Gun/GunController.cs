@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class GunController : MonoBehaviour, IShootable
 {
-    [SerializeField]
-    private Transform _weaponHold;
-    [SerializeField]
-    private Gun _startingGun;
+    [SerializeField] private Transform _weaponHold;
+    [SerializeField] private Gun _startingGun;
+
     private Gun _equippedGun;
+    private bool _canDamageEnemies = true;
+    private enum WhoIsUsing { Player, Enemy }
 
     public bool CanShoot => _equippedGun != null && _equippedGun.CanShoot;
 

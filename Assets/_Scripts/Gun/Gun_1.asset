@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GunStats
   <ProjData>k__BackingField: {fileID: 11400000, guid: f8d53edd63fa92e48843b24cfafa8045, type: 2}
   <MuzzleVelocityModifier>k__BackingField: 1
-  <TimeBetweenShots>k__BackingField: 0.092
-  <BaseSpread>k__BackingField: 0.05
+  <TimeBetweenShots>k__BackingField: 0.2
+  <BaseSpread>k__BackingField: 0.1
