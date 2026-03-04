@@ -12,3 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aff05bf6ff0ee584bbff4210ee372120, type: 3}
   m_Name: FractionRelationsConfig1
   m_EditorClassIdentifier: Assembly-CSharp::FractionRelationsConfig
+  _relationsList:
+  - from: 0
+    to: 0
+    relation: 0
+  - from: 0
+    to: 0
+    relation: 0
+  - from: 0
+    to: 0
+    relation: 0
+  - from: 0
+    to: 0
+    relation: 0
+  _baseRelation: 2

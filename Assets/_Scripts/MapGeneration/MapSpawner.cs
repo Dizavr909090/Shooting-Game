@@ -26,14 +26,14 @@ public class MapSpawner : MonoBehaviour
 #endif
         }
 
-        GameObject go = new GameObject(name);
+        GameObject gameObject = new GameObject(name);
 
 #if UNITY_EDITOR
-        Undo.RegisterCreatedObjectUndo(go, "Generate Map");
+        Undo.RegisterCreatedObjectUndo(gameObject, "Generate Map");
 #endif
 
-        go.transform.parent = parent;
-        return go.transform;
+        gameObject.transform.parent = parent;
+        return gameObject.transform;
     }
 
     public void SpawnMap(LevelMapData mapData, MapSettings settings, MapConfig currentMap, Transform holder)

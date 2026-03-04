@@ -10,7 +10,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(AlwaysKnowDetector))]
 [RequireComponent(typeof(GunController))]
 [RequireComponent(typeof(EnemyRotator))]
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IFractionProvider
 {
     [SerializeField] private EnemyStats _stats;
 
@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour
 
     public HealthComponent Health => _healthComponent;
     public EnemyPoolableComponent PoolableComponent => _poolableComponent;
+    public FractionRelationsConfig.FractionType FractionType => _stats.FractionType;
 
     private void Awake()
     {

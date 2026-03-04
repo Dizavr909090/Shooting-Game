@@ -10,7 +10,7 @@ public class Gun : MonoBehaviour
 
     public bool CanShoot => Time.time > nextShotTime;
 
-    public void Shoot()
+    public void Shoot(FractionRelationsConfig.FractionType shooterFraction)
     {
         nextShotTime = Time.time + _gunStats.TimeBetweenShots;
 
@@ -25,7 +25,8 @@ public class Gun : MonoBehaviour
             CalculateSpread(),
             _gunStats.ProjData.BaseSpeed * _gunStats.MuzzleVelocityModifier,
             _gunStats.ProjData,
-            projToShoot
+            projToShoot,
+            shooterFraction
             );
 
         transform.DOLocalMoveZ(-0.1f, 0.05f).SetRelative().SetLoops(2, LoopType.Yoyo);

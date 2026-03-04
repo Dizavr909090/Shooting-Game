@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0df272bb97135dd46859c445ad1dc2ae, type: 3}
   m_Name: 1_EnemyStats
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStats
+  FractionType: 1
   <Material>k__BackingField: {fileID: 0}
   <MaxHealth>k__BackingField: 0
   <MoveSpeed>k__BackingField: 0

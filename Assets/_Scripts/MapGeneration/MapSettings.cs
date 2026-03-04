@@ -68,6 +68,7 @@ public struct LevelMapData
         grid = Grid;
 
         List<Coord> openCoords = new List<Coord>();
+
         for (int x = 0; x < tileMap.GetLength(0); x++)
         {
             for (int y = 0; y < tileMap.GetLength(1); y++)
@@ -75,7 +76,8 @@ public struct LevelMapData
                 if (tileMap[x, y] == TileType.Floor) openCoords.Add(new Coord(x, y));
             }
         }
-        _shuffledOpenCoords = new Queue<Coord>(Utility.ShuffleArray(openCoords.ToArray(), seed));
+
+        _shuffledOpenCoords = new Queue<Coord>(Utility.ShuffleArray(openCoords.ToArray()));
     }
 
     public Coord GetRandomOpenTile()

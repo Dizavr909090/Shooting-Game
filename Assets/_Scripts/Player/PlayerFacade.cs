@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerTracker))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
-public class PlayerFacade : MonoBehaviour
+public class PlayerFacade : MonoBehaviour, IFractionProvider
 {
     public static PlayerFacade Instance { get; private set; }
 
@@ -17,6 +17,7 @@ public class PlayerFacade : MonoBehaviour
     public PlayerMovement Movement { get; private set; }
     public PlayerTracker Tracker { get; private set; }
     public Transform Transform { get; private set; }
+    [field: SerializeField]public FractionRelationsConfig.FractionType FractionType { get; set; }
 
     private void Awake()
     {

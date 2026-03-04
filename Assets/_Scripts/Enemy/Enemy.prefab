@@ -310,7 +310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GunController
   _weaponHold: {fileID: 8651217751435458286}
-  _startingGun: {fileID: -7043338177790030131, guid: 8e933639250064443bac58bb9535c333, type: 3}
+  _startingGun: {fileID: -7043338177790030131, guid: a7956e2e238a572438e5197bcd56966a, type: 3}
 --- !u!114 &2920811672949072090
 MonoBehaviour:
   m_ObjectHideFlags: 0

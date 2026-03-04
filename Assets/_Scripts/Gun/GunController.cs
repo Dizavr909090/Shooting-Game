@@ -4,9 +4,10 @@ public class GunController : MonoBehaviour, IShootable
 {
     [SerializeField] private Transform _weaponHold;
     [SerializeField] private Gun _startingGun;
-
+    
+    private FractionRelationsConfig.FractionType _shooterFractionType;
     private Gun _equippedGun;
-    private bool _canDamageEnemies = true;
+
     private enum WhoIsUsing { Player, Enemy }
 
     public bool CanShoot => _equippedGun != null && _equippedGun.CanShoot;
@@ -18,7 +19,7 @@ public class GunController : MonoBehaviour, IShootable
 
     public void Shoot()
     {
-        _equippedGun?.Shoot();
+        _equippedGun?.Shoot(_shooterFractionType);
     }
 
     public void StopFiring()
@@ -34,6 +35,8 @@ public class GunController : MonoBehaviour, IShootable
         }
         _equippedGun = Instantiate(gunToEquip, _weaponHold.position, _weaponHold.rotation);
         _equippedGun.transform.parent = _weaponHold;
+        _shooterFractionType = _equippedGun.GetComponentInParent<IFractionProvider>()?.FractionType ?? 
+            FractionRelationsConfig.FractionType.Neutral;
     }
 
     private void SelectStartingGun()

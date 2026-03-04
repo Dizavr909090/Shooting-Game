@@ -9,7 +9,6 @@ public class MapGrid
     {
         _mapSize = mapSize;
         _tileSize = tileSize;
-
     }
 
     public Vector3 CoordToWorld(Coord coord)

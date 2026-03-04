@@ -6,8 +6,11 @@ public class ProjectileSimulation : MonoBehaviour
 {
     public event Action<ProjectileData, ProjectileVisual> ProjectileHit; 
 
+
     [SerializeField] private LayerMask collisionMask;
 
+    [SerializeField] private FractionRelationsConfig _relationsConfig;
+    
     public static ProjectileSimulation Instance { get; private set; }
 
     private List<ProjectileInstance> _activeProjectiles = new();
@@ -29,25 +32,37 @@ public class ProjectileSimulation : MonoBehaviour
                 moveDistance,
                 collisionMask);
 
+            bool shouldHandleHit = true;
+
             if (isRaycast)
             {
-                hit.collider.GetComponent<IDamageable>()?.TakeHit(projInstance.ProjectileData.Damage, hit);
-                ProjectileHit?.Invoke(projInstance.ProjectileData, projInstance.ProjectileVisual);
-                _activeProjectiles.RemoveAt(i);
-                continue;
-            }
-            else
-            {
-                projInstance.UpdatePosition(Time.deltaTime);
-                projInstance.ProjectileVisual.transform.position = projInstance.Position;
-                projInstance.ProjectileVisual.transform.forward = projInstance.Velocity;
-                projInstance.ReduceLifeTime(Time.deltaTime);
-                
-                if(projInstance.TimeRemaining <= 0)
+                if (hit.collider.TryGetComponent<IFractionProvider>(out var targetProvider))
                 {
+                    if (!_relationsConfig.IsHostile(projInstance.ShooterFraction, targetProvider.FractionType))
+                    {
+                        shouldHandleHit = false;
+                    }
+                    
+                }  
+                
+                if (shouldHandleHit)
+                {
+                    hit.collider.GetComponent<IDamageable>()?.TakeHit(projInstance.ProjectileData.Damage, hit);
                     ProjectileHit?.Invoke(projInstance.ProjectileData, projInstance.ProjectileVisual);
                     _activeProjectiles.RemoveAt(i);
+                    continue;
                 }
+            }
+
+            projInstance.UpdatePosition(Time.deltaTime);
+            projInstance.ProjectileVisual.transform.position = projInstance.Position;
+            projInstance.ProjectileVisual.transform.forward = projInstance.Velocity;
+            projInstance.ReduceLifeTime(Time.deltaTime);
+
+            if (projInstance.TimeRemaining <= 0)
+            {
+                ProjectileHit?.Invoke(projInstance.ProjectileData, projInstance.ProjectileVisual);
+                _activeProjectiles.RemoveAt(i);
             }
         }
     }
@@ -57,14 +72,16 @@ public class ProjectileSimulation : MonoBehaviour
         Vector3 direction,
         float speed,
         ProjectileData data,
-        ProjectileVisual visual)
+        ProjectileVisual visual,
+        FractionRelationsConfig.FractionType shooterFraction)
     {
         ProjectileInstance projInstance = new(
             startPos,
             direction,
             speed,
             data,
-            visual
+            visual,
+            shooterFraction
             );
         _activeProjectiles.Add(projInstance);
     }

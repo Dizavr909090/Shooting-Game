@@ -4,6 +4,7 @@ using UnityEngine;
 public class EnemyStats : ScriptableObject
 {
     [Header("Core Properties")]
+    [field: SerializeField] public FractionRelationsConfig.FractionType FractionType;
     [field: SerializeField] public Material Material { get; private set; }
     [field: SerializeField] public float MaxHealth { get; private set; }
 
