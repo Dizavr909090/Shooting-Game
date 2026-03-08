@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using static MapSettings;
 
 public class MapBuilder
@@ -9,7 +10,7 @@ public class MapBuilder
 
     private List<Coord> _allCoords;
     private Queue<Coord> _shuffledCoords;
-
+    private List<Coord> _allFreeEdgeTiles = new List<Coord>();
     public MapBuilder(MapConfig config)
     {
         _config = config;
@@ -23,6 +24,9 @@ public class MapBuilder
     {
         FillFloor();
         PlaceObstacles();
+
+        if (_config.Rooms.Count > 0)
+            ExpandMap();
 
         return _map;
     }
@@ -94,6 +98,69 @@ public class MapBuilder
                 _map[x, y] = TileType.Floor;
             }
         }
+    }
+
+    private List<Coord> FindFreeEdgeTiles()
+    {
+        _allFreeEdgeTiles.Clear();
+
+        int width = _map.GetLength(0);
+        int height = _map.GetLength(1);
+
+        for (int x = 0; x < width; x++)
+        {
+            CheckAndAdd(x, 0);
+            CheckAndAdd(x, height - 1);
+        }
+
+        for (int y = 0; y < height; y++)
+        {
+            CheckAndAdd(0, y);
+            CheckAndAdd(width - 1, y);
+        }
+
+        return _allFreeEdgeTiles;
+    }
+
+    private void CheckAndAdd(int x, int y)
+    {
+        var newCoord = new Coord(x, y);
+
+        if (_map[x, y] == TileType.Floor && !_allFreeEdgeTiles.Contains(newCoord))
+        {
+            _allFreeEdgeTiles.Add(newCoord);
+        }
+    }
+
+    private void ExpandMap()
+    {
+        var oldWidth = _map.GetLength(0);
+        var oldHeight = _map.GetLength(1);
+
+        var room = _config.Rooms[0];
+
+        var roomWidth = room.Size.x;
+        var roomHeight = room.Size.y;
+
+        TileType[,] newMap = new TileType[oldWidth + room.Size.x, oldHeight];
+
+        for (int x = 0; x < oldWidth; x++)
+        {
+            for (int y = 0; y < oldHeight; y++)
+            {
+                newMap[x,y] = _map[x,y];
+            }
+        }
+
+        for (int x = oldWidth; x < newMap.GetLength(0); x++)
+        {
+            for (int y = 0; y < roomHeight; y++)
+            {
+                newMap[x,y] = TileType.Floor;
+            }
+        }
+
+        _map = newMap;
     }
 
     private Coord GetRandomCoord()

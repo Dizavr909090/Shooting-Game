@@ -25,6 +25,8 @@ public class MapSettings : ScriptableObject
         [SerializeField, Range(0, 1)]
         private float _obstaclePercent;
 
+        [field: SerializeField] public List<RoomPreset> Rooms;
+
         public Vector2 MapSize => _mapSize;
         public int Seed => _seed;
         public float TileSize => _tileSize;
