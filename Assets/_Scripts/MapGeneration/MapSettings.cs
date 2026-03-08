@@ -4,19 +4,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MapSettings", menuName = "Scriptable Objects/MapSettings")]
 public class MapSettings : ScriptableObject
 {
-    [SerializeField] private List<TilePrefabConfig> _tileConfigs;
     [SerializeField] private MapConfig[] _maps;
 
     public MapConfig[] Maps => _maps;
-
-    public GameObject GetPrefabByType(TileType type)
-    {
-        foreach (var config in _tileConfigs)
-        {
-            if (config.type == type) return config.prefab;
-        }
-        return null;
-    }
 
     [System.Serializable]
     public struct MapConfig
@@ -59,7 +49,15 @@ public struct LevelMapData
     public MapGrid grid;
     private Queue<Coord> _shuffledOpenCoords;
 
-    public Coord center => new Coord((int)mapSize.x / 2, (int)mapSize.y / 2);
+    public Vector3 WorldCenter
+    {
+        get
+        {
+            float fx = (tileMap.GetLength(0) - 1) / 2f;
+            float fy = (tileMap.GetLength(1) - 1) / 2f;
+            return grid.CoordToWorld(fx, fy);
+        }
+    }
 
     public LevelMapData(TileType[,] TileMap, Vector2 MapSize, float tileSize, int seed, MapGrid Grid)
     {
@@ -86,11 +84,4 @@ public struct LevelMapData
         _shuffledOpenCoords.Enqueue(coord);
         return coord;
     }
-}
-
-[System.Serializable]
-public struct TilePrefabConfig
-{
-    public TileType type;
-    public GameObject prefab;
 }

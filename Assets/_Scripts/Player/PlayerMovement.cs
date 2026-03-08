@@ -35,12 +35,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnEnable()
     {
-        _input.OnMove += HandeInput;
+        _input.OnMove += HandleInput;
     }
 
     private void OnDisable()
     {
-        _input.OnMove -= HandeInput;
+        _input.OnMove -= HandleInput;
     }
 
     private void FixedUpdate()
@@ -54,17 +54,18 @@ public class PlayerMovement : MonoBehaviour
     {
         _currentVelocity = Vector3.zero;
         _smoothDampVelocity = Vector3.zero;
-
         _myRb.linearVelocity = Vector3.zero;
         _myRb.angularVelocity = Vector3.zero;
+        _myRb.interpolation = RigidbodyInterpolation.None;
 
         _myRb.position = targetPosition;
         transform.position = targetPosition;
 
-        _myRb.interpolation = RigidbodyInterpolation.None;
+        Physics.SyncTransforms();
+        _myRb.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
-    private void HandeInput(Vector2 input)
+    private void HandleInput(Vector2 input)
     {
         _rawInputVector = input;
     }

@@ -10,12 +10,13 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float _spawnDelay = 1f;
 
     private EnemyPool _enemyPool;
-    private MapSpawner _mapSpawner;
     private SpawnVisualizer _spawnVisualizer;
     private ICampingProvider _campingProvider;
     private LevelMapData _mapData;
     private bool _hasMapData;
     private ITargetable _target;
+
+    private System.Random _randomSpawnOffset;
 
     private bool _isDisabled;
 
@@ -30,11 +31,10 @@ public class Spawner : MonoBehaviour
 
     public void Disable() => _isDisabled = true;
 
-    public void Initialize(ICampingProvider campingProvider, ITargetable target, MapSpawner mapSpawner)
+    public void Initialize(ICampingProvider campingProvider, ITargetable target)
     {
         _campingProvider = campingProvider;
         _target = target;
-        _mapSpawner = mapSpawner;
     }
 
     public void OnMapGenerated(LevelMapData data)
@@ -45,14 +45,13 @@ public class Spawner : MonoBehaviour
 
     private IEnumerator SpawnEnemySequence(Coord spawnCoord)
     {
-        var renderer = _mapSpawner.GetTileAt(spawnCoord.x, spawnCoord.y).GetComponent<Renderer>();
-        yield return _spawnVisualizer.StartBlink(renderer, _spawnDelay);
-
         Vector3 spawnPosition = _mapData.grid.CoordToWorld(spawnCoord);
+
+        yield return new WaitForSeconds(_spawnDelay);
 
         Enemy spawnedEnemy = _enemyPool.GetEnemy();
 
-        spawnedEnemy.Activate(_target, spawnPosition);
+        spawnedEnemy.Activate(_target, spawnPosition);// + Vector3.up * 0.1f);
 
         spawnedEnemy.Health.OnDeath += ReturnEnemyToPool;
 

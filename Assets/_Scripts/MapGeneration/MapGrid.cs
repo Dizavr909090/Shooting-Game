@@ -11,26 +11,37 @@ public class MapGrid
         _tileSize = tileSize;
     }
 
-    public Vector3 CoordToWorld(Coord coord)
+    public Vector3 CoordToWorld(float xCoord, float yCoord)
     {
-        float offsetX = -_mapSize.x / 2f + 0.5f;
-        float offsetZ = -_mapSize.y / 2f + 0.5f;
+        float mapWidth = _mapSize.x * _tileSize;
+        float mapHeight = _mapSize.y * _tileSize;
 
-        float x = (offsetX + coord.x) * _tileSize;
-        float z = (offsetZ + coord.y) * _tileSize;
+        float startX = -mapWidth / 2f;
+        float startZ = -mapHeight / 2f;
+
+        float x = startX + (xCoord * _tileSize) + (_tileSize / 2f);
+        float z = startZ + (yCoord * _tileSize) + (_tileSize / 2f);
 
         return new Vector3(x, 0, z);
     }
 
+    public Vector3 CoordToWorld(Coord coord) => CoordToWorld(coord.x, coord.y);
+
     public Coord WorldToCoord(Vector3 position)
     {
-        int x = Mathf.RoundToInt(position.x / _tileSize + (_mapSize.x -1) / 2f);
-        int y = Mathf.RoundToInt(position.z / _tileSize + (_mapSize.y - 1) / 2f);
+        float mapWidth = _mapSize.x * _tileSize;
+        float mapHeight = _mapSize.y * _tileSize;
+
+        float xLocal = position.x + mapWidth / 2f;
+        float zLocal = position.z + mapHeight / 2f;
+
+        int x = Mathf.FloorToInt(xLocal / _tileSize);
+        int y = Mathf.FloorToInt(zLocal / _tileSize);
 
         return new Coord(
             Mathf.Clamp(x, 0, (int)_mapSize.x - 1),
             Mathf.Clamp(y, 0, (int)_mapSize.y - 1)
-            );
+        );
     }
 
     public bool IsInside(Coord coord)
