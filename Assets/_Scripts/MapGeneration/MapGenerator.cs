@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEngine;
@@ -14,6 +15,8 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private MapMesh _floorMesh;
     [SerializeField] private MapMesh _obstacleMesh;
     [SerializeField] private int _mapIndex;
+
+    private List<Coord> _debugExits;
 
     private LevelMapData _currentMapData;
     private MapConfig _currentMap;
@@ -42,6 +45,8 @@ public class MapGenerator : MonoBehaviour
         MapBuilder mapBuilder = new MapBuilder(_currentMap);
         TileType[,] mapTiles = mapBuilder.Build();
 
+        _debugExits = mapBuilder.ЕxitsList;
+
         Grid = new MapGrid(_currentMap.MapSize, _currentMap.TileSize);
 
         _currentMapData = new LevelMapData(mapTiles, _currentMap.MapSize, _currentMap.TileSize, _currentMap.Seed, Grid);
@@ -51,7 +56,7 @@ public class MapGenerator : MonoBehaviour
         _obstacleMesh.GenerateMesh(_currentMapData, _mapSettings, _currentMap, TileType.Obstacle);
 
         GenerateNavMesh();
-     
+
         MapGenerated?.Invoke(_currentMapData);
     }
 
@@ -88,4 +93,30 @@ public class MapGenerator : MonoBehaviour
 
         return gameObject.transform;
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        // Если карта еще не сгенерирована или выходов нет — ничего не рисуем
+        if (_debugExits == null) return;
+
+        GUIStyle style = new GUIStyle();
+        style.normal.textColor = Color.red; // Числа будут красными
+        style.fontSize = 15;
+
+        for (int i = 0; i < _debugExits.Count; i++)
+        {
+            Coord e = _debugExits[i];
+            // Переводим координаты тайла в мировой мир (используем твой Grid)
+            Vector3 worldPos = Grid.CoordToWorld(e.x, e.y);
+
+            // Рисуем сферу в точке выхода
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(worldPos + Vector3.up * 0.5f, 0.2f);
+
+            // Рисуем индекс цифрой чуть выше сферы
+            UnityEditor.Handles.Label(worldPos + Vector3.up * 1.5f, i.ToString(), style);
+        }
+    }
+#endif
 }

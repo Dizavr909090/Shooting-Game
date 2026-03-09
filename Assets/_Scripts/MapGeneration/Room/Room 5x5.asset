@@ -12,6 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d08331465787e40b1c08b6425d5f82, type: 3}
   m_Name: Room 5x5
   m_EditorClassIdentifier: Assembly-CSharp::RoomPreset
-  <Size>k__BackingField: {x: 0, y: 0}
-  <width>k__BackingField: 5
-  <height>k__BackingField: 5
+  <Size>k__BackingField: {x: 5, y: 5}

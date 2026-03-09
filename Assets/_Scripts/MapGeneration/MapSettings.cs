@@ -25,7 +25,10 @@ public class MapSettings : ScriptableObject
         [SerializeField, Range(0, 1)]
         private float _obstaclePercent;
 
+        
+
         [field: SerializeField] public List<RoomPreset> Rooms;
+        [field: SerializeField] public int SelectedExitIndex;
 
         public Vector2 MapSize => _mapSize;
         public int Seed => _seed;
@@ -42,7 +45,7 @@ public class MapSettings : ScriptableObject
     }
 }
 
-public enum TileType { Floor, Obstacle }
+public enum TileType { Floor, Obstacle, Empty }
 
 public struct LevelMapData
 {

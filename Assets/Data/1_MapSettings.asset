@@ -12,16 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75a6a2fad2d0f3246a6d1f02ee01b76a, type: 3}
   m_Name: 1_MapSettings
   m_EditorClassIdentifier: Assembly-CSharp::MapSettings
-  _tileConfigs:
-  - type: 0
-    prefab: {fileID: 4050845759496461566, guid: ddad36ad7b7989c439c999f9e46b912b, type: 3}
   _maps:
   - _mapSize: {x: 10, y: 10}
-    _seed: 1
+    _seed: 15
     _tileSize: 2
-    _minObstacleHeight: 10.16
-    _maxObstacleHeight: 1.38
+    _minObstacleHeight: 1
+    _maxObstacleHeight: 4
     _foregroundColour: {r: 0, g: 0, b: 0, a: 0}
     _backgroundColour: {r: 1, g: 0, b: 1, a: 1}
     _outlinePercent: 0
+    _obstaclePercent: 0
+    Rooms:
+    - {fileID: 11400000, guid: 0ed7e1f50744e4a4aa0fb11d8ee3f375, type: 2}
+    - {fileID: 11400000, guid: 0ed7e1f50744e4a4aa0fb11d8ee3f375, type: 2}
+  - _mapSize: {x: 5, y: 5}
+    _seed: 1
+    _tileSize: 2
+    _minObstacleHeight: 1
+    _maxObstacleHeight: 4
+    _foregroundColour: {r: 0, g: 0, b: 0, a: 0}
+    _backgroundColour: {r: 0.15408616, g: 0.9150943, b: 0.13381095, a: 1}
+    _outlinePercent: 0
     _obstaclePercent: 0.07
+    Rooms: []

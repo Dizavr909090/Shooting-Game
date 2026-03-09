@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using UnityEditor;
+using UnityEngine;
 using static MapSettings;
 
 public class MapBuilder
@@ -11,6 +11,9 @@ public class MapBuilder
     private List<Coord> _allCoords;
     private Queue<Coord> _shuffledCoords;
     private List<Coord> _allFreeEdgeTiles = new List<Coord>();
+
+    public List<Coord> ЕxitsList { get; private set; } = new List<Coord>();
+
     public MapBuilder(MapConfig config)
     {
         _config = config;
@@ -25,8 +28,15 @@ public class MapBuilder
         FillFloor();
         PlaceObstacles();
 
+        ЕxitsList = FindFreeEdgeTiles();
+
         if (_config.Rooms.Count > 0)
-            ExpandMap();
+        {
+
+            int index = Mathf.Clamp(_config.SelectedExitIndex, 0, ЕxitsList.Count - 1);
+            ExpandMap(ЕxitsList[index]);
+        }
+            
 
         return _map;
     }
@@ -107,17 +117,13 @@ public class MapBuilder
         int width = _map.GetLength(0);
         int height = _map.GetLength(1);
 
-        for (int x = 0; x < width; x++)
-        {
-            CheckAndAdd(x, 0);
-            CheckAndAdd(x, height - 1);
-        }
+        for (int x = 0; x < width; x++) CheckAndAdd(x, 0);
 
-        for (int y = 0; y < height; y++)
-        {
-            CheckAndAdd(0, y);
-            CheckAndAdd(width - 1, y);
-        }
+        for (int y = 1; y < height; y++) CheckAndAdd(width - 1, y);
+
+        for (int x = width - 2; x >= 0; x--) CheckAndAdd(x, height - 1);
+
+        for (int y = height - 2; y >= 1; y--) CheckAndAdd(0, y);
 
         return _allFreeEdgeTiles;
     }
@@ -132,31 +138,72 @@ public class MapBuilder
         }
     }
 
-    private void ExpandMap()
+    private void ExpandMap(Coord entrance)
     {
         var oldWidth = _map.GetLength(0);
         var oldHeight = _map.GetLength(1);
 
         var room = _config.Rooms[0];
+        int roomWidth = room.Size.x;
+        int roomHeight = room.Size.y;
 
-        var roomWidth = room.Size.x;
-        var roomHeight = room.Size.y;
+        int xStart = 0;
+        int yStart = 0;
 
-        TileType[,] newMap = new TileType[oldWidth + room.Size.x, oldHeight];
+        if (entrance.x == 0)// ЛЕВАЯ СТЕНА
+        {
+            xStart = -roomWidth;
+            yStart = entrance.y - (roomHeight / 2);
+        }
+        else if (entrance.x == oldWidth - 1)// ПРАВАЯ СТЕНА
+        {
+            xStart = oldWidth;
+            yStart = entrance.y - (roomHeight / 2);
+        }
+        else if (entrance.y == 0)// НИЖНЯЯ СТЕНА
+        {
+            xStart = entrance.x - (roomWidth / 2);
+            yStart = -roomHeight;
+        }
+        else if (entrance.y == oldHeight - 1)// ВЕРХНЯЯ СТЕНА
+        {
+            xStart = entrance.x - (roomWidth / 2);
+            yStart = oldHeight;
+        }
+
+        int minX = Mathf.Min(0, xStart);
+        int minY = Mathf.Min(0, yStart);
+        int maxX = Mathf.Max(oldWidth, xStart + roomWidth);
+        int maxY = Mathf.Max(oldHeight, yStart + roomHeight);
+
+        int newWidth = maxX - minX;
+        int newHeight = maxY - minY;
+
+        int hOffset = -minX;
+        int vOffset = -minY;
+
+        TileType[,] newMap = new TileType[newWidth, newHeight];
+
+        for (int x = 0; x < newWidth; x++)
+            for (int y = 0; y < newHeight; y++)
+                newMap[x, y] = TileType.Empty;
 
         for (int x = 0; x < oldWidth; x++)
         {
             for (int y = 0; y < oldHeight; y++)
             {
-                newMap[x,y] = _map[x,y];
+                newMap[x + hOffset, y + vOffset] = _map[x, y];
             }
         }
 
-        for (int x = oldWidth; x < newMap.GetLength(0); x++)
+        for (int x = 0; x < roomWidth; x++)
         {
             for (int y = 0; y < roomHeight; y++)
             {
-                newMap[x,y] = TileType.Floor;
+                int drawX = x + xStart + hOffset;
+                int drawY = y + yStart + vOffset;
+
+                newMap[drawX, drawY] = TileType.Floor;
             }
         }
 

@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b2c778def40a574b8a2748e06d87dc4, type: 3}
-  m_Name: BaseWave_1
-  m_EditorClassIdentifier: Assembly-CSharp::WaveData
-  <WaveName>k__BackingField: Wave
-  <EnemyCount>k__BackingField: 3
-  <TimeBetweenSpawns>k__BackingField: 1
+  m_Script: {fileID: 11500000, guid: 42d08331465787e40b1c08b6425d5f82, type: 3}
+  m_Name: Room 5x5 1
+  m_EditorClassIdentifier: Assembly-CSharp::RoomPreset
+  <Size>k__BackingField: {x: 5, y: 5}
