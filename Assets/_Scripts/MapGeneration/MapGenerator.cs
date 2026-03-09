@@ -47,7 +47,11 @@ public class MapGenerator : MonoBehaviour
 
         _debugExits = mapBuilder.ЕxitsList;
 
-        Grid = new MapGrid(_currentMap.MapSize, _currentMap.TileSize);
+        float pivotX = (_currentMap.MapSize.x - 1) / 2f + mapBuilder.LastHOffset;
+        float pivotY = (_currentMap.MapSize.y - 1) / 2f + mapBuilder.LastVOffset;
+
+        Vector2 finalSize = new Vector2(mapTiles.GetLength(0), mapTiles.GetLength(1));
+        Grid = new MapGrid(finalSize, _currentMap.TileSize, new Vector2(pivotX, pivotY));
 
         _currentMapData = new LevelMapData(mapTiles, _currentMap.MapSize, _currentMap.TileSize, _currentMap.Seed, Grid);
 
@@ -93,30 +97,4 @@ public class MapGenerator : MonoBehaviour
 
         return gameObject.transform;
     }
-
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        // Если карта еще не сгенерирована или выходов нет — ничего не рисуем
-        if (_debugExits == null) return;
-
-        GUIStyle style = new GUIStyle();
-        style.normal.textColor = Color.red; // Числа будут красными
-        style.fontSize = 15;
-
-        for (int i = 0; i < _debugExits.Count; i++)
-        {
-            Coord e = _debugExits[i];
-            // Переводим координаты тайла в мировой мир (используем твой Grid)
-            Vector3 worldPos = Grid.CoordToWorld(e.x, e.y);
-
-            // Рисуем сферу в точке выхода
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(worldPos + Vector3.up * 0.5f, 0.2f);
-
-            // Рисуем индекс цифрой чуть выше сферы
-            UnityEditor.Handles.Label(worldPos + Vector3.up * 1.5f, i.ToString(), style);
-        }
-    }
-#endif
 }

@@ -4,25 +4,21 @@ public class MapGrid
 {
     private readonly Vector2 _mapSize;
     private readonly float _tileSize;
+    private readonly Vector2 _pivot;
 
-    public MapGrid(Vector2 mapSize, float tileSize)
+    public MapGrid(Vector2 mapSize, float tileSize, Vector2 pivot)
     {
         _mapSize = mapSize;
         _tileSize = tileSize;
+        _pivot = pivot;
     }
 
-    public Vector3 CoordToWorld(float xCoord, float yCoord)
+    public Vector3 CoordToWorld(float x, float y)
     {
-        float mapWidth = _mapSize.x * _tileSize;
-        float mapHeight = _mapSize.y * _tileSize;
+        float worldX = (x - _pivot.x) * _tileSize;
+        float worldZ = (y - _pivot.y) * _tileSize;
 
-        float startX = -mapWidth / 2f;
-        float startZ = -mapHeight / 2f;
-
-        float x = startX + (xCoord * _tileSize) + (_tileSize / 2f);
-        float z = startZ + (yCoord * _tileSize) + (_tileSize / 2f);
-
-        return new Vector3(x, 0, z);
+        return new Vector3(worldX, 0, worldZ);
     }
 
     public Vector3 CoordToWorld(Coord coord) => CoordToWorld(coord.x, coord.y);

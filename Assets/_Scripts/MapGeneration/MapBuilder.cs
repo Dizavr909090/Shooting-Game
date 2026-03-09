@@ -12,6 +12,9 @@ public class MapBuilder
     private Queue<Coord> _shuffledCoords;
     private List<Coord> _allFreeEdgeTiles = new List<Coord>();
 
+    public int LastHOffset { get; private set; }
+    public int LastVOffset { get; private set; }
+
     public List<Coord> ЕxitsList { get; private set; } = new List<Coord>();
 
     public MapBuilder(MapConfig config)
@@ -206,6 +209,9 @@ public class MapBuilder
                 newMap[drawX, drawY] = TileType.Floor;
             }
         }
+
+        LastHOffset = hOffset;
+        LastVOffset = vOffset;
 
         _map = newMap;
     }
