@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MapSettings
   _maps:
   - _mapSize: {x: 10, y: 10}
-    _seed: 15
+    _seed: 0
     _tileSize: 2
     _minObstacleHeight: 1
     _maxObstacleHeight: 4
@@ -24,7 +24,7 @@ MonoBehaviour:
     _obstaclePercent: 0
     Rooms:
     - {fileID: 11400000, guid: 0ed7e1f50744e4a4aa0fb11d8ee3f375, type: 2}
-    - {fileID: 11400000, guid: 0ed7e1f50744e4a4aa0fb11d8ee3f375, type: 2}
+    SelectedExitIndex: -1
   - _mapSize: {x: 5, y: 5}
     _seed: 1
     _tileSize: 2
@@ -35,3 +35,5 @@ MonoBehaviour:
     _outlinePercent: 0
     _obstaclePercent: 0.07
     Rooms: []
+    SelectedExitIndex: 0
+  <LavaPrefab>k__BackingField: {fileID: 0}

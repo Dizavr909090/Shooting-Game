@@ -68,12 +68,30 @@ public class MapMesh : MonoBehaviour
                         else if (targetType == TileType.Obstacle)
                         {
                             float randomHeight = Mathf.Lerp(
-                                currentMap.MinObstacleHeight, 
-                                currentMap.MaxObstacleHeight, 
+                                currentMap.MinObstacleHeight,
+                                currentMap.MaxObstacleHeight,
                                 (float)rngBySeed.NextDouble());
 
                             AddObstacle(pos, halfSize, randomHeight);
-                        }     
+                        }
+                        else if (targetType == TileType.Boundary)
+                        {
+                            AddFace(
+                                new Vector3(pos.x - halfSize, 0, pos.z - halfSize), // 0: BL                 
+                                new Vector3(pos.x - halfSize, 0, pos.z + halfSize), // 2: FL
+                                new Vector3(pos.x + halfSize, 0, pos.z - halfSize), // 1: BR
+                                new Vector3(pos.x + halfSize, 0, pos.z + halfSize)  // 3: FR
+                            );
+                        }
+                        else if (targetType == TileType.Empty)
+                        {
+                            AddFace(
+                                new Vector3(pos.x - halfSize, 0, pos.z - halfSize), // 0: BL                 
+                                new Vector3(pos.x - halfSize, 0, pos.z + halfSize), // 2: FL
+                                new Vector3(pos.x + halfSize, 0, pos.z - halfSize), // 1: BR
+                                new Vector3(pos.x + halfSize, 0, pos.z + halfSize)  // 3: FR
+                            );
+                        }
                     }
                     else
                     {

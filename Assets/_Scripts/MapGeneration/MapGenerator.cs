@@ -9,11 +9,21 @@ public class MapGenerator : MonoBehaviour
 {
     public event Action<LevelMapData> MapGenerated;
 
+    [System.Serializable]
+    public struct MeshReferences
+    {
+        public MapMesh Floor;
+        public MapMesh Obstacle;
+        public MapMesh Boundary;
+        public MapMesh Lava;
+    }
+
+    [SerializeField] private MeshReferences _meshes;
+
+    [Header("Map")]
     [SerializeField] private MapSettings _mapSettings;
     [SerializeField] private string _holderName = "Generated Map";
     [SerializeField] private NavMeshSurface _navMeshSurface;
-    [SerializeField] private MapMesh _floorMesh;
-    [SerializeField] private MapMesh _obstacleMesh;
     [SerializeField] private int _mapIndex;
 
     private List<Coord> _debugExits;
@@ -56,8 +66,8 @@ public class MapGenerator : MonoBehaviour
         _currentMapData = new LevelMapData(mapTiles, _currentMap.MapSize, _currentMap.TileSize, _currentMap.Seed, Grid);
 
         Transform mapHolder = CreateMapHolder(_holderName, transform);
-        _floorMesh.GenerateMesh(_currentMapData, _mapSettings, _currentMap, TileType.Floor);
-        _obstacleMesh.GenerateMesh(_currentMapData, _mapSettings, _currentMap, TileType.Obstacle);
+
+        GenerateMesh();
 
         GenerateNavMesh();
 
@@ -76,6 +86,14 @@ public class MapGenerator : MonoBehaviour
         NavMeshSurface.size = new Vector3(fullWidth, 10f, fullDepth);
 
         NavMeshSurface.BuildNavMesh();
+    }
+
+    private void GenerateMesh()
+    {
+        _meshes.Floor.GenerateMesh(_currentMapData, _mapSettings, _currentMap, TileType.Floor);
+        _meshes.Obstacle.GenerateMesh(_currentMapData, _mapSettings, _currentMap, TileType.Obstacle);
+        _meshes.Boundary.GenerateMesh(_currentMapData, _mapSettings, _currentMap, TileType.Boundary);
+        _meshes.Lava.GenerateMesh(_currentMapData, _mapSettings, _currentMap, TileType.Empty);
     }
 
     private Transform CreateMapHolder(string name, Transform parent)

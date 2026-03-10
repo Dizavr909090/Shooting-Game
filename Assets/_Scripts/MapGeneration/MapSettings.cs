@@ -6,6 +6,8 @@ public class MapSettings : ScriptableObject
 {
     [SerializeField] private MapConfig[] _maps;
 
+    [field: SerializeField] public GameObject LavaPrefab { get; private set; }
+
     public MapConfig[] Maps => _maps;
 
     [System.Serializable]
@@ -45,7 +47,7 @@ public class MapSettings : ScriptableObject
     }
 }
 
-public enum TileType { Floor, Obstacle, Empty }
+public enum TileType { Floor, Obstacle, Boundary, Lava, Empty }
 
 public struct LevelMapData
 {

@@ -39,7 +39,8 @@ public class MapBuilder
             int index = Mathf.Clamp(_config.SelectedExitIndex, 0, ЕxitsList.Count - 1);
             ExpandMap(ЕxitsList[index]);
         }
-            
+
+        _map = MapDecorator.AddBoundaries(_map);
 
         return _map;
     }
@@ -179,11 +180,11 @@ public class MapBuilder
         int maxX = Mathf.Max(oldWidth, xStart + roomWidth);
         int maxY = Mathf.Max(oldHeight, yStart + roomHeight);
 
-        int newWidth = maxX - minX;
-        int newHeight = maxY - minY;
+        int newWidth = maxX - minX + 2;
+        int newHeight = maxY - minY + 2;
 
-        int hOffset = -minX;
-        int vOffset = -minY;
+        int hOffset = -minX + 1;
+        int vOffset = -minY + 1;
 
         TileType[,] newMap = new TileType[newWidth, newHeight];
 

@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6dff35394bd7545b7c3409f1d2ba3b, type: 3}
+  m_Name: VisualSettings1
+  m_EditorClassIdentifier: Assembly-CSharp::MapVisualDatabase
+  FloorMesh: {fileID: 2341371153148709628, guid: 80157b95018af6c4b9fd5b3f469307a5, type: 3}
+  ObstacleMesh: {fileID: 4529015551066641907, guid: c3565e387dc906e45ad56c764fcea610, type: 3}
+  BoundaryMesh: {fileID: 4366576518437633438, guid: 9454a8ccf2b9cc84b9801c94654acbe7, type: 3}
+  LavaMesh: {fileID: 4366576518437633438, guid: 9454a8ccf2b9cc84b9801c94654acbe7, type: 3}
