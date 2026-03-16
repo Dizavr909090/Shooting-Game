@@ -14,5 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GunStats
   <ProjData>k__BackingField: {fileID: 11400000, guid: f8d53edd63fa92e48843b24cfafa8045, type: 2}
   <MuzzleVelocityModifier>k__BackingField: 1
-  <TimeBetweenShots>k__BackingField: 0.2
+  <FireRate>k__BackingField: 0.1
   <BaseSpread>k__BackingField: 0.1
+  <BurstCount>k__BackingField: 0
+  <TimeBetweenShotsInBurst>k__BackingField: 0
+  <BurstCooldown>k__BackingField: 0
+  <MaxAmmo>k__BackingField: 100
+  <MagazineSize>k__BackingField: 20
+  <ReloadTime>k__BackingField: 2
+  <IsInfiniteAmmo>k__BackingField: 0
+  <ReloadMode>k__BackingField: 0

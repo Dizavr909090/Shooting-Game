@@ -7,6 +7,7 @@ public class InputManager : MonoBehaviour
 {
     public event Action<Vector2> OnMove;
     public event Action OnShootPressed;
+    public event Action ReloadPressed;
 
     private PlayerControls _playerControls;
     
@@ -25,6 +26,8 @@ public class InputManager : MonoBehaviour
 
         _playerControls.Player.Shoot.performed += HandleShootPerformed;
         _playerControls.Player.Shoot.canceled += HandleShootCanceled;
+
+        _playerControls.Player.Reload.performed += HandleReloadPerformed;
     }
 
     void OnDisable()
@@ -36,6 +39,8 @@ public class InputManager : MonoBehaviour
 
             _playerControls.Player.Shoot.performed -= HandleShootPerformed;
             _playerControls.Player.Shoot.canceled -= HandleShootCanceled;
+
+            _playerControls.Player.Reload.performed -= HandleReloadPerformed;
 
             _playerControls.Disable();
         }
@@ -63,5 +68,10 @@ public class InputManager : MonoBehaviour
     private void HandleShootCanceled(InputAction.CallbackContext context)
     {
         IsShooting = false;
+    }
+
+    private void HandleReloadPerformed(InputAction.CallbackContext context)
+    {
+        ReloadPressed?.Invoke();
     }
 }

@@ -17,8 +17,8 @@ public class GunStats : ScriptableObject
     [field: SerializeField] public int MaxAmmo { get; private set; }
     [field: SerializeField] public int MagazineSize { get; private set; }
     [field: SerializeField] public float ReloadTime { get; private set; }
-    [field: SerializeField] public bool InfiniteAmmo { get; private set; }
-
-    [SerializeField] public enum ReloadType { Magazine, Single, None}
+    [field: SerializeField] public bool IsInfiniteAmmo { get; private set; }
     [field: SerializeField] public ReloadType ReloadMode { get; private set; } 
 }
+
+[SerializeField] public enum ReloadType { Magazine, Single, None }

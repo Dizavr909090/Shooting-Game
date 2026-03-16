@@ -1,14 +1,14 @@
+using System;
 using UnityEngine;
 
 public class GunController : MonoBehaviour, IShootable
 {
     [SerializeField] private Transform _weaponHold;
     [SerializeField] private Gun _startingGun;
-    
+    [SerializeField] private GunEventChannelSO _gunEquipChannel;
+
     private FractionRelationsConfig.FractionType _shooterFractionType;
     private Gun _equippedGun;
-
-    private enum WhoIsUsing { Player, Enemy }
 
     public bool CanShoot => _equippedGun != null && _equippedGun.CanShoot;
 
@@ -27,6 +27,11 @@ public class GunController : MonoBehaviour, IShootable
         _equippedGun?.StopFiring();
     }
 
+    public void Reload()
+    {
+        _equippedGun.ForceReload();
+    }
+
     public void EquipGun(Gun gunToEquip)
     {
         if (_equippedGun != null)
@@ -37,6 +42,8 @@ public class GunController : MonoBehaviour, IShootable
         _equippedGun.transform.parent = _weaponHold;
         _shooterFractionType = _equippedGun.GetComponentInParent<IFractionProvider>()?.FractionType ?? 
             FractionRelationsConfig.FractionType.Neutral;
+
+        _gunEquipChannel.RaiseEvent(_equippedGun);
     }
 
     private void SelectStartingGun()

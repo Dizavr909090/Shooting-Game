@@ -15,18 +15,27 @@ public class PlayerShooting : MonoBehaviour
     private void OnEnable()
     {
         _input = FindFirstObjectByType<InputManager>();
+        _input.ReloadPressed += _shootable.Reload;
     }
 
     private void Update()
-    {       
+    {
+        HandleShooting();
+    }
+
+    private void OnDisable()
+    {
+        _input.ReloadPressed -= _shootable.Reload;
+    }
+
+    private void HandleShooting()
+    {
         if (_input.IsShooting)
         {
             if (_shootable.CanShoot)
             {
-                _shootable.Shoot();
+                _shootable.Shoot();              
             }
-            
-            Camera.main.transform.DOShakePosition(0.03f, 0.03f, 1, 90, false, true);
-        } 
+        }
     }
 }

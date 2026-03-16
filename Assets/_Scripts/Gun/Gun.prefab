@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4971256718294014237}
   - component: {fileID: -7043338177790030131}
+  - component: {fileID: 2861769477287638607}
   m_Layer: 0
   m_Name: Gun
   m_TagString: Untagged
@@ -79,6 +80,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Gun
   _muzzleTransform: {fileID: 4142318783944462262}
   _gunStats: {fileID: 11400000, guid: 99ae45f48c5f7b64aad35d89bb63b143, type: 2}
+  _ammoHandler: {fileID: 2861769477287638607}
+--- !u!114 &2861769477287638607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960818352074925751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c37a8b9428f74349a5d2ed11c8bf7fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AmmoHandler
 --- !u!1 &4173675924752932334
 GameObject:
   m_ObjectHideFlags: 0
