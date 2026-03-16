@@ -16,25 +16,19 @@ public static class MapValidator
         {
             Coord tile = queue.Dequeue();
 
-            for (int x = -1; x <= 1; x++)
+            foreach (var dir in MapBuilder.Directions.All)
             {
-                for (int y = -1; y <= 1; y++)
-                {
-                    int neighbourX = tile.x + x;
-                    int neighbourY = tile.y + y;
+                int neighbourX = tile.x + dir.x;
+                int neighbourY = tile.y + dir.y;
 
-                    if (x == 0 || y == 0)
-                    {
-                        if (neighbourX >= 0 && neighbourX < map.GetLength(0) &&
+                if (neighbourX >= 0 && neighbourX < map.GetLength(0) &&
                             neighbourY >= 0 && neighbourY < map.GetLength(1))
-                        {
-                            if (!mapFlags[neighbourX, neighbourY] && !(map[neighbourX, neighbourY] == TileType.Obstacle))
-                            {
-                                mapFlags[neighbourX, neighbourY] = true;
-                                queue.Enqueue(new Coord(neighbourX, neighbourY));
-                                accessibleTileCount++;
-                            }
-                        }
+                {
+                    if (!mapFlags[neighbourX, neighbourY] && map[neighbourX, neighbourY] == TileType.Floor)
+                    {
+                        mapFlags[neighbourX, neighbourY] = true;
+                        queue.Enqueue(new Coord(neighbourX, neighbourY));
+                        accessibleTileCount++;
                     }
                 }
             }

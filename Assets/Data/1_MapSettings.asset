@@ -13,27 +13,27 @@ MonoBehaviour:
   m_Name: 1_MapSettings
   m_EditorClassIdentifier: Assembly-CSharp::MapSettings
   _maps:
-  - _mapSize: {x: 10, y: 10}
-    _seed: 0
-    _tileSize: 2
-    _minObstacleHeight: 1
-    _maxObstacleHeight: 4
-    _foregroundColour: {r: 0, g: 0, b: 0, a: 0}
-    _backgroundColour: {r: 1, g: 0, b: 1, a: 1}
-    _outlinePercent: 0
-    _obstaclePercent: 0
+  - HubSize: {x: 20, y: 20}
+    Seed: 1
+    TileSize: 2
+    MinObstacleHeight: 2.74
+    MaxObstacleHeight: 3.25
+    ForegroundColour: {r: 0, g: 0, b: 0, a: 0}
+    BackgroundColour: {r: 0, g: 0, b: 0, a: 0}
     Rooms:
     - {fileID: 11400000, guid: 0ed7e1f50744e4a4aa0fb11d8ee3f375, type: 2}
-    SelectedExitIndex: -1
-  - _mapSize: {x: 5, y: 5}
-    _seed: 1
-    _tileSize: 2
-    _minObstacleHeight: 1
-    _maxObstacleHeight: 4
-    _foregroundColour: {r: 0, g: 0, b: 0, a: 0}
-    _backgroundColour: {r: 0.15408616, g: 0.9150943, b: 0.13381095, a: 1}
-    _outlinePercent: 0
+    SelectedExitIndex: 1
+    MaxGridSize: 100
+    _obstaclePercent: 0.085
+  - HubSize: {x: 20, y: 16}
+    Seed: 2
+    TileSize: 2
+    MinObstacleHeight: 2
+    MaxObstacleHeight: 3
+    ForegroundColour: {r: 0, g: 0, b: 0, a: 0}
+    BackgroundColour: {r: 0, g: 0, b: 0, a: 0}
+    Rooms:
+    - {fileID: 11400000, guid: 0ed7e1f50744e4a4aa0fb11d8ee3f375, type: 2}
+    SelectedExitIndex: 1
+    MaxGridSize: 100
     _obstaclePercent: 0.07
-    Rooms: []
-    SelectedExitIndex: 0
-  <LavaPrefab>k__BackingField: {fileID: 0}

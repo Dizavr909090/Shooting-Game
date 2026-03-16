@@ -24,6 +24,7 @@ public class StateMachine : MonoBehaviour
 
     public float DistanceToTarget => _distanceToTarget;
     [SerializeField] public ITargetable CurrentTarget => _targetProvider?.Target;
+    [SerializeField] public bool IsTargetVisible => _targetProvider != null && _targetProvider.IsVisible;
 
     private void Update()
     {

@@ -1,3 +1,5 @@
+using System;
+
 public static class Utility
 {
     public static T[] ShuffleArray<T>(T[] array, int seed)
@@ -14,6 +16,7 @@ public static class Utility
 
         return array;
     }
+
     public static T[] ShuffleArray<T>(T[] array)
     {
         System.Random prng = new System.Random();
@@ -27,5 +30,12 @@ public static class Utility
         }
 
         return array;
+    }
+
+    public static int RandomRange(int min, int max, int seed)
+    {
+        System.Random prng = new System.Random(seed);
+
+        return prng.Next(min, max);
     }
 }

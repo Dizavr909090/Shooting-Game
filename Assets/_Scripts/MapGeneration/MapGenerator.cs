@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEngine;
@@ -9,7 +8,8 @@ public class MapGenerator : MonoBehaviour
 {
     public event Action<LevelMapData> MapGenerated;
 
-    [System.Serializable]
+
+    [Serializable]
     public struct MeshReferences
     {
         public MapMesh Floor;
@@ -18,18 +18,16 @@ public class MapGenerator : MonoBehaviour
         public MapMesh Lava;
     }
 
-    [SerializeField] private MeshReferences _meshes;
-
     [Header("Map")]
     [SerializeField] private MapSettings _mapSettings;
     [SerializeField] private string _holderName = "Generated Map";
     [SerializeField] private NavMeshSurface _navMeshSurface;
     [SerializeField] private int _mapIndex;
-
-    private List<Coord> _debugExits;
+    [SerializeField] private MeshReferences _meshes;
 
     private LevelMapData _currentMapData;
-    private MapConfig _currentMap;
+    private MapConfig _config;
+    
 
     public MapGrid Grid { get; private set; }
     public MapSettings MapSettings => _mapSettings;
@@ -50,20 +48,16 @@ public class MapGenerator : MonoBehaviour
 
     public void GenerateMap()
     {
-        _currentMap = _mapSettings.Maps[_mapIndex];
+        _config = _mapSettings.Maps[_mapIndex];
 
-        MapBuilder mapBuilder = new MapBuilder(_currentMap);
-        TileType[,] mapTiles = mapBuilder.Build();
+        MapBuilder mapBuilder = new MapBuilder(_config);
+        TileType[,] map = mapBuilder.Build();
 
-        _debugExits = mapBuilder.ЕxitsList;
+        Vector2 finalSize = new Vector2(map.GetLength(0), map.GetLength(1));
 
-        float pivotX = (_currentMap.MapSize.x - 1) / 2f + mapBuilder.LastHOffset;
-        float pivotY = (_currentMap.MapSize.y - 1) / 2f + mapBuilder.LastVOffset;
+        Grid = new MapGrid(finalSize, _config.TileSize, _config.WorldCenter);
 
-        Vector2 finalSize = new Vector2(mapTiles.GetLength(0), mapTiles.GetLength(1));
-        Grid = new MapGrid(finalSize, _currentMap.TileSize, new Vector2(pivotX, pivotY));
-
-        _currentMapData = new LevelMapData(mapTiles, _currentMap.MapSize, _currentMap.TileSize, _currentMap.Seed, Grid);
+        _currentMapData = new LevelMapData(map, finalSize, _config.TileSize, _config.Seed, Grid, _config.HubSize);
 
         Transform mapHolder = CreateMapHolder(_holderName, transform);
 
@@ -76,12 +70,13 @@ public class MapGenerator : MonoBehaviour
 
     private void GenerateNavMesh()
     {
-        float fullWidth = _currentMapData.tileMap.GetLength(0) * _currentMap.TileSize;
-        float fullDepth = _currentMapData.tileMap.GetLength(1) * _currentMap.TileSize;
+        float mapWidth = _currentMapData.tileMap.GetLength(0);
+        float mapHeight = _currentMapData.tileMap.GetLength(1);
 
-        float centerPointX = (_currentMapData.tileMap.GetLength(0) - 1) / 2f;
-        float centerPointY = (_currentMapData.tileMap.GetLength(1) - 1) / 2f;
-        NavMeshSurface.center = Grid.CoordToWorld(centerPointX, centerPointY);
+        float fullWidth = mapWidth * _config.TileSize;
+        float fullDepth = mapHeight * _config.TileSize;
+
+        NavMeshSurface.center = _currentMapData.WorldCenter;
 
         NavMeshSurface.size = new Vector3(fullWidth, 10f, fullDepth);
 
@@ -90,10 +85,10 @@ public class MapGenerator : MonoBehaviour
 
     private void GenerateMesh()
     {
-        _meshes.Floor.GenerateMesh(_currentMapData, _mapSettings, _currentMap, TileType.Floor);
-        _meshes.Obstacle.GenerateMesh(_currentMapData, _mapSettings, _currentMap, TileType.Obstacle);
-        _meshes.Boundary.GenerateMesh(_currentMapData, _mapSettings, _currentMap, TileType.Boundary);
-        _meshes.Lava.GenerateMesh(_currentMapData, _mapSettings, _currentMap, TileType.Empty);
+        _meshes.Floor.GenerateMesh(_currentMapData, _mapSettings, _config, TileType.Floor);
+        _meshes.Obstacle.GenerateMesh(_currentMapData, _mapSettings, _config, TileType.Obstacle);
+        _meshes.Boundary.GenerateMesh(_currentMapData, _mapSettings, _config, TileType.Boundary);
+        _meshes.Lava.GenerateMesh(_currentMapData, _mapSettings, _config, TileType.Empty);
     }
 
     private Transform CreateMapHolder(string name, Transform parent)

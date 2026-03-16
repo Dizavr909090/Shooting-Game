@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class RangedAttackState : BaseState
 {
+    private Vector3 _lastVisiblePosition;
+    private float _lostVisibilityTimer;
+    private const float VisibilityTimeout = 0.5f;
+
     private IShootable _shootable;
     private EnemyStats _stats;
     private EnemyMovement _movement;
@@ -28,14 +32,46 @@ public class RangedAttackState : BaseState
     public override void Update()
     {
         if (HandleTargetLost()) return;
+
+        bool isVisible = _stateMachine.IsTargetVisible;
+
+        if (!isVisible)
+        {
+            _lostVisibilityTimer += Time.deltaTime;
+
+            if (_lostVisibilityTimer >= VisibilityTimeout)
+            {
+                _stateMachine.SwitchState<ChaseState>();
+                return;
+            }
+        }
+        else
+        {
+            _lostVisibilityTimer = 0;
+        }
+
         if (TrySwitchIfOutOfRange()) return;
 
-        Vector3 targetPos = _stateMachine.CurrentTarget.Transform.position;
-        _rotator.RotateTowards(targetPos);
-
-        if (_rotator.IsFacingTarget(targetPos))
+        if (_stateMachine.IsTargetVisible)
         {
-            if (_shootable.CanShoot) _shootable.Shoot();
+            _lastVisiblePosition = _stateMachine.CurrentTarget.Transform.position;
+        }
+
+        Vector3 lookAtPos = _stateMachine.IsTargetVisible
+            ? _stateMachine.CurrentTarget.Transform.position
+            : _lastVisiblePosition;
+
+        Vector3 targetPos = _stateMachine.CurrentTarget.Transform.position;
+        _rotator.RotateTowards(lookAtPos);
+
+        if (_rotator.IsFacingTarget(lookAtPos))
+        {
+            bool canSuppress = !isVisible && _lostVisibilityTimer < VisibilityTimeout;
+
+            if ((isVisible || canSuppress) && _shootable.CanShoot)
+            {
+                _shootable.Shoot();
+            }
         }
     }
 

@@ -1,5 +1,4 @@
 using UnityEngine;
-using DG.Tweening;
 
 public class Gun : MonoBehaviour
 {
@@ -12,7 +11,7 @@ public class Gun : MonoBehaviour
 
     public void Shoot(FractionRelationsConfig.FractionType shooterFraction)
     {
-        nextShotTime = Time.time + _gunStats.TimeBetweenShots;
+        nextShotTime = Time.time + _gunStats.FireRate;
 
         ProjectileVisual projToShoot = ProjectileProvider.Instance.GetProjectile(_gunStats.ProjData);
         projToShoot.transform.position = _muzzleTransform.position;
@@ -28,9 +27,6 @@ public class Gun : MonoBehaviour
             projToShoot,
             shooterFraction
             );
-
-        transform.DOLocalMoveZ(-0.1f, 0.05f).SetRelative().SetLoops(2, LoopType.Yoyo);
-        transform.DOPunchRotation(new Vector3(-20, 0, 0), 0.1f);
     }
 
     private Vector3 CalculateSpread()
