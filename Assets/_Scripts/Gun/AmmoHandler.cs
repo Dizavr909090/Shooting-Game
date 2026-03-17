@@ -7,6 +7,7 @@ public class AmmoHandler : MonoBehaviour
     public event Action ReloadStart;
     public event Action ReloadEnd;
     public event Action AmmoChanged;
+    public event Action<float> ReloadProgressChanged;
 
     private int _maxAmmo;
     private int _magazineSize;
