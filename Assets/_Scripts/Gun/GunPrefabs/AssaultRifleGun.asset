@@ -10,17 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a49fc083622a2a640a2bda2f20e432f8, type: 3}
-  m_Name: Gun_1
+  m_Name: AssaultRifleGun
   m_EditorClassIdentifier: Assembly-CSharp::GunStats
   <ProjData>k__BackingField: {fileID: 11400000, guid: f8d53edd63fa92e48843b24cfafa8045, type: 2}
+  <ShootMode>k__BackingField: 0
+  <PelletCount>k__BackingField: 0
   <MuzzleVelocityModifier>k__BackingField: 1
   <FireRate>k__BackingField: 0.1
   <BaseSpread>k__BackingField: 0.1
   <BurstCount>k__BackingField: 0
   <TimeBetweenShotsInBurst>k__BackingField: 0
   <BurstCooldown>k__BackingField: 0
+  <ReloadMode>k__BackingField: 0
   <MaxAmmo>k__BackingField: 100
   <MagazineSize>k__BackingField: 20
-  <ReloadTime>k__BackingField: 2
+  <ReloadTime>k__BackingField: 1
   <IsInfiniteAmmo>k__BackingField: 0
-  <ReloadMode>k__BackingField: 0

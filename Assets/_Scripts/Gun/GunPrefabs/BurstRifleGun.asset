@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a49fc083622a2a640a2bda2f20e432f8, type: 3}
+  m_Name: BurstRifleGun
+  m_EditorClassIdentifier: Assembly-CSharp::GunStats
+  <ProjData>k__BackingField: {fileID: 11400000, guid: f8d53edd63fa92e48843b24cfafa8045, type: 2}
+  <ShootMode>k__BackingField: 1
+  <PelletCount>k__BackingField: 1
+  <MuzzleVelocityModifier>k__BackingField: 1
+  <FireRate>k__BackingField: 0
+  <BaseSpread>k__BackingField: 0.1
+  <BurstCount>k__BackingField: 3
+  <TimeBetweenShotsInBurst>k__BackingField: 0.1
+  <BurstCooldown>k__BackingField: 0.5
+  <ReloadMode>k__BackingField: 0
+  <MaxAmmo>k__BackingField: 200
+  <MagazineSize>k__BackingField: 30
+  <ReloadTime>k__BackingField: 1
+  <IsInfiniteAmmo>k__BackingField: 0

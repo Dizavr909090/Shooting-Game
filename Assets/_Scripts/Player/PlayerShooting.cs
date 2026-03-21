@@ -1,8 +1,9 @@
-using DG.Tweening;
 using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
+    [SerializeField] private GunEventChannelSO _gunEquipChannel;
+
     private InputManager _input;
     private IShootable _shootable;
 
@@ -13,29 +14,49 @@ public class PlayerShooting : MonoBehaviour
     }
 
     private void OnEnable()
-    {
-        _input = FindFirstObjectByType<InputManager>();
+    {     
         _input.ReloadPressed += _shootable.Reload;
+        _gunEquipChannel.EventRaised += HandleGunChanged;
     }
 
     private void Update()
     {
-        HandleShooting();
+        if (_shootable.CurrentShootMode == ShootType.Auto ||
+            _shootable.CurrentShootMode == ShootType.AutoBurst ||
+            _shootable.CurrentShootMode == ShootType.AutoSingle)
+            HandleAutoShooting();
     }
 
     private void OnDisable()
     {
+        _gunEquipChannel.EventRaised -= HandleGunChanged;
         _input.ReloadPressed -= _shootable.Reload;
+        _input.OnShootPressed -= HandleSingleShoot;
     }
 
-    private void HandleShooting()
+    private void HandleGunChanged(Gun newGun)
     {
-        if (_input.IsShooting)
+        _input.OnShootPressed -= HandleSingleShoot;
+
+        if (!newGun.IsAutomaticMode)
         {
-            if (_shootable.CanShoot)
-            {
-                _shootable.Shoot();              
-            }
+            _input.OnShootPressed += HandleSingleShoot;
+        }
+    }
+
+    private void HandleAutoShooting()
+    {
+        if (_input.IsShooting && _shootable.CanShoot)
+        {
+            _shootable.Shoot();
+        }
+    }
+
+    private void HandleSingleShoot()
+    {
+        if (_shootable.CanShoot)
+        {
+            _shootable.Shoot();
         }
     }
 }

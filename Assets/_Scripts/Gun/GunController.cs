@@ -6,10 +6,11 @@ public class GunController : MonoBehaviour, IShootable
     [SerializeField] private Transform _weaponHold;
     [SerializeField] private Gun _startingGun;
     [SerializeField] private GunEventChannelSO _gunEquipChannel;
-
+    
     private FractionRelationsConfig.FractionType _shooterFractionType;
     private Gun _equippedGun;
 
+    public ShootType CurrentShootMode => _equippedGun.ShootMode;
     public bool CanShoot => _equippedGun != null && _equippedGun.CanShoot;
 
     private void Start()

@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: -7043338177790030131}
   - component: {fileID: 2861769477287638607}
   m_Layer: 0
-  m_Name: Gun
+  m_Name: AssaultRifle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
 public class AmmoHandler : MonoBehaviour
@@ -99,34 +100,52 @@ public class AmmoHandler : MonoBehaviour
 
     private IEnumerator Reload()
     {
-        if (CanReload())
+        if (!CanReload()) yield break;
+
+        IsReloading = true;
+
+        if (_reloadMod == ReloadType.Magazine)
         {
-            IsReloading = true;
-
-            if (_reloadMod == ReloadType.Single)
+            float timer = 0;
+            
+            while (timer < _reloadTime)
             {
-                while (_currentAmmoInMagazine != _magazineSize)
-                {
-                    yield return new WaitForSeconds(_reloadTime);
+                timer += Time.deltaTime;
+                float progress = timer / _reloadTime;
+                ReloadProgressChanged?.Invoke(progress);
 
-                    _currentAmmo--;
-                    _currentAmmoInMagazine++;
-                    AmmoChanged?.Invoke();
-                }
+                yield return null;
             }
 
-            if (_reloadMod == ReloadType.Magazine)
+            int neededAmmo = _magazineSize - _currentAmmoInMagazine;
+            int availableAmmo = Mathf.Min(neededAmmo, _currentAmmo);
+            _currentAmmo -= availableAmmo;
+            _currentAmmoInMagazine += availableAmmo;
+        }
+        else if (_reloadMod == ReloadType.Single)
+        {
+            while (_currentAmmoInMagazine < _magazineSize && _currentAmmo > 0)
             {
-                yield return new WaitForSeconds(_reloadTime);
+                float timer = 0;
 
-                int neededAmmo = _magazineSize - _currentAmmoInMagazine;
-                int availableAmmo = Mathf.Min(neededAmmo, _currentAmmo);
-                _currentAmmo -= availableAmmo;
-                _currentAmmoInMagazine += availableAmmo;
+                while (timer < _reloadTime)
+                {
+                    timer += Time.deltaTime;
+                    float progress = timer / _reloadTime;
+                    ReloadProgressChanged?.Invoke(progress);
+
+                    yield return null;
+                }
+
+                _currentAmmo--;
+                _currentAmmoInMagazine++;
+                AmmoChanged?.Invoke();
             }
         }
 
-        CancelReload();
+        ReloadProgressChanged?.Invoke(0f);
+        IsReloading = false;
+        _reloadCoroutine = null;
         ReloadEnd?.Invoke();
         AmmoChanged?.Invoke();
     }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent (typeof(AmmoHandler))]
@@ -7,9 +8,12 @@ public class Gun : MonoBehaviour
     [SerializeField] private GunStats _gunStats;
     [SerializeField] private AmmoHandler _ammoHandler;
 
-    private float nextShotTime;
+    private float _nextShotTime;
+    private bool _isFiringBurst;
 
-    public bool CanShoot => Time.time > nextShotTime;
+    public bool CanShoot => Time.time > _nextShotTime;
+    public ShootType ShootMode => _gunStats.ShootMode;
+    public bool IsAutomaticMode => _gunStats.IsAutomaticMode;
 
     private void Awake()
     {
@@ -23,10 +27,53 @@ public class Gun : MonoBehaviour
 
     public void Shoot(FractionRelationsConfig.FractionType shooterFraction)
     {
-        if (_ammoHandler.TryConsumeAmmo())
+        if (ShootMode == ShootType.Auto || ShootMode == ShootType.Single || ShootMode == ShootType.AutoSingle)
         {
-            nextShotTime = Time.time + _gunStats.FireRate;
+            if (_ammoHandler.TryConsumeAmmo())
+            {
+                ExecutePhysicalShot(shooterFraction);
+                _nextShotTime = Time.time + _gunStats.FireRate;
+            }
+        }
+        else if (ShootMode == ShootType.Burst || ShootMode == ShootType.AutoBurst)
+        {
+            if (_isFiringBurst) return;
 
+            StartCoroutine(BurstShootCoroutine(shooterFraction));
+        }
+    }
+
+    public void ForceReload()
+    {
+        _ammoHandler.StartReload();
+    }
+
+    public void StopFiring()
+    {
+       
+    }
+
+    private IEnumerator BurstShootCoroutine(FractionRelationsConfig.FractionType shooterFraction)
+    {
+        _isFiringBurst = true;
+
+        for (int i = 0; i < _gunStats.BurstCount; i++)
+        {
+            if (_ammoHandler.TryConsumeAmmo())
+            {
+                ExecutePhysicalShot(shooterFraction);
+                yield return new WaitForSeconds(_gunStats.TimeBetweenShotsInBurst);
+            }
+        }
+        _nextShotTime = Time.time + _gunStats.BurstCooldown;
+
+        _isFiringBurst = false;
+    }
+
+    private void ExecutePhysicalShot(FractionRelationsConfig.FractionType shooterFraction)
+    {
+        for (int i = 0; i < _gunStats.PelletCount; i++)
+        {
             ProjectileVisual projToShoot = ProjectileProvider.Instance.GetProjectile(_gunStats.ProjData);
             projToShoot.transform.SetPositionAndRotation(
                 _muzzleTransform.position,
@@ -42,17 +89,7 @@ public class Gun : MonoBehaviour
                 projToShoot,
                 shooterFraction
                 );
-        } 
-    }
-
-    public void ForceReload()
-    {
-        _ammoHandler.StartReload();
-    }
-
-    public void StopFiring()
-    {
-       
+        }
     }
 
     private Vector3 CalculateSpread()
@@ -63,7 +100,7 @@ public class Gun : MonoBehaviour
 
         Vector3 spreadDirection = _muzzleTransform.forward
             + (_muzzleTransform.right * randomCircle.x * spreadIntensity)
-            + (_muzzleTransform.up * randomCircle.y * spreadIntensity);
+            + (_muzzleTransform.forward);
 
         spreadDirection.Normalize();
 
