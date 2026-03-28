@@ -1,16 +1,26 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BossExecutionLayer : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private List<BaseAbility> _allAbilities;
+
+    public void UseAbility()
     {
-        
+        var selectedAbility = WeightSelector.GetRandom(_allAbilities);
+
+        UpdateAllWeights(selectedAbility);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void UpdateAllWeights(BaseAbility choseAbility)
     {
-        
+        choseAbility.PerformPenaltyMultiplierForWeight();
+
+        foreach (BaseAbility ability in _allAbilities)
+        {
+            if (ability == choseAbility) continue;
+
+            ability.IncreaseValueOfWeight();
+        }
     }
 }
