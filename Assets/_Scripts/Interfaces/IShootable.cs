@@ -9,4 +9,8 @@ public interface IShootable
     void StopFiring();
 
     void Reload();
+
+    void ResetAmmo();
+
+    void CancelReload();
 }

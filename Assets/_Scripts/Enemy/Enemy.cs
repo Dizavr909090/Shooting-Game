@@ -22,6 +22,7 @@ public class Enemy : MonoBehaviour, IFractionProvider
     private HealthComponent _healthComponent;
     private EnemyPoolableComponent _poolableComponent;
     private IShootable _shootable;
+    private IAmmoProvider _ammoProvider;
     private EnemyRotator _rotator;
     private NavMeshAgent _agent;
 
@@ -36,7 +37,7 @@ public class Enemy : MonoBehaviour, IFractionProvider
         _visuals.Initialize(_attack);
         _movement.Initialize(_targetProvider, _agent);
         _attack.Initialize(_targetProvider, _stats);
-        _stateMachine.Initialize(_movement, _attack, _stats, _healthComponent, _targetProvider, _shootable, _rotator);  
+        _stateMachine.Initialize(_movement, _attack, _stats, _healthComponent, _targetProvider, _shootable, _ammoProvider, _rotator);  
         _rotator.Initialize(_stats, _agent);
     }
 

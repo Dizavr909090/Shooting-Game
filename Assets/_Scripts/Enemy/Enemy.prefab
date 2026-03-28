@@ -268,6 +268,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7246d1220e4ea45b6b1951f0ee64c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPoolable
+  _health: {fileID: 0}
+  _movement: {fileID: 0}
+  _attack: {fileID: 0}
+  _stateMachine: {fileID: 0}
 --- !u!114 &1572886345599358538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,7 +284,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aabb52693f1e9cf44b639a91d44dfbc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StateMachine
-  _timeBetweenChecks: 0.1
+  _currentStateName: 
+  _timeBetweenChecks: 0.02
+  _gunEquipChannel: {fileID: 11400000, guid: def1efd72869e804aa0b5dbe6b27dbe6, type: 2}
 --- !u!114 &5981044848862734688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -309,8 +315,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf43841fd8068894f851865d7c6da064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GunController
+  _startingGun: {fileID: -7043338177790030131, guid: e683d8432eeb8584b9554c946a1ca5cf, type: 3}
   _weaponHold: {fileID: 8651217751435458286}
-  _startingGun: {fileID: -7043338177790030131, guid: a7956e2e238a572438e5197bcd56966a, type: 3}
+  _gunEquipChannel: {fileID: 11400000, guid: def1efd72869e804aa0b5dbe6b27dbe6, type: 2}
 --- !u!114 &2920811672949072090
 MonoBehaviour:
   m_ObjectHideFlags: 0

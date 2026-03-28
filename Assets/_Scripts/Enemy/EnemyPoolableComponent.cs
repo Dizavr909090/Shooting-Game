@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class EnemyPoolableComponent : MonoBehaviour, IPoolableComponent
 {
-    private HealthComponent _health;
-    private EnemyMovement _movement;
-    private EnemyAttack _attack;
-    private StateMachine _stateMachine;
+    [SerializeField] private HealthComponent _health;
+    [SerializeField] private EnemyMovement _movement;
+    [SerializeField] private EnemyAttack _attack;
+    [SerializeField] private StateMachine _stateMachine;
 
     private void Awake()
     {
@@ -15,7 +15,6 @@ public class EnemyPoolableComponent : MonoBehaviour, IPoolableComponent
     public void Reset()
     {
         _health.ResetHealth();
-
         _movement.ResetMovement();
         _attack.ResetAttack();
         _stateMachine.ResetLogic();

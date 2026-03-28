@@ -22,7 +22,7 @@ MonoBehaviour:
   <TimeBetweenShotsInBurst>k__BackingField: 0.1
   <BurstCooldown>k__BackingField: 0.5
   <ReloadMode>k__BackingField: 0
-  <MaxAmmo>k__BackingField: 200
-  <MagazineSize>k__BackingField: 30
+  <MaxAmmo>k__BackingField: 15
+  <MagazineSize>k__BackingField: 15
   <ReloadTime>k__BackingField: 1
   <IsInfiniteAmmo>k__BackingField: 0

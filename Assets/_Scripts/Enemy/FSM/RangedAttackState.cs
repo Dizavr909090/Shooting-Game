@@ -50,6 +50,11 @@ public class RangedAttackState : BaseState
             _lostVisibilityTimer = 0;
         }
 
+        if (!_stateMachine.AmmoProvider.HasAnyAmmo)
+        {
+            _stateMachine.SwitchState<ChaseState>();
+        }
+
         if (TrySwitchIfOutOfRange()) return;
 
         if (_stateMachine.IsTargetVisible)

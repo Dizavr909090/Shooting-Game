@@ -34,9 +34,14 @@ public class ChaseState : BaseState
         if (_stateMachine.DistanceToTarget <= _stats.MeleeAttackRange + _stats.DistanceTolerance)
         {
             _stateMachine.SwitchState<MeleeAttackState>();
+            return;
         }
 
-        if (_stateMachine.DistanceToTarget <= _stats.RangedAttackDistanceMax + _stats.DistanceTolerance &&
+        bool canShoot = _stateMachine.AmmoProvider != null &&
+                    !_stateMachine.AmmoProvider.HasAnyAmmo;
+
+        if (canShoot &&
+            _stateMachine.DistanceToTarget <= _stats.RangedAttackDistanceMax + _stats.DistanceTolerance &&
             _targetProvider.IsVisible)
         {
             _stateMachine.SwitchState<RangedAttackState>();

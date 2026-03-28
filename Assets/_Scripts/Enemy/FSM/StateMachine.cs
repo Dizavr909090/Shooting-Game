@@ -5,7 +5,11 @@ using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
+    [Header("Debug")]
+    [SerializeField] private string _currentStateName;
+
     [SerializeField] private float _timeBetweenChecks = 0.02f;
+    [SerializeField] private GunEventChannelSO _gunEquipChannel;
 
     private EnemyMovement _enemyMovement;
     private EnemyAttack _enemyAttack;
@@ -14,17 +18,30 @@ public class StateMachine : MonoBehaviour
     private IHealth _enemyHealth;
     private ITargetProvider _targetProvider;
     private IShootable _shootable;
+    private IAmmoProvider _ammoProvider;
 
     private float _distanceToTarget;
-    
 
     private Dictionary<Type, IState> _states;
-    [SerializeField] private IState _currentState;
+    private IState _currentState;
     private Coroutine _stateUpdateCoroutine;
 
     public float DistanceToTarget => _distanceToTarget;
-    [SerializeField] public ITargetable CurrentTarget => _targetProvider?.Target;
-    [SerializeField] public bool IsTargetVisible => _targetProvider != null && _targetProvider.IsVisible;
+    public ITargetable CurrentTarget => _targetProvider?.Target;
+    public IAmmoProvider AmmoProvider => _ammoProvider;
+    public bool IsTargetVisible => _targetProvider != null && _targetProvider.IsVisible;
+
+    private void OnEnable()
+    {
+        if (_gunEquipChannel != null)
+            _gunEquipChannel.EventRaised += HandleGunEquipped;
+    }
+
+    private void OnDisable()
+    {
+        if (_gunEquipChannel != null)
+            _gunEquipChannel.EventRaised += HandleGunEquipped;
+    }
 
     private void Update()
     {
@@ -48,6 +65,7 @@ public class StateMachine : MonoBehaviour
 
         _currentState?.OnExit();
         _currentState = _states[typeof(T)];
+        _currentStateName = typeof(T).Name;
         _currentState?.OnEnter();
     }
 
@@ -58,6 +76,7 @@ public class StateMachine : MonoBehaviour
         IHealth health, 
         ITargetProvider targetProvider,
         IShootable shootable,
+        IAmmoProvider ammoProvider,
         EnemyRotator rotator)
     {
         _enemyMovement = movement;
@@ -66,6 +85,7 @@ public class StateMachine : MonoBehaviour
         _enemyHealth = health;
         _targetProvider = targetProvider;
         _shootable = shootable;
+        _ammoProvider = ammoProvider;
         _enemyRotator = rotator;
 
         _states = new Dictionary<Type, IState>()
@@ -74,6 +94,7 @@ public class StateMachine : MonoBehaviour
             {typeof(ChaseState), new ChaseState(this, _enemyMovement, _enemyStats, _targetProvider, _enemyRotator) },
             {typeof(MeleeAttackState), new MeleeAttackState(this, _enemyMovement, _enemyStats, _enemyAttack) },
             {typeof(RangedAttackState), new RangedAttackState(this, _enemyMovement, _enemyStats, _shootable, _enemyRotator ) },
+            {typeof(ReloadState), new ReloadState(this, _enemyMovement, _shootable) },
             {typeof(DeadState), new DeadState(this, _enemyMovement) }
         };
 
@@ -101,6 +122,12 @@ public class StateMachine : MonoBehaviour
             {
                 SwitchState<DeadState>();
             }
+            else if (_currentState != _states[typeof(ReloadState)] &&
+                 _currentState != _states[typeof(DeadState)] &&
+                 CheckReloadCondition())
+            {
+                SwitchState<ReloadState>();
+            }
 
             yield return new WaitForSeconds(_timeBetweenChecks);
         }
@@ -116,5 +143,15 @@ public class StateMachine : MonoBehaviour
         {
             _distanceToTarget = float.MaxValue;
         }
+    }
+
+    private bool CheckReloadCondition()
+    {
+        return _ammoProvider != null && _ammoProvider.NeedsReload;
+    }
+
+    private void HandleGunEquipped(Gun equippedGun)
+    {
+        _ammoProvider = equippedGun.AmmoProvider;
     }
 }

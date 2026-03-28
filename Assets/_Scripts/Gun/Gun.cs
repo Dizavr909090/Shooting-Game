@@ -14,6 +14,8 @@ public class Gun : MonoBehaviour
     public bool CanShoot => Time.time > _nextShotTime;
     public ShootType ShootMode => _gunStats.ShootMode;
     public bool IsAutomaticMode => _gunStats.IsAutomaticMode;
+    public bool NeedsReload => _ammoHandler.IsMagazineEmpty;
+    public IAmmoProvider AmmoProvider => _ammoHandler;
 
     private void Awake()
     {
@@ -46,6 +48,16 @@ public class Gun : MonoBehaviour
     public void ForceReload()
     {
         _ammoHandler.StartReload();
+    }
+
+    public void ForceCancelReload()
+    {
+        _ammoHandler.CanReload();
+    }
+
+    public void ForceResetAmmo()
+    {
+        _ammoHandler.ResetAmmo();
     }
 
     public void StopFiring()

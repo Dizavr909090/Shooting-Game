@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEditor;
 using UnityEngine;
 
-public class AmmoHandler : MonoBehaviour
+public class AmmoHandler : MonoBehaviour, IAmmoProvider
 {
     public event Action ReloadStart;
     public event Action ReloadEnd;
@@ -24,7 +24,11 @@ public class AmmoHandler : MonoBehaviour
     public int CurrentAmmo => _currentAmmo;
     public int CurrentAmmoInMagazine => _currentAmmoInMagazine;
     public bool IsReloading {  get; private set; }
-    
+    public bool IsMagazineEmpty => _currentAmmoInMagazine <= 0;
+    public bool HasAnyAmmo => (_currentAmmoInMagazine > 0 || _currentAmmo > 0);
+    public bool HasReserveAmmo => _currentAmmo > 0;
+    public bool NeedsReload => IsMagazineEmpty && HasReserveAmmo && !IsReloading;
+
     public void Initialize(
         float reloadTime, 
         int maxAmmo, 
@@ -96,6 +100,12 @@ public class AmmoHandler : MonoBehaviour
         }
 
         IsReloading = false;
+    }
+
+    public void ResetAmmo()
+    {
+        _currentAmmo = _maxAmmo;
+        _currentAmmoInMagazine = _magazineSize;
     }
 
     private IEnumerator Reload()

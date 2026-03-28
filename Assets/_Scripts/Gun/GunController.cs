@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class GunController : MonoBehaviour, IShootable
 {
-    [SerializeField] private Transform _weaponHold;
     [SerializeField] private Gun _startingGun;
+    [SerializeField] private Transform _weaponHold;
     [SerializeField] private GunEventChannelSO _gunEquipChannel;
     
     private FractionRelationsConfig.FractionType _shooterFractionType;
@@ -13,7 +13,7 @@ public class GunController : MonoBehaviour, IShootable
     public ShootType CurrentShootMode => _equippedGun.ShootMode;
     public bool CanShoot => _equippedGun != null && _equippedGun.CanShoot;
 
-    private void Start()
+    private void OnEnable()
     {
         SelectStartingGun();
     }
@@ -33,12 +33,26 @@ public class GunController : MonoBehaviour, IShootable
         _equippedGun.ForceReload();
     }
 
+    public void ResetAmmo()
+    {
+        _equippedGun.ForceResetAmmo();
+    }
+
+    public void CancelReload()
+    {
+        _equippedGun.ForceCancelReload();
+    }
+
     public void EquipGun(Gun gunToEquip)
     {
-        if (_equippedGun != null)
+        if (_equippedGun != null && _equippedGun.name.Contains(gunToEquip.name))
         {
-            Destroy(_equippedGun.gameObject);
+            _equippedGun.ForceResetAmmo();
+            return;
         }
+
+        if (_equippedGun != null) Destroy(_equippedGun.gameObject);
+
         _equippedGun = Instantiate(gunToEquip, _weaponHold.position, _weaponHold.rotation);
         _equippedGun.transform.parent = _weaponHold;
         _shooterFractionType = _equippedGun.GetComponentInParent<IFractionProvider>()?.FractionType ?? 
@@ -52,6 +66,7 @@ public class GunController : MonoBehaviour, IShootable
         if (_startingGun != null)
         {
             EquipGun(_startingGun);
+            _startingGun.ForceResetAmmo();
         }
     }
 }
