@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "BossAbilitySO", menuName = "Scriptable Objects/BossAbilitySO")]
 public abstract class BossAbilitySO : ScriptableObject
 {
     [Header("Identification")]
@@ -16,5 +15,5 @@ public abstract class BossAbilitySO : ScriptableObject
     [field: SerializeField] public float MinDistance { get; private set; }
     [field: SerializeField] public float MaxDistance { get; private set; }
 
-    public abstract BaseAbility CreateAbilityLogic(BossStateMachine stateMachine);
+    public abstract BaseAbility CreateAbilityLogic();
 }

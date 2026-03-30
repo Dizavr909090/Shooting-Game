@@ -1,14 +1,20 @@
+using UnityEngine;
+
+[System.Serializable]
 public class BaseAbility : IWeightable
 {
-    protected BossAbilitySO _data;
-
-    private float _currentWeight;
+    [SerializeField] protected BossAbilitySO _data;
+    [SerializeField] private float _currentWeight;
+    private IAbilityUser _abilityUser;
 
     public float CurrentWeight => _currentWeight;
+    public string Name => _data != null ? _data.AbilityName : "Unknown Ability";
 
-    public void Initialize()
+    public BaseAbility(BossAbilitySO data, IAbilityUser abilityUser)
     {
-        _currentWeight = _data.BaseWeight;
+        _data = data;
+        _currentWeight = data.BaseWeight;
+        _abilityUser = abilityUser;
     }
 
     public void IncreaseValueOfWeight()
@@ -28,5 +34,10 @@ public class BaseAbility : IWeightable
         {
             _currentWeight *= _data.PenaltyMultiplier;
         }
+    }
+
+    public void Execute()
+    {
+        _abilityUser.ExecuteCommand(new AttackCommand());
     }
 }

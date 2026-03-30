@@ -315,7 +315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf43841fd8068894f851865d7c6da064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GunController
-  _startingGun: {fileID: -7043338177790030131, guid: e683d8432eeb8584b9554c946a1ca5cf, type: 3}
+  _startingGun: {fileID: -7043338177790030131, guid: 897c04194a4a0174d8c8bf4368bb7c3f, type: 3}
   _weaponHold: {fileID: 8651217751435458286}
   _gunEquipChannel: {fileID: 11400000, guid: def1efd72869e804aa0b5dbe6b27dbe6, type: 2}
 --- !u!114 &2920811672949072090

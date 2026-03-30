@@ -38,7 +38,7 @@ public class ChaseState : BaseState
         }
 
         bool canShoot = _stateMachine.AmmoProvider != null &&
-                    !_stateMachine.AmmoProvider.HasAnyAmmo;
+                    _stateMachine.AmmoProvider.HasAnyAmmo;
 
         if (canShoot &&
             _stateMachine.DistanceToTarget <= _stats.RangedAttackDistanceMax + _stats.DistanceTolerance &&
