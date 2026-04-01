@@ -1,30 +1,33 @@
 using UnityEngine;
 
 [System.Serializable]
-public class BaseAbility : IWeightable
+public abstract class BaseAbility : IWeightable
 {
-    [SerializeField] protected BossAbilitySO _data;
+    protected IAbilityUser _abilityUser;
+
+    [SerializeField] private BaseAbilitySO _baseData;
     [SerializeField] private float _currentWeight;
-    private IAbilityUser _abilityUser;
+    
 
     public float CurrentWeight => _currentWeight;
-    public string Name => _data != null ? _data.AbilityName : "Unknown Ability";
+    public string Name => _baseData != null ? _baseData.AbilityName : "Unknown Ability";
+    protected BaseAbilitySO BaseData => _baseData;
 
-    public BaseAbility(BossAbilitySO data, IAbilityUser abilityUser)
+    public BaseAbility(BaseAbilitySO data, IAbilityUser abilityUser)
     {
-        _data = data;
+        _baseData = data;
         _currentWeight = data.BaseWeight;
         _abilityUser = abilityUser;
     }
 
     public void IncreaseValueOfWeight()
     {
-        _currentWeight += _data.RecoveryValue;
+        _currentWeight += _baseData.RecoveryValue;
     }
 
     public void PerformPenaltyMultiplierForWeight()
     {
-        var penaliedWeight = _data.BaseWeight * _data.PenaltyMultiplier;
+        var penaliedWeight = _baseData.BaseWeight * _baseData.PenaltyMultiplier;
 
         if (_currentWeight > penaliedWeight)
         {
@@ -32,12 +35,17 @@ public class BaseAbility : IWeightable
         }
         else
         {
-            _currentWeight *= _data.PenaltyMultiplier;
+            _currentWeight *= _baseData.PenaltyMultiplier;
         }
     }
 
-    public void Execute()
-    {
-        _abilityUser.ExecuteCommand(new AttackCommand());
-    }
+    public abstract void Execute();
+}
+
+public abstract class BaseAbility<T> : BaseAbility where T : BaseAbilitySO
+{
+    protected T Data => (T)BaseData;
+
+    protected BaseAbility(T data, IAbilityUser abilityUser) : base(data, abilityUser) { }
+
 }

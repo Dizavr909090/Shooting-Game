@@ -1,4 +1,4 @@
 public interface IAbilityUser
 {
-    void ExecuteCommand(IBossCommand command);
+    void ExecuteCommand(ICommand command);
 }

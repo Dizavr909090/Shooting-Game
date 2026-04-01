@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class BossExecutionLayer : MonoBehaviour
 {
-    [SerializeField] private List<BossAbilitySO> _allAbilityConfigs;
-    [SerializeField] private List<BaseAbility> _allAbilities;
-
+    [SerializeField] private List<BaseAbilitySO> _allAbilityConfigs;
+    [SerializeField] private List<BaseAbility> _allAbilities = new List<BaseAbility>();
+    [SerializeField] private AbilityController _bossController;
 
     private void Start()
     {
         foreach (var abilityConfig in _allAbilityConfigs)
         {
-            var ability = abilityConfig.CreateAbilityLogic();
+            var ability = abilityConfig.CreateAbilityLogic(_bossController);
             _allAbilities.Add(ability);
         }
 
@@ -33,6 +33,8 @@ public class BossExecutionLayer : MonoBehaviour
     public void UseAbility()
     {
         var selectedAbility = WeightSelector.GetRandom(_allAbilities);
+
+        selectedAbility.Execute();
 
         Debug.Log($"<color=cyan>СЛЕДУЮЩИЙ ХОД:</color> <b>{selectedAbility.Name}</b> | Вес: {selectedAbility.CurrentWeight:F1}");
 

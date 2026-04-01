@@ -817,55 +817,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1099740481}
   m_CullTransparentMesh: 1
---- !u!1 &1433927844
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1433927846}
-  - component: {fileID: 1433927845}
-  m_Layer: 0
-  m_Name: A1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1433927845
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1433927844}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21f18fc91d190d44696f8eb4fb69c2ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossExecutionLayer
-  _allAbilityConfigs:
-  - {fileID: 11400000, guid: f81871f1643f6a54aa98060e61d2585a, type: 2}
-  - {fileID: 11400000, guid: eeac43f0f410e224bb2bbad14a23eb03, type: 2}
-  - {fileID: 11400000, guid: a70dcb34227193042b5dc06e86faad95, type: 2}
-  _allAbilities: []
---- !u!4 &1433927846
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1433927844}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.63775, y: 0, z: 3.36782}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1449110727
 GameObject:
   m_ObjectHideFlags: 0
@@ -1319,7 +1270,7 @@ Transform:
   m_GameObject: {fileID: 1630139554}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: -1.12, y: 3.13, z: -14.76}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1853,4 +1804,3 @@ SceneRoots:
   - {fileID: 989107387}
   - {fileID: 1630139569}
   - {fileID: 2124706121}
-  - {fileID: 1433927846}

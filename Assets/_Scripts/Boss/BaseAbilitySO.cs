@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class BossAbilitySO : ScriptableObject
+public abstract class BaseAbilitySO : ScriptableObject
 {
     [Header("Identification")]
     [field: SerializeField]public string AbilityName { get; private set; }
@@ -15,5 +15,5 @@ public abstract class BossAbilitySO : ScriptableObject
     [field: SerializeField] public float MinDistance { get; private set; }
     [field: SerializeField] public float MaxDistance { get; private set; }
 
-    public abstract BaseAbility CreateAbilityLogic();
+    public abstract BaseAbility CreateAbilityLogic(IAbilityUser abilityUser);
 }
