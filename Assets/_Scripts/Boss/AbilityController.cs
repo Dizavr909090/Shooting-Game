@@ -22,4 +22,13 @@ public class AbilityController : MonoBehaviour, IAbilityUser, IModuleRegistry
     {
         _modules.Remove(module);
     }
+
+    public bool AllModulesReady()
+    {
+        foreach (var module in _modules)
+        {
+            if (!module.IsAtTarget) return false;
+        }
+        return true;
+    }
 }

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class AttackCommand : ICommand
 {
     public float Damage { get; }

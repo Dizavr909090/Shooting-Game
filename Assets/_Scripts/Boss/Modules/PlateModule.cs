@@ -3,12 +3,23 @@ using UnityEngine;
 public class PlateModule : BaseModule
 {
     [SerializeField] private Transform _weaponHold;
+    [SerializeField] private IShootable _shootable;
     [SerializeField] private float _currentAngle;
     [SerializeField] private float _targetAngle;
     [SerializeField] private float _radius;
     [SerializeField] private float _lerpSpeed;
 
     private Vector3 _weaponOffset = new Vector3(0, 0, 1f);
+    private bool _isFiring;
+
+    public override bool IsAtTarget =>
+    Mathf.Abs(Mathf.DeltaAngle(_currentAngle, _targetAngle)) < 0.1f &&
+    Vector3.Distance(_weaponHold.localPosition, _weaponOffset) < 0.01f;
+
+    private void Awake()
+    {
+        _shootable ??= GetComponent<IShootable>();
+    }
 
     private void Update()
     {
@@ -21,9 +32,24 @@ public class PlateModule : BaseModule
         transform.localEulerAngles = new Vector3(0, _currentAngle, 0);
 
         _weaponHold.localPosition = Vector3.MoveTowards(_weaponHold.localPosition, _weaponOffset, _lerpSpeed * Time.deltaTime);
+
+        if (_isFiring)
+        {
+            if (_shootable.CanShoot)
+            {
+                _shootable?.Shoot();
+            }
+        }
+            
     }
 
     public override void HandleCommand(ICommand command)
+    {
+        HandleMovePlateCommand(command);
+        HandleShootCommand(command);
+    }
+
+    private void HandleMovePlateCommand(ICommand command)
     {
         if (command is MovePlateCommand movePlateCommand)
         {
@@ -31,6 +57,19 @@ public class PlateModule : BaseModule
             {
                 _targetAngle = movePlateCommand.TargetAngle;
                 _weaponOffset = movePlateCommand.WeaponOffset;
+            }
+        }
+    }
+
+    private void HandleShootCommand(ICommand command)
+    {
+        if (command is ShootCommand fireCommand)
+        {
+            if (fireCommand.TargetID == ID || fireCommand.TargetID == -1)
+            {
+                _isFiring = fireCommand.IsFiring;
+
+                if (!_isFiring) _shootable?.StopFiring();
             }
         }
     }

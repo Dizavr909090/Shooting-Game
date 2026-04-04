@@ -15,24 +15,26 @@ public class BossExecutionLayer : MonoBehaviour
             var ability = abilityConfig.CreateAbilityLogic(_bossController);
             _allAbilities.Add(ability);
         }
-
-        RunProbabilityTest(1000);
-        StartCoroutine(AbilityTicker());
+        StartCoroutine(AttackRoutine());
     }
 
-    private IEnumerator AbilityTicker()
+    public IEnumerator AttackRoutine()
     {
         while (true)
         {
-            yield return new WaitForSeconds(2);
-            UseAbility();
+            UseAbility(out BaseAbility selectedAbility);
+
+            yield return new WaitForSeconds(selectedAbility.BaseData.ActiveDuration);
+
+            selectedAbility.Stop();
+
+            yield return new WaitForSeconds(selectedAbility.BaseData.Cooldown);
         }
-        
     }
 
-    public void UseAbility()
+    public void UseAbility(out BaseAbility selectedAbility)
     {
-        var selectedAbility = WeightSelector.GetRandom(_allAbilities);
+        selectedAbility = WeightSelector.GetRandom(_allAbilities);
 
         selectedAbility.Execute();
 
@@ -51,30 +53,5 @@ public class BossExecutionLayer : MonoBehaviour
 
             ability.IncreaseValueOfWeight();
         }
-    }
-
-    private void RunProbabilityTest(int iterations)
-    {
-        Dictionary<string, int> stats = new Dictionary<string, int>();
-
-        // Подготавливаем словарь
-        foreach (var a in _allAbilities) stats[a.Name] = 0;
-
-        // Крутим цикл
-        for (int i = 0; i < iterations; i++)
-        {
-            var picked = WeightSelector.GetRandom(_allAbilities);
-            stats[picked.Name]++;
-            UpdateAllWeights(picked);
-        }
-
-        // Выводим результат
-        string report = $"<b>Результаты теста ({iterations} итераций):</b>\n";
-        foreach (var pair in stats)
-        {
-            float percent = (pair.Value / (float)iterations) * 100f;
-            report += $"{pair.Key}: {pair.Value} раз ({percent:F1}%)\n";
-        }
-        Debug.Log(report);
     }
 }

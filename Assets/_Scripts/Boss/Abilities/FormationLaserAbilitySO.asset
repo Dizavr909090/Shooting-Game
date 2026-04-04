@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b054557ba6bdc646b6895efb4d328c0, type: 3}
+  m_Name: FormationLaserAbilitySO
+  m_EditorClassIdentifier: Assembly-CSharp::PlateFormationSO
+  <AbilityName>k__BackingField: Laser
+  <BaseWeight>k__BackingField: 100
+  <PenaltyMultiplier>k__BackingField: 0.1
+  <RecoveryValue>k__BackingField: 50
+  <Cooldown>k__BackingField: 0
+  <MinDistance>k__BackingField: 0
+  <MaxDistance>k__BackingField: 0
+  PlateAngles:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  WeaponOffsets:
+  - {x: 0, y: 0, z: 1}
+  - {x: -0.1, y: 0, z: 1}
+  - {x: 0.1, y: 0, z: 1}
+  - {x: 0, y: -0.1, z: 1}
+  - {x: 0, y: 0.1, z: 1}

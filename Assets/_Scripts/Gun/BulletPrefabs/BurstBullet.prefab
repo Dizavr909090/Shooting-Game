@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8076172799591956165}
   - component: {fileID: 6390799932616022974}
   m_Layer: 0
-  m_Name: ShotGunBullet
+  m_Name: BurstBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 2994880478861557889}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.012, z: -0.011010051}
-  m_LocalScale: {x: 0.030798225, y: 0.039934352, z: 0.14582853}
+  m_LocalPosition: {x: 0, y: -0.0119999815, z: -0.011010051}
+  m_LocalScale: {x: 0.082693115, y: 0.10722358, z: 0.39154905}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -142,7 +142,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d436989649a6732499b21d234bb89f3f, type: 2}
+  - {fileID: 2100000, guid: a34d3bbdbdc051a4784e4d5c9a2d86f2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

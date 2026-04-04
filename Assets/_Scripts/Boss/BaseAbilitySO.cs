@@ -11,6 +11,7 @@ public abstract class BaseAbilitySO : ScriptableObject
     [field: SerializeField] public float RecoveryValue { get; private set; }
 
     [Header("Usage Conditions")]
+    [field: SerializeField] public float ActiveDuration { get; private set; }
     [field: SerializeField] public float Cooldown { get; private set; }
     [field: SerializeField] public float MinDistance { get; private set; }
     [field: SerializeField] public float MaxDistance { get; private set; }

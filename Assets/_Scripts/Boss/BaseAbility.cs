@@ -11,7 +11,7 @@ public abstract class BaseAbility : IWeightable
 
     public float CurrentWeight => _currentWeight;
     public string Name => _baseData != null ? _baseData.AbilityName : "Unknown Ability";
-    protected BaseAbilitySO BaseData => _baseData;
+    public BaseAbilitySO BaseData => _baseData;
 
     public BaseAbility(BaseAbilitySO data, IAbilityUser abilityUser)
     {
@@ -40,6 +40,7 @@ public abstract class BaseAbility : IWeightable
     }
 
     public abstract void Execute();
+    public virtual void Stop() { }
 }
 
 public abstract class BaseAbility<T> : BaseAbility where T : BaseAbilitySO

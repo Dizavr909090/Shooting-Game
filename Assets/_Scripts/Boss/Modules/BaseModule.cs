@@ -6,6 +6,8 @@ public abstract class BaseModule : MonoBehaviour, IActorModule
 
     [field: SerializeField] public int ID {  get; private set; }
 
+    public virtual bool IsAtTarget { get; }
+
     protected virtual void OnEnable()
     {
         _moduleController = GetComponentInParent<IModuleRegistry>();

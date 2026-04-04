@@ -25,4 +25,4 @@ MonoBehaviour:
   <MaxAmmo>k__BackingField: 30
   <MagazineSize>k__BackingField: 10
   <ReloadTime>k__BackingField: 0.3
-  <IsInfiniteAmmo>k__BackingField: 0
+  <IsInfiniteAmmo>k__BackingField: 1
