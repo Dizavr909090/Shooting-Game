@@ -16,7 +16,7 @@ MonoBehaviour:
   <ShootMode>k__BackingField: 0
   <PelletCount>k__BackingField: 20
   <MuzzleVelocityModifier>k__BackingField: 1
-  <FireRate>k__BackingField: 1
+  <FireRate>k__BackingField: 0.5
   <BaseSpread>k__BackingField: 0.5
   <BurstCount>k__BackingField: 0
   <TimeBetweenShotsInBurst>k__BackingField: 0

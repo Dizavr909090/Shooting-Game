@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a49fc083622a2a640a2bda2f20e432f8, type: 3}
   m_Name: BurstRifleGun
   m_EditorClassIdentifier: Assembly-CSharp::GunStats
-  <ProjData>k__BackingField: {fileID: 11400000, guid: f8d53edd63fa92e48843b24cfafa8045, type: 2}
+  <ProjData>k__BackingField: {fileID: 11400000, guid: 2a465cc354fdf8845bfef82fd433812a, type: 2}
   <ShootMode>k__BackingField: 1
   <PelletCount>k__BackingField: 1
   <MuzzleVelocityModifier>k__BackingField: 1
   <FireRate>k__BackingField: 0
   <BaseSpread>k__BackingField: 0.1
-  <BurstCount>k__BackingField: 3
+  <BurstCount>k__BackingField: 5
   <TimeBetweenShotsInBurst>k__BackingField: 0.1
   <BurstCooldown>k__BackingField: 0.5
   <ReloadMode>k__BackingField: 0

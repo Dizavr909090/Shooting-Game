@@ -39,8 +39,7 @@ public class PlateModule : BaseModule
             {
                 _shootable?.Shoot();
             }
-        }
-            
+        }       
     }
 
     public override void HandleCommand(ICommand command)

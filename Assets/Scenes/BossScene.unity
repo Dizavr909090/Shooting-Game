@@ -119,6 +119,67 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &103382247
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 103382250}
+  - component: {fileID: 103382249}
+  - component: {fileID: 103382248}
+  m_Layer: 0
+  m_Name: _CombatSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &103382248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103382247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fb6d286384221946b7b7d0ade69700e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileSimulation
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 448
+  _relationsConfig: {fileID: 11400000, guid: 1ee20940ba39e514291506dd71dde43d, type: 2}
+--- !u!114 &103382249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103382247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc5a974a01322ea458462eed323f5989, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileProvider
+--- !u!4 &103382250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103382247}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.00643, y: 1.75759, z: -0.4285}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &145037856
 GameObject:
   m_ObjectHideFlags: 0
@@ -626,8 +687,8 @@ Transform:
   m_GameObject: {fileID: 667651295}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.09, y: 2, z: 4.15}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.09, y: 1.2, z: 4.2806}
+  m_LocalScale: {x: 0.52511555, y: 0.52511555, z: 0.52511555}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 145037857}
@@ -647,8 +708,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossExecutionLayer
   _allAbilityConfigs:
-  - {fileID: 11400000, guid: 0b2bdeb935a4bf042920d53f340a82b0, type: 2}
-  - {fileID: 11400000, guid: 0b2bdeb935a4bf042920d53f340a82b0, type: 2}
+  - {fileID: 11400000, guid: 4341ce836c977064784149411846fca6, type: 2}
+  - {fileID: 11400000, guid: 680ddacbf804adc46a920c248bfcf817, type: 2}
   _bossController: {fileID: 667651298}
 --- !u!114 &667651298
 MonoBehaviour:
@@ -716,7 +777,7 @@ MonoBehaviour:
   _currentAngle: -90
   _targetAngle: -90
   _radius: 2.8
-  _lerpSpeed: 20
+  _lerpSpeed: 45
 --- !u!65 &821216042
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -806,7 +867,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf43841fd8068894f851865d7c6da064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GunController
-  _startingGun: {fileID: -7043338177790030131, guid: 897c04194a4a0174d8c8bf4368bb7c3f, type: 3}
+  _startingGun: {fileID: -7043338177790030131, guid: 8e933639250064443bac58bb9535c333, type: 3}
   _weaponHold: {fileID: 1269040121}
   _gunEquipChannel: {fileID: 11400000, guid: def1efd72869e804aa0b5dbe6b27dbe6, type: 2}
 --- !u!1 &861433800
@@ -1013,7 +1074,7 @@ MonoBehaviour:
   _currentAngle: 45
   _targetAngle: 45
   _radius: 2.8
-  _lerpSpeed: 20
+  _lerpSpeed: 45
 --- !u!65 &961054448
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1103,7 +1164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf43841fd8068894f851865d7c6da064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GunController
-  _startingGun: {fileID: -7043338177790030131, guid: 897c04194a4a0174d8c8bf4368bb7c3f, type: 3}
+  _startingGun: {fileID: -7043338177790030131, guid: e683d8432eeb8584b9554c946a1ca5cf, type: 3}
   _weaponHold: {fileID: 419095057}
   _gunEquipChannel: {fileID: 11400000, guid: def1efd72869e804aa0b5dbe6b27dbe6, type: 2}
 --- !u!1 &989107383
@@ -1268,7 +1329,7 @@ MonoBehaviour:
   _currentAngle: 90
   _targetAngle: 90
   _radius: 2.8
-  _lerpSpeed: 20
+  _lerpSpeed: 45
 --- !u!65 &1001604121
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1548,7 +1609,7 @@ MonoBehaviour:
   _currentAngle: 0
   _targetAngle: 0
   _radius: 2.8
-  _lerpSpeed: 20
+  _lerpSpeed: 45
 --- !u!65 &1181938680
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1638,7 +1699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf43841fd8068894f851865d7c6da064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GunController
-  _startingGun: {fileID: -7043338177790030131, guid: 8e933639250064443bac58bb9535c333, type: 3}
+  _startingGun: {fileID: -7043338177790030131, guid: 897c04194a4a0174d8c8bf4368bb7c3f, type: 3}
   _weaponHold: {fileID: 997225881}
   _gunEquipChannel: {fileID: 11400000, guid: def1efd72869e804aa0b5dbe6b27dbe6, type: 2}
 --- !u!1 &1269040120
@@ -2553,7 +2614,7 @@ MonoBehaviour:
   _currentAngle: -45
   _targetAngle: -45
   _radius: 2.8
-  _lerpSpeed: 20
+  _lerpSpeed: 45
 --- !u!65 &1951789923
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2905,3 +2966,4 @@ SceneRoots:
   - {fileID: 1630139569}
   - {fileID: 2124706121}
   - {fileID: 667651296}
+  - {fileID: 103382250}

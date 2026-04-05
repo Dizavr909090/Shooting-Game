@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class BossExecutionLayer : MonoBehaviour
 {
-    [SerializeField] private List<BaseAbilitySO> _allAbilityConfigs;
-    [SerializeField] private List<BaseAbility> _allAbilities = new List<BaseAbility>();
+    [SerializeField] private List<BaseAbility_SO> _allAbilityConfigs;
+    [SerializeField] private List<Base_Ability> _allAbilities = new List<Base_Ability>();
     [SerializeField] private AbilityController _bossController;
 
     private void Start()
@@ -22,7 +22,7 @@ public class BossExecutionLayer : MonoBehaviour
     {
         while (true)
         {
-            UseAbility(out BaseAbility selectedAbility);
+            UseAbility(out Base_Ability selectedAbility);
 
             yield return new WaitForSeconds(selectedAbility.BaseData.ActiveDuration);
 
@@ -32,7 +32,7 @@ public class BossExecutionLayer : MonoBehaviour
         }
     }
 
-    public void UseAbility(out BaseAbility selectedAbility)
+    public void UseAbility(out Base_Ability selectedAbility)
     {
         selectedAbility = WeightSelector.GetRandom(_allAbilities);
 
@@ -43,11 +43,11 @@ public class BossExecutionLayer : MonoBehaviour
         UpdateAllWeights(selectedAbility);
     }
 
-    private void UpdateAllWeights(BaseAbility choseAbility)
+    private void UpdateAllWeights(Base_Ability choseAbility)
     {
         choseAbility.PerformPenaltyMultiplierForWeight();
 
-        foreach (BaseAbility ability in _allAbilities)
+        foreach (Base_Ability ability in _allAbilities)
         {
             if (ability == choseAbility) continue;
 
