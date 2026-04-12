@@ -708,7 +708,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossExecutionLayer
   _allAbilityConfigs:
-  - {fileID: 11400000, guid: 4341ce836c977064784149411846fca6, type: 2}
   - {fileID: 11400000, guid: 680ddacbf804adc46a920c248bfcf817, type: 2}
   _bossController: {fileID: 667651298}
 --- !u!114 &667651298
@@ -772,7 +771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a6e107ef3b15f24b8585604be3ad0de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlateModule
-  <ID>k__BackingField: 3
+  <ModuleID>k__BackingField: 0
   _weaponHold: {fileID: 1269040121}
   _currentAngle: -90
   _targetAngle: -90
@@ -867,7 +866,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf43841fd8068894f851865d7c6da064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GunController
-  _startingGun: {fileID: -7043338177790030131, guid: 8e933639250064443bac58bb9535c333, type: 3}
+  _startingGun: {fileID: -7043338177790030131, guid: 897c04194a4a0174d8c8bf4368bb7c3f, type: 3}
   _weaponHold: {fileID: 1269040121}
   _gunEquipChannel: {fileID: 11400000, guid: def1efd72869e804aa0b5dbe6b27dbe6, type: 2}
 --- !u!1 &861433800
@@ -1069,7 +1068,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a6e107ef3b15f24b8585604be3ad0de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlateModule
-  <ID>k__BackingField: 2
+  <ModuleID>k__BackingField: 0
   _weaponHold: {fileID: 419095057}
   _currentAngle: 45
   _targetAngle: 45
@@ -1164,7 +1163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf43841fd8068894f851865d7c6da064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GunController
-  _startingGun: {fileID: -7043338177790030131, guid: e683d8432eeb8584b9554c946a1ca5cf, type: 3}
+  _startingGun: {fileID: -7043338177790030131, guid: 8e933639250064443bac58bb9535c333, type: 3}
   _weaponHold: {fileID: 419095057}
   _gunEquipChannel: {fileID: 11400000, guid: def1efd72869e804aa0b5dbe6b27dbe6, type: 2}
 --- !u!1 &989107383
@@ -1185,7 +1184,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &989107384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1324,7 +1323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a6e107ef3b15f24b8585604be3ad0de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlateModule
-  <ID>k__BackingField: 4
+  <ModuleID>k__BackingField: 0
   _weaponHold: {fileID: 1671001903}
   _currentAngle: 90
   _targetAngle: 90
@@ -1419,7 +1418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf43841fd8068894f851865d7c6da064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GunController
-  _startingGun: {fileID: -7043338177790030131, guid: 8e933639250064443bac58bb9535c333, type: 3}
+  _startingGun: {fileID: -7043338177790030131, guid: 897c04194a4a0174d8c8bf4368bb7c3f, type: 3}
   _weaponHold: {fileID: 1671001903}
   _gunEquipChannel: {fileID: 11400000, guid: def1efd72869e804aa0b5dbe6b27dbe6, type: 2}
 --- !u!1 &1099740481
@@ -1604,7 +1603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a6e107ef3b15f24b8585604be3ad0de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlateModule
-  <ID>k__BackingField: 0
+  <ModuleID>k__BackingField: 0
   _weaponHold: {fileID: 997225881}
   _currentAngle: 0
   _targetAngle: 0
@@ -1699,7 +1698,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf43841fd8068894f851865d7c6da064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GunController
-  _startingGun: {fileID: -7043338177790030131, guid: 897c04194a4a0174d8c8bf4368bb7c3f, type: 3}
+  _startingGun: {fileID: -7043338177790030131, guid: e683d8432eeb8584b9554c946a1ca5cf, type: 3}
   _weaponHold: {fileID: 997225881}
   _gunEquipChannel: {fileID: 11400000, guid: def1efd72869e804aa0b5dbe6b27dbe6, type: 2}
 --- !u!1 &1269040120
@@ -2609,7 +2608,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a6e107ef3b15f24b8585604be3ad0de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlateModule
-  <ID>k__BackingField: 1
+  <ModuleID>k__BackingField: 0
   _weaponHold: {fileID: 1377368576}
   _currentAngle: -45
   _targetAngle: -45
@@ -2704,7 +2703,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf43841fd8068894f851865d7c6da064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GunController
-  _startingGun: {fileID: -7043338177790030131, guid: e683d8432eeb8584b9554c946a1ca5cf, type: 3}
+  _startingGun: {fileID: -7043338177790030131, guid: 8e933639250064443bac58bb9535c333, type: 3}
   _weaponHold: {fileID: 1377368576}
   _gunEquipChannel: {fileID: 11400000, guid: def1efd72869e804aa0b5dbe6b27dbe6, type: 2}
 --- !u!1 &2055993454

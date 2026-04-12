@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8300c6ee4f0b804caeaa807e6be8c6c, type: 3}
   m_Name: Laser_Ability
   m_EditorClassIdentifier: Assembly-CSharp::CompositeAbility_SO
-  <AbilityName>k__BackingField: 
+  <AbilityName>k__BackingField: Laser
   <BaseWeight>k__BackingField: 100
   <PenaltyMultiplier>k__BackingField: 0.1
   <RecoveryValue>k__BackingField: 100

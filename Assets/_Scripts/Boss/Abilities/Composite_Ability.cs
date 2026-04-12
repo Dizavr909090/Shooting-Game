@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting.Antlr3.Runtime;
 
 public class Composite_Ability : Base_Ability<CompositeAbility_SO>
 {
@@ -21,7 +22,13 @@ public class Composite_Ability : Base_Ability<CompositeAbility_SO>
     public override void Stop()
     {
         _cts?.Cancel();
-        _abilityUser.ExecuteCommand(new ShootCommand(-1, false));
+        _cts?.Dispose();
+        _cts = null;
+
+        foreach (var action in _sequence)
+        {
+            action.Cleanup();
+        }
     }
 
     private async UniTask ExecuteSequence(CancellationToken token)

@@ -16,6 +16,6 @@ MonoBehaviour:
   - 0
   - -180
   - 180
-  - -270
-  - 270
+  - 89
+  - -89
   WeaponOffsets: []

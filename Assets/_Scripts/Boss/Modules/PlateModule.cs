@@ -52,8 +52,9 @@ public class PlateModule : BaseModule
     {
         if (command is MovePlateCommand movePlateCommand)
         {
-            if (movePlateCommand.TargetID == ID || movePlateCommand.TargetID == -1)
+            if (movePlateCommand.TargetID == ModuleID || movePlateCommand.TargetID == -1)
             {
+                Debug.Log($"[Plate {ModuleID}] Moving to Angle: {movePlateCommand.TargetAngle}");
                 _targetAngle = movePlateCommand.TargetAngle;
                 _weaponOffset = movePlateCommand.WeaponOffset;
             }
@@ -64,9 +65,10 @@ public class PlateModule : BaseModule
     {
         if (command is ShootCommand fireCommand)
         {
-            if (fireCommand.TargetID == ID || fireCommand.TargetID == -1)
+            if (fireCommand.TargetID == ModuleID || fireCommand.TargetID == -1)
             {
                 _isFiring = fireCommand.IsFiring;
+                _shootable?.ApplyModifier(fireCommand.GunModifier);
 
                 if (!_isFiring) _shootable?.StopFiring();
             }

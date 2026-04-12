@@ -1,23 +1,17 @@
 using Cysharp.Threading.Tasks;
-using System.Collections;
 using UnityEngine;
 
-public class MovePlateAction : Base_Action
+public class MovePlateAction : Base_Action<PlateFormation_SO>
 {
-    private PlateFormation_SO _formationData;
-
-    public MovePlateAction(PlateFormation_SO data, IAbilityUser abilityUser) : base(abilityUser)
-    {
-        _formationData = data;
-    }
+    public MovePlateAction(PlateFormation_SO data, IAbilityUser abilityUser) : base(data, abilityUser){}
 
     public override async UniTask Execute()
     {
-        for (int i = 0; i < _formationData.PlateAngles.Length; i++)
+        for (int i = 0; i < Data.PlateAngles.Length; i++)
         {
-            float angle = _formationData.PlateAngles[i];
-            Vector3 offset = (_formationData.WeaponOffsets != null && i < _formationData.WeaponOffsets.Length)
-                ? _formationData.WeaponOffsets[i]
+            float angle = Data.PlateAngles[i];
+            Vector3 offset = (Data.WeaponOffsets != null && i < Data.WeaponOffsets.Length)
+                ? Data.WeaponOffsets[i]
                 : new Vector3(0, 0, 1f);
 
             _abilityUser.ExecuteCommand(new MovePlateCommand(i, angle, offset));

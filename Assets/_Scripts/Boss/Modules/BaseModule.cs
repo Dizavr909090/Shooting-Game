@@ -4,7 +4,7 @@ public abstract class BaseModule : MonoBehaviour, IActorModule
 {
     protected IModuleRegistry _moduleController;
 
-    [field: SerializeField] public int ID {  get; private set; }
+    [field: SerializeField] public int ModuleID {  get; private set; }
 
     public virtual bool IsAtTarget { get; }
 

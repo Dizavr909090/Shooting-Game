@@ -155,3 +155,6 @@ public class StateMachine : MonoBehaviour
         _ammoProvider = equippedGun.AmmoProvider;
     }
 }
+
+
+

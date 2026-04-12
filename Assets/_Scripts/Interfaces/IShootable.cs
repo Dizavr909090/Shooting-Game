@@ -13,4 +13,6 @@ public interface IShootable
     void ResetAmmo();
 
     void CancelReload();
+
+    void ApplyModifier(GunModifier modifier);
 }

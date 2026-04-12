@@ -15,12 +15,12 @@ MonoBehaviour:
   <ProjData>k__BackingField: {fileID: 11400000, guid: 2a465cc354fdf8845bfef82fd433812a, type: 2}
   <ShootMode>k__BackingField: 1
   <PelletCount>k__BackingField: 1
-  <MuzzleVelocityModifier>k__BackingField: 1
+  <MuzzleVelocityModifier>k__BackingField: 3
   <FireRate>k__BackingField: 0
   <BaseSpread>k__BackingField: 0.1
-  <BurstCount>k__BackingField: 5
+  <BurstCount>k__BackingField: 3
   <TimeBetweenShotsInBurst>k__BackingField: 0.1
-  <BurstCooldown>k__BackingField: 0.5
+  <BurstCooldown>k__BackingField: 0.3
   <ReloadMode>k__BackingField: 0
   <MaxAmmo>k__BackingField: 100
   <MagazineSize>k__BackingField: 15

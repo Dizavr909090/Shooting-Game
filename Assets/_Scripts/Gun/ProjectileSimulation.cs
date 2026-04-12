@@ -47,6 +47,7 @@ public class ProjectileSimulation : MonoBehaviour
                 
                 if (shouldHandleHit)
                 {
+                    float finaleDamage = projInstance.ProjectileData.Damage * projInstance.DamageMultiplier;
                     hit.collider.GetComponent<IDamageable>()?.TakeHit(projInstance.ProjectileData.Damage, hit);
                     ProjectileHit?.Invoke(projInstance.ProjectileData, projInstance.ProjectileVisual);
                     _activeProjectiles.RemoveAt(i);
@@ -73,7 +74,8 @@ public class ProjectileSimulation : MonoBehaviour
         float speed,
         ProjectileData data,
         ProjectileVisual visual,
-        FractionRelationsConfig.FractionType shooterFraction)
+        FractionRelationsConfig.FractionType shooterFraction,
+        float damageMultiplier)
     {
         ProjectileInstance projInstance = new(
             startPos,
@@ -81,7 +83,8 @@ public class ProjectileSimulation : MonoBehaviour
             speed,
             data,
             visual,
-            shooterFraction
+            shooterFraction,
+            damageMultiplier
             );
         _activeProjectiles.Add(projInstance);
     }

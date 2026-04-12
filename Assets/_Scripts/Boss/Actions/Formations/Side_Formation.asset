@@ -9,6 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ff594e2f81a50c42983d5dbe98bee80, type: 3}
-  m_Name: Shoot_Action
-  m_EditorClassIdentifier: Assembly-CSharp::ShootAction_SO
+  m_Script: {fileID: 11500000, guid: ed3d27051919fcc4bb75e18dbd06bff5, type: 3}
+  m_Name: Side_Formation
+  m_EditorClassIdentifier: Assembly-CSharp::PlateFormation_SO
+  PlateAngles:
+  - 0
+  - -90
+  - 90
+  - -90
+  - 90
+  WeaponOffsets: []

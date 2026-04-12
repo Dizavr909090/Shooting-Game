@@ -8,6 +8,7 @@ public class Gun : MonoBehaviour
     [SerializeField] private GunStats _gunStats;
     [SerializeField] private AmmoHandler _ammoHandler;
 
+    private GunModifier _currentModifier = GunModifier.Default;
     private float _nextShotTime;
     private bool _isFiringBurst;
 
@@ -34,7 +35,7 @@ public class Gun : MonoBehaviour
             if (_ammoHandler.TryConsumeAmmo())
             {
                 ExecutePhysicalShot(shooterFraction);
-                _nextShotTime = Time.time + _gunStats.FireRate;
+                _nextShotTime = Time.time + _gunStats.FireRate / Mathf.Max(0.01f, _currentModifier.FireRateModifier); ;
             }
         }
         else if (ShootMode == ShootType.Burst || ShootMode == ShootType.AutoBurst)
@@ -62,7 +63,13 @@ public class Gun : MonoBehaviour
 
     public void StopFiring()
     {
-       
+        _isFiringBurst = false;
+        ApplyModifier(GunModifier.Default);
+    }
+
+    public void ApplyModifier(GunModifier modifier)
+    {
+        _currentModifier = modifier;
     }
 
     private IEnumerator BurstShootCoroutine(FractionRelationsConfig.FractionType shooterFraction)
@@ -74,32 +81,38 @@ public class Gun : MonoBehaviour
             if (_ammoHandler.TryConsumeAmmo())
             {
                 ExecutePhysicalShot(shooterFraction);
-                yield return new WaitForSeconds(_gunStats.TimeBetweenShotsInBurst);
+                yield return new WaitForSeconds(_gunStats.TimeBetweenShotsInBurst * _currentModifier.FireRateModifier);
             }
         }
-        _nextShotTime = Time.time + _gunStats.BurstCooldown;
+        _nextShotTime = Time.time + _gunStats.BurstCooldown / Mathf.Max(0.01f, _currentModifier.FireRateModifier);
 
         _isFiringBurst = false;
     }
 
     private void ExecutePhysicalShot(FractionRelationsConfig.FractionType shooterFraction)
     {
+        ProjectileData dataToUse = _currentModifier.ProjectileOverride != null
+            ? _currentModifier.ProjectileOverride
+            : _gunStats.ProjData;
+
         for (int i = 0; i < _gunStats.PelletCount; i++)
         {
-            ProjectileVisual projToShoot = ProjectileProvider.Instance.GetProjectile(_gunStats.ProjData);
+            ProjectileVisual projToShoot = ProjectileProvider.Instance.GetProjectile(dataToUse);
             projToShoot.transform.SetPositionAndRotation(
                 _muzzleTransform.position,
                 _muzzleTransform.rotation);
 
             projToShoot.PoolableComponent.ActivateTrail();
+            projToShoot.transform.localScale = dataToUse.projPrefab.transform.localScale * _currentModifier.ScaleModifier;
 
             ProjectileSimulation.Instance.AddProjectile(
                 projToShoot.transform.position,
                 CalculateSpread(),
-                _gunStats.ProjData.BaseSpeed * _gunStats.MuzzleVelocityModifier,
+                _gunStats.ProjData.BaseSpeed * _gunStats.MuzzleVelocityModifier * _currentModifier.SpeedModifier,
                 _gunStats.ProjData,
                 projToShoot,
-                shooterFraction
+                shooterFraction,
+                _currentModifier.DamageModifier
                 );
         }
     }
@@ -108,7 +121,7 @@ public class Gun : MonoBehaviour
     {
         Vector2 randomCircle = Random.insideUnitCircle;
 
-        float spreadIntensity = _gunStats.BaseSpread;
+        float spreadIntensity = _gunStats.BaseSpread * _currentModifier.SpreadModifier;
 
         Vector3 spreadDirection = _muzzleTransform.forward
             + (_muzzleTransform.right * randomCircle.x * spreadIntensity)

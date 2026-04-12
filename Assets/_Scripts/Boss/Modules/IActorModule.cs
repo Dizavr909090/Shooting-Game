@@ -1,6 +1,6 @@
 public interface IActorModule
 {
-    int ID { get; }
-    bool IsAtTarget { get; } // Новое свойство
+    int ModuleID { get; }
+    bool IsAtTarget { get; }
     void HandleCommand(ICommand command);
 }

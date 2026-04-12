@@ -10,18 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d8300c6ee4f0b804caeaa807e6be8c6c, type: 3}
-  m_Name: Fan_Ability
+  m_Name: SideShots_Ability
   m_EditorClassIdentifier: Assembly-CSharp::CompositeAbility_SO
-  <AbilityName>k__BackingField: Fan
-  <BaseWeight>k__BackingField: 100
-  <PenaltyMultiplier>k__BackingField: 0.1
-  <RecoveryValue>k__BackingField: 100
+  <AbilityName>k__BackingField: Side
+  <BaseWeight>k__BackingField: 2000
+  <PenaltyMultiplier>k__BackingField: 0.001
+  <RecoveryValue>k__BackingField: 50
   <ActiveDuration>k__BackingField: 10
   <Cooldown>k__BackingField: 0.5
   <MinDistance>k__BackingField: 0
   <MaxDistance>k__BackingField: 0
   _actionData:
+  - {fileID: 11400000, guid: 418108cdfb270ea4e9f1734cd684d44d, type: 2}
   - {fileID: 11400000, guid: 2830902f8b37baa4fb94a0dec6dd3d0a, type: 2}
-  - {fileID: 11400000, guid: a89352147eb83f64b80673e32fde6c27, type: 2}
-  - {fileID: 11400000, guid: 99e15534744c010438a5929038a5ceb5, type: 2}
-  - {fileID: 11400000, guid: 3b8719cf67465c24da4200fd1ecbf8dd, type: 2}

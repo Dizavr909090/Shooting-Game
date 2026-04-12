@@ -11,6 +11,7 @@ public class ProjectileInstance
     public Vector3 DirectionNormalized { get; private set; }
     public LayerMask CollisionToHit { get; private set; }
     public FractionRelationsConfig.FractionType ShooterFraction { get; private set; }
+    public float DamageMultiplier { get; private set; }
 
 
     public ProjectileInstance(
@@ -19,7 +20,8 @@ public class ProjectileInstance
         float speed, 
         ProjectileData data, 
         ProjectileVisual visual,
-        FractionRelationsConfig.FractionType shooterFraction)
+        FractionRelationsConfig.FractionType shooterFraction,
+        float damageMultiplier)
     {
         Position = startPos;
         DirectionNormalized = direction.normalized;
@@ -29,6 +31,7 @@ public class ProjectileInstance
         ProjectileVisual = visual;
         TimeRemaining = data.LifeTime;
         ShooterFraction = shooterFraction;
+        DamageMultiplier = damageMultiplier;
     }
 
     public void UpdatePosition(float timeToUpdate)

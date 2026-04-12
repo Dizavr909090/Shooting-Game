@@ -7,7 +7,6 @@ public abstract class Base_Ability : IWeightable
 
     [SerializeField] private BaseAbility_SO _baseData;
     [SerializeField] private float _currentWeight;
-    
 
     public float CurrentWeight => _currentWeight;
     public string Name => _baseData != null ? _baseData.AbilityName : "Unknown Ability";

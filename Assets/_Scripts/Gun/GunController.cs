@@ -26,6 +26,7 @@ public class GunController : MonoBehaviour, IShootable
     public void StopFiring()
     {
         _equippedGun?.StopFiring();
+        _equippedGun?.ApplyModifier(GunModifier.Default);
     }
 
     public void Reload()
@@ -68,5 +69,10 @@ public class GunController : MonoBehaviour, IShootable
             EquipGun(_startingGun);
             _startingGun.ForceResetAmmo();
         }
+    }
+
+    public void ApplyModifier(GunModifier modifier)
+    {
+        _equippedGun?.ApplyModifier(modifier);
     }
 }
